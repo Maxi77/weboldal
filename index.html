@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Al1ve Kaszik</title>
+  <link rel="icon" type="image/png" href="images/hiena.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- INLINE STÍLUS a gate-hez (Brave-safe) -->
+  <style>
+    :root{
+      /* ha a style.css-ben vannak ezek, ez a blokk csak tartalék */
+      --card-background:#1e1e1e; --border-color:#333; --primary-text-color:#e0e0e0;
+      --secondary-text-color:#a0a0a0; --accent-color:#bb86fc;
+    }
+    /* Gate overlay */
+    .gate-overlay{position:fixed;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.72);z-index:3000}
+    .gate-hidden{display:none!important}
+    .gate-dialog{width:min(640px,92vw);background:var(--card-background);border:1px solid var(--border-color);
+      border-radius:16px;padding:1.25rem 1.25rem 1rem;box-shadow:0 24px 48px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.02) inset}
+    .gate-dialog h2{margin-bottom:.75rem;font-size:1.4rem;color:var(--primary-text-color);text-align:center}
+    .gate-text{text-align:center;max-width:60ch;margin:0 auto 1.25rem auto;color:var(--secondary-text-color);line-height:1.55;font-size:.98rem}
+    .gate-checks{display:flex;flex-direction:column;align-items:center;gap:.8rem;margin-bottom:1rem}
+    .gate-row{display:grid;grid-template-columns:20px 1fr;column-gap:.6rem;align-items:start;width:100%;max-width:640px;text-align:left}
+    .gate-row input[type="checkbox"]{width:18px;height:18px;margin-top:2px;accent-color:var(--accent-color);cursor:pointer}
+    .gate-row span{display:block;line-height:1.45}
+    .gate-actions{display:flex;justify-content:center;gap:.6rem}
+    .gbtn{border:1px solid var(--border-color);background:var(--card-background);color:var(--primary-text-color);
+      padding:.6rem 1rem;border-radius:10px;font-weight:600;cursor:pointer;transition:transform .15s ease,background-color .2s ease,border-color .2s ease,opacity .2s ease}
+    .gbtn:hover{transform:translateY(-1px)}
+    .gbtn-primary{background:var(--accent-color);color:#000;border-color:transparent;opacity:.6}
+    .gbtn-primary:disabled{cursor:not-allowed;opacity:.45}
+    .gbtn-primary:not(:disabled){opacity:1}
+    .gbtn-secondary{background:#262626}
+    /* A teljes app rejtése a jóváhagyásig */
+    .app-hidden{display:none!important}
+    @media (max-width:480px){.gate-dialog{padding:1rem}.gate-dialog h2{font-size:1.2rem}.gate-text{max-width:48ch}}
+  </style>
+</head>
+
+<body>
+  <!-- GATE OVERLAY (Brave-barát) -->
+  <div id="gateOverlay" class="gate-overlay" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <div class="gate-dialog">
+      <h2 id="gateTitle">Verification Required</h2>
+      <p class="gate-text">
+        Only persons over the age of 18 may continue. The content of this site is intended for users residing abroad.
+        By continuing, you confirm your age and accept responsibility for your access. Please confirm this.
+      </p>
+      <div class="gate-checks">
+        <label class="gate-row">
+          <input type="checkbox" id="gateAgeAck">
+          <span>I'm 18+ years old.</span>
+        </label>
+        <label class="gate-row">
+          <input type="checkbox" id="gateResidencyAck">
+          <span>I confirm I reside abroad and accept responsibility for my access.</span>
+        </label>
+      </div>
+      <div class="gate-actions">
+        <button id="gateExit" class="gbtn gbtn-secondary" type="button">Exit</button>
+        <button id="gateGo" class="gbtn gbtn-primary" type="button" disabled>Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- A TELJES OLDALAD TARTALMA – #app-root alá csomagolva -->
+  <div id="app-root" class="app-hidden">
+    <nav class="main-nav">
+      <ul>
+        <li><a href="#">Főoldal</a></li>
+        <li><a href="#best-offers">Best Offers</a></li>
+        <li><a href="#crab-casinos">Crab Casinos</a></li>
+        <li><a href="#socials">Elérhetőségek</a></li>
+      </ul>
+      <a id="twitch-status" href="https://www.twitch.tv/al1vehunter" target="_blank" class="hidden">
+        <div class="live-dot"></div>
+        <i class="fab fa-twitch"></i>
+        <span>ÉLŐ</span>
+      </a>
+    </nav>
+
+    <header>
+      <h1>Kaszinók</h1>
+    </header>
+
+    <main>
+      <section id="best-offers">
+        <h2 class="section-title">Best Offers</h2>
+        <div class="casino-grid">
+
+          <a href="..." target="_blank" class="casino-card">
+            <div class="card-badge">New</div>
+            <img src="images/cases.jpg" alt="Cases Logó">
+            <h3>Cases.gg</h3>
+            <p>
+              USE CODE: <span class="red">AL1VE </span><br>
+              Kártyás/Crypto deposit <br>
+              250$-os LB + 100$ Heti GW <br>
+              <span class="red">Van KYC</span><br>
+            </p>
+          </a>
+
+          <a href="..." target="_blank" class="casino-card">
+            <div class="card-badge">NEW</div>
+            <img src="images/casinobet.png" alt="Casinobet logó">
+            <h3>Casinobet</h3>
+            <p>
+              Instant cashout <br>
+              Instant rakeback <br>
+              Daily, Weekly, Monthly bonus <br>
+              <span class="green">NO KYC</span><br>
+            </p>
+          </a>
+
+          <a href="..." target="_blank" class="casino-card">
+            <div class="card-badge">NEW</div>
+            <img src="images/amonbet.png" alt="AmonBet logó">
+            <h3>AmonBet</h3>
+            <p>
+              Kártyás/Crypto deposit <br>
+              Heti Slot Cashback + 20 ingyenes pörgetés email/telefonszám megerősítésével <br>
+              <span class="red">Van KYC</span><br>
+            </p>
+          </a>
+
+          <a href="..." target="_blank" class="casino-card">
+            <div class="card-badge">New</div>
+            <img src="images/freespinz.jpg" alt="Freespinz Logó">
+            <h3>Freespinz</h3>
+            <p>
+              <span class="red">AL1VE </span>Promocode<br>
+              30EUR deposit and additional 30EUR 1x bet max win CAP 150 EUR <br>
+              <span class="red">Van KYC</span><br>
+            </p>
+          </a>
+
+          <a href="..." target="_blank" class="casino-card">
+            <img src="images/888starz.png" alt="888Starz logó">
+            <h3>888Starz</h3>
+            <p>
+              Crypto és kártyás befizetés/kifizetés<br>
+              100% Deposit bónusz<br>
+              130% Első befizetési bónusz+ 150 FS az <span class="red">AL1VE</span> promókóddal<br>
+              <span class="red">Van KYC</span><br>
+            </p>
+          </a>
+
+          <a href="..." target="_blank" class="casino-card">
+            <img src="images/qbet.png" alt="Qbet logó">
+            <h3>Qbet</h3>
+            <p>
+              5% Cashback rendszer hetente<br>
+              Crypto és kártyás befizetés/kifizetés<br>
+              <span class="red">Van KYC</span><br>
+            </p>
+          </a>
+        </div>
+      </section>
+
+      <hr class="section-divider">
+
+      <section id="crab-casinos">
+        <h2 class="section-title">Crab Casinos</h2>
+        <div class="casino-grid">
+          <a href="..." target="_blank" class="casino-card">
+            <img src="images/wazamba.png" alt="Wazamba Logó">
+            <h3>Wazamba</h3>
+            <p>
+              100% Deposit Bonus 500 dollárig<br>
+              Bonus crab játék<br>
+              Heti ingyenes pörgetések<br>
+              2-3 nap kifizetés<br>
+              <span class="red">Van KYC</span><br>
+            </p>
+          </a>
+
+          <a href="..." target="_blank" class="casino-card">
+            <img src="images/sg.png" alt="Sg Logó">
+            <h3>Sg Casino</h3>
+            <p>
+              100% Deposit Bonus 500 dollárig<br>
+              Bonus crab játék<br>
+              Heti ingyenes pörgetések<br>
+              2-3 nap kifizetés<br>
+              <span class="red">Van KYC</span><br>
+            </p>
+          </a>
+        </div>
+      </section>
+
+      <section class="socials" id="socials">
+        <h2>Elérhetőségeim</h2>
+        <div class="social-links">
+          <a href="https://www.twitch.tv/al1vehunter" target="_blank" class="social-link twitch">
+            <i class="fab fa-twitch"></i> Twitch
+          </a>
+          <a href="https://discord.gg/agjpQKQP" target="_blank" class="social-link discord">
+            <i class="fab fa-discord"></i> Discord
+          </a>
+          <a href="https://x.com/Al1ve6" target="_blank" class="social-link x">
+            <i class="fab fa-x-twitter"></i> X
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>A túlzásba vitt szerencsejáték függőséget okozhat, játssz felelősséggel,<br> mindig annyival játssz amennyit nem sajnálsz ha elbukod!</p>
+      <p>&copy; 2025 al1ve. Minden jog fenntartva.</p>
+    </footer>
+  </div><!-- /#app-root -->
+
+  <!-- GATE LOGIKA (mindig mutat, jóváhagyásig rejt mindent) -->
+  <script>
+    (function () {
+      const OVR = document.getElementById('gateOverlay');
+      const APP = document.getElementById('app-root');
+      const age = document.getElementById('gateAgeAck');
+      const res = document.getElementById('gateResidencyAck');
+      const btnExit = document.getElementById('gateExit');
+      const btnGo = document.getElementById('gateGo');
+
+      function update() {
+        const ok = !!(age?.checked && res?.checked);
+        if (btnGo) btnGo.disabled = !ok;
+      }
+      function showGate() {
+        OVR?.classList.remove('gate-hidden');
+        APP?.classList.add('app-hidden');
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        age?.focus();
+      }
+      function hideGate() {
+        OVR?.classList.add('gate-hidden');
+        APP?.classList.remove('app-hidden');
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+      }
+      function init() {
+        if (!OVR || !APP) return;
+        age?.addEventListener('change', update);
+        res?.addEventListener('change', update);
+        btnExit?.addEventListener('click', () => { window.location.href = 'https://www.google.com'; });
+        btnGo?.addEventListener('click', () => { hideGate(); });
+        showGate(); update();
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init, { once: true });
+      } else { init(); }
+    })();
+  </script>
+
+  <!-- TWITCH státusz (változatlan, a gate után) -->
+  <script>
+    const TWITCH_CHANNEL = 'al1vehunter';
+    const TWITCH_CLIENT_ID = 'jbdr5e5x1wx0idyrg77mxy7m6efcln';
+    const TWITCH_ACCESS_TOKEN = 'iwgyh0o4c6az9oo5v2prr0hnj12wge';
+    const statusElement = document.getElementById('twitch-status');
+
+    async function checkTwitchStatus() {
+      if (!TWITCH_CLIENT_ID || !TWITCH_ACCESS_TOKEN || !statusElement ||
+          TWITCH_CLIENT_ID.includes('IDE_MASOLD') || TWITCH_ACCESS_TOKEN.includes('IDE_MASOLD')) {
+        console.error("Twitch adatok hiányoznak vagy nincsenek kitöltve! A státusz jelző nem fog működni.");
+        return;
+      }
+      const url = `https://api.twitch.tv/helix/streams?user_login=${TWITCH_CHANNEL}`;
+      try {
+        const response = await fetch(url, {
+          headers: { 'Client-ID': TWITCH_CLIENT_ID, 'Authorization': `Bearer ${TWITCH_ACCESS_TOKEN}` }
+        });
+        const data = await response.json();
+        if (data.data && data.data.length > 0) {
+          statusElement.classList.remove('hidden');
+        } else {
+          statusElement.classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('Hiba a Twitch API lekérdezése közben:', error);
+        statusElement.classList.add('hidden');
+      }
+    }
+    document.addEventListener('DOMContentLoaded', checkTwitchStatus);
+    setInterval(checkTwitchStatus, 180000);
+  </script>
+</body>
+</html>
+
+
