@@ -380,10 +380,3 @@ footer p { max-width: 800px; margin: 0 auto 10px auto; line-height: 1.6; }
   font-weight: 700;
   text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
 }
-
-/* A BEST és NEW jelvények áthelyezése a jobb oldalra */
-.card-rank-badge.font-best,
-.card-rank-badge.font-new {
-  left: auto; /* Kikapcsoljuk a bal oldalt */
-  right: 25px; /* Átrakjuk a jobb oldalra */
-}
