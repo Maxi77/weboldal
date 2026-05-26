@@ -555,6 +555,41 @@ body{
   color:white;
 }
 
+.star-rating{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:60px;
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* csillag shape */
+.star-icon{
+  width:60px;
+  height:60px;
+  fill:#FFD700; /* arany sárga */
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+  position:absolute;
+}
+
+/* szám a csillag közepén */
+.star-text{
+  position:relative;
+  font-size:13px;
+  font-weight:800;
+  color:#000;
+  z-index:2;
+}
+
+/* hover glow */
+.casino-card:hover .star-icon{
+  filter: drop-shadow(0 0 14px rgba(255, 215, 0, 0.9));
+  transform: scale(1.05);
+  transition:0.3s;
+}
 
 
 
