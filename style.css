@@ -603,5 +603,184 @@ body{
   font-size: 12px;
 }
 
+/* Alapbeállítások resetelése */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Sötét háttér a teljes oldalnak */
+body {
+    background-color: #0b0b12;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Konténer a kártyáknak */
+.card-container {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* A kártya fő stílusa */
+.card {
+    background: linear-gradient(145deg, #131322, #0f0f1a);
+    border: 2px solid rgba(147, 51, 234, 0.3); /* Halvány lila szegély */
+    border-radius: 24px;
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(147, 51, 234, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* #1 Jelvény a bal felső sarokban */
+.badge {
+    position: absolute;
+    top: 0;
+    left: 25px;
+    background: #6d28d9; /* Lila */
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 10px 14px 18px 14px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%); /* Alul fecskefarkú kivágás */
+    box-shadow: 0 4px 10px rgba(109, 40, 217, 0.4);
+}
+
+/* Csillag értékelés a jobb felső sarokban */
+.rating {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 65px;
+    height: 65px;
+}
+
+/* fénylő sárga csillag */
+.star-icon {
+    color: #facc15;
+    font-size: 4rem;
+    position: absolute;
+    /* Neon ragyogás effekt a csillagnak */
+    filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.6));
+}
+
+.rating-number {
+    position: relative;
+    color: #000;
+    font-weight: 700;
+    font-size: 1.05rem;
+    z-index: 1;
+    margin-top: 4px; /* Finom igazítás a csillag közepére */
+}
+
+/* Kártya fejléc (Logó + Nevek) */
+.card-header {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+/* Ideiglenes logó stílus */
+.logo-placeholder {
+    font-size: 2.5rem;
+    color: #a855f7;
+    margin-bottom: 10px;
+}
+
+.brand-name {
+    color: #ffffff;
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.sub-name {
+    color: #a855f7; /* Világosabb lila szöveg */
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+/* Lista stílusai */
+.features-list {
+    list-style: none;
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+.features-list li {
+    color: #b3b3c6; /* Finom szürkésfehér szöveg */
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: flex-start;
+    line-height: 1.4;
+}
+
+/* Pipa ikonok */
+.check-icon {
+    color: #a855f7;
+    margin-right: 12px;
+    margin-top: 3px;
+    font-size: 1.1rem;
+}
+
+/* A kiemelt zöld "NO KYC" sor */
+.features-list li.highlight {
+    color: #22c55e; /* Élénk zöld */
+    font-weight: 600;
+}
+
+.features-list li.highlight .check-icon {
+    color: #22c55e; /* A zöld sorban a pipa is zöld */
+}
+
+/* PLAY NOW Gomb */
+.cta-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: linear-gradient(90deg, #7c3aed, #6d28d9);
+    color: #ffffff;
+    text-decoration: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3);
+}
+
+/* Gomb hover effekt (fénylés amikor ráviszed az egeret) */
+.cta-button:hover {
+    background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+    transform: translateY(-2px);
+}
+
 
 
