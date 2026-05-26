@@ -8,32 +8,30 @@
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-  <!-- INLINE STÍLUS a gate-hez (Brave-safe) -->
   <style>
-    :root{
-      /* ha a style.css-ben vannak ezek, ez a blokk csak tartalék */
-      --card-background:#1e1e1e; --border-color:#333; --primary-text-color:#e0e0e0;
-      --secondary-text-color:#a0a0a0; --accent-color:#bb86fc;
+    :root {
+      --card-background:#131322; --border-color:#333; --primary-text-color:#e0e0e0;
+      --secondary-text-color:#a0a0a0; --accent-color:#a855f7;
     }
     /* Gate overlay */
-    .gate-overlay{position:fixed;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.72);z-index:3000}
+    .gate-overlay{position:fixed;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.85);z-index:3000}
     .gate-hidden{display:none!important}
-    .gate-dialog{width:min(640px,92vw);background:var(--card-background);border:1px solid var(--border-color);
+    .gate-dialog{width:min(640px,92vw);background:var(--card-background);border:1px solid rgba(147, 51, 234, 0.3);
       border-radius:16px;padding:1.25rem 1.25rem 1rem;box-shadow:0 24px 48px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.02) inset}
     .gate-dialog h2{margin-bottom:.75rem;font-size:1.4rem;color:var(--primary-text-color);text-align:center}
     .gate-text{text-align:center;max-width:60ch;margin:0 auto 1.25rem auto;color:var(--secondary-text-color);line-height:1.55;font-size:.98rem}
     .gate-checks{display:flex;flex-direction:column;align-items:center;gap:.8rem;margin-bottom:1rem}
-    .gate-row{display:grid;grid-template-columns:20px 1fr;column-gap:.6rem;align-items:start;width:100%;max-width:640px;text-align:left}
+    .gate-row{display:grid;grid-template-columns:20px 1fr;column-gap:.6rem;align-items:start;width:100%;max-width:640px;text-align:left;cursor:pointer}
     .gate-row input[type="checkbox"]{width:18px;height:18px;margin-top:2px;accent-color:var(--accent-color);cursor:pointer}
-    .gate-row span{display:block;line-height:1.45}
+    .gate-row span{display:block;line-height:1.45;color:#b3b3c6}
     .gate-actions{display:flex;justify-content:center;gap:.6rem}
-    .gbtn{border:1px solid var(--border-color);background:var(--card-background);color:var(--primary-text-color);
+    .gbtn{border:1px solid rgba(147, 51, 234, 0.3);background:#0f0f1a;color:var(--primary-text-color);
       padding:.6rem 1rem;border-radius:10px;font-weight:600;cursor:pointer;transition:transform .15s ease,background-color .2s ease,border-color .2s ease,opacity .2s ease}
-    .gbtn:hover{transform:translateY(-1px)}
-    .gbtn-primary{background:var(--accent-color);color:#000;border-color:transparent;opacity:.6}
+    .gbtn:hover{transform:translateY(-1px);border-color:var(--accent-color)}
+    .gbtn-primary{background:linear-gradient(90deg, #7c3aed, #6d28d9);color:#fff;border-color:transparent;opacity:.6}
     .gbtn-primary:disabled{cursor:not-allowed;opacity:.45}
     .gbtn-primary:not(:disabled){opacity:1}
     .gbtn-secondary{background:#262626}
@@ -44,7 +42,6 @@
 </head>
 
 <body>
-  <!-- GATE OVERLAY (Brave-barát) -->
   <div id="gateOverlay" class="gate-overlay" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
     <div class="gate-dialog">
       <h2 id="gateTitle">Verification Required</h2>
@@ -69,7 +66,6 @@
     </div>
   </div>
 
-  <!-- A TELJES OLDALAD TARTALMA – #app-root alá csomagolva -->
   <div id="app-root" class="app-hidden">
     <nav class="main-nav">
       <ul>
@@ -94,112 +90,143 @@
         <h2 class="section-title">Best Offers</h2>
         <div class="casino-grid">
 
-           <a href="https://shuffle.com?r=Al1ve" target="_blank" class="casino-card">
-            <div class="card-badge">BEST</div>
-            <img src="images/shuffle.png" alt="Shuffle">
+          <div class="casino-card dynamic-card">
+            <div class="card-rank-badge">#1</div>
             <div class="star-rating">
-            <svg viewBox="0 0 24 24" class="star-icon">
-            <path d="M12 2l3.1 6.3 7 1-5 4.9 1.2 7-6.3-3.3-6.3 3.3 1.2-7-5-4.9 7-1z"/>
-            </svg>
-            <span class="star-text">9.8</span>
+              <i class="fa-solid fa-star star-icon"></i>
+              <span class="star-text">9.8</span>
             </div>
-            <h3>Shuffle</h3>
-            <p> 
-              100% welcome bonus first deposit up to 1k$<br>
-              Crypto Deposits & Withdrawals<br>
-              Weekly/Monthly Promotions, Rakeback, Cashback<br>
-              Instant Cashout<br>
-              <span class="green">NO KYC</span><br>  
-          </p>
-        </a>
-          
-           <a href="acebet.co/welcome/r/al1ve" target="_blank" class="casino-card">
-            <div class="card-badge">BEST</div>
-            <img src="images/acebetrb.png" alt="Acebet">
-            <h3>Acebet</h3>
-            <p>
-              1$ Welcome Bonus or 25FS in Le Cowboy + 100% Deposit bonus<br>
-              Crypto/Card Deposits & Withdrawals<br>
-              Weekly/Monthly Promotions, Cashback<br>
-              Challanges and Slot Battles<br>
-              <span class="red">Request KYC</span><br>
-            </p>
-          </a>
+            <div class="card-logo-container">
+              <img src="images/shuffle.png" alt="Shuffle">
+            </div>
+            <h3>SHUFFLE</h3>
+            <h4 class="sub-brand">Shuffle</h4>
+            <ul class="card-features">
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 100% welcome bonus first deposit up to 1k$</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto Deposits & Withdrawals</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Weekly/Monthly Promotions, Rakeback, Cashback</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Instant Cashout</li>
+              <li class="green-highlight"><i class="fa-solid fa-circle-check check-icon"></i> NO KYC</li>
+            </ul>
+            <a href="https://shuffle.com?r=Al1ve" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
 
-           <a href="https://tinyurl.com/infiaff?bid=400&lid=317&aid=SRSj9Pdp3&cid=9080" target="_blank" class="casino-card">
-            <div class="card-badge">New</div>
-            <img src="images/stealthrbpng.png" alt="Stealthbet">
-            <h3>StealthBet</h3>
-            <p>
-              Crypto/Card deposit/cashout<br>
-              Deposit bonuses (100FS after first depsoit)<br>
-              100€ daily gw if you deposit and wagered min 10€<br>
-              You can find all further details on Discord<br>
-              <span class="red">Request KYC</span><br>
-            </p>
-          </a>
+          <div class="casino-card dynamic-card">
+            <div class="card-rank-badge font-best">BEST</div>
+            <div class="card-logo-container">
+              <img src="images/acebetrb.png" alt="Acebet">
+            </div>
+            <h3>ACEBET</h3>
+            <h4 class="sub-brand">Acebet</h4>
+            <ul class="card-features">
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 1$ Welcome Bonus or 25FS in Le Cowboy + 100% Deposit bonus</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto/Card Deposits & Withdrawals</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Weekly/Monthly Promotions, Cashback</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Challenges and Slot Battles</li>
+              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
+            </ul>
+            <a href="https://acebet.co/welcome/r/al1ve" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
 
-            <a href="https://lunubet.one/al1vehunter.im" target="_blank" class="casino-card">
-            <div class="card-badge">New</div>
-            <img src="images/lunubetrb.png" alt="LunuBet">
-            <h3>LunuBet</h3>
-            <p>
-              <span class="red">HUNTER </span>Promocode<br>
-              Crypto/Card deposit/cashout<br>
-              120% Deposit bonuses <br>
-              <span class="red">Request KYC</span><br>
-            </p>
-          </a>
+          <div class="casino-card dynamic-card">
+            <div class="card-rank-badge font-new">NEW</div>
+            <div class="card-logo-container">
+              <img src="images/stealthrbpng.png" alt="Stealthbet">
+            </div>
+            <h3>STEALTHBET</h3>
+            <h4 class="sub-brand">StealthBet</h4>
+            <ul class="card-features">
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto/Card deposit/cashout</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Deposit bonuses (100FS after first deposit)</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 100€ daily gw if you deposit and wagered min 10€</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> You can find all further details on Discord</li>
+              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
+            </ul>
+            <a href="https://tinyurl.com/infiaff?bid=400&lid=317&aid=SRSj9Pdp3&cid=9080" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
 
-            <a href="https://m.affs.com/redirect.aspx?mid=1241&sid=12756&cid=&pid=&affid=9279" target="_blank" class="casino-card">
-            <div class="card-badge">New</div>
-            <img src="images/Bisonrb.png" alt="Bison">
-            <h3>Bison Casino</h3>
-            <p>
-              Crypto/Card deposit/cashout<br>
-              12 Free FS Sweet Bonanza (50x wager and max 32USD max co)<br>
-              Cashout 1-2 Day<br>
-               <span class="red">Request KYC</span><br>
-            </p>
-          </a>
-          
-          <a href="https://refpa04636.pro/L?tag=d_4427689m_129584c_AL1VE1X&site=4427689&ad=129584&r=registration" target="_blank" class="casino-card">
-            <img src="images/1xbitr.png" alt="1xBit">
-            <h3>1xBit</h3>
-            <p>
-              <span class="red">AL1VE1X </span>Promocode<br>
-              Crypto deposit/cashout<br>
-              Sports betting <br>
-              Instant Cashout <br>
-              150% Deposit bonus + 50 no wager fs<br>
-              <span class="green">NO KYC</span><br>
-            </p>
-          </a>
+          <div class="casino-card dynamic-card">
+            <div class="card-rank-badge font-new">NEW</div>
+            <div class="card-logo-container">
+              <img src="images/lunubetrb.png" alt="LunuBet">
+            </div>
+            <h3>LUNUBET</h3>
+            <h4 class="sub-brand">LunuBet</h4>
+            <ul class="card-features">
+              <li><i class="fa-solid fa-circle-check check-icon"></i> <span class="text-accent">HUNTER</span> Promocode</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto/Card deposit/cashout</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 120% Deposit bonuses</li>
+              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
+            </ul>
+            <a href="https://lunubet.one/al1vehunter.im" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
 
-          <a href="https://www.nifoe1md.com/69PDQW/71B7BTM/" target="_blank" class="casino-card">
-             <div class="card-badge">New</div>
-            <img src="images/egolog.png" alt="Ego logó">
-            <h3>EgoGames</h3>
-            <p>
-              Card/Crypto deposit/withdraw<br>
-              110% Deposit bonus for first time deposit (30x wager)<br>
-              Weekly, Monthly bonuses<br>
-              VIP lvl / Cashback<br>
-              <span class="red">Request KYC</span><br>
-            </p>
-          </a>
-          
-          <a href="https://www.nifoe1md.com/69PDQW/5653MC3/" target="_blank" class="casino-card">
-            <img src="images/luckybet.png" alt="Luckybet logó">
-            <h3>Lucky Bet</h3>
-            <p>
-              Card/Crypto deposit/withdraw<br>
-              100% Deposit bonus for first time deposit<br>
-              Weekly, Monthly bonuses<br>
-              <span class="red">AL1VE </span>Promocode<br>
-              <span class="red">Request KYC</span><br>
-            </p>
-          </a>
+          <div class="casino-card dynamic-card">
+            <div class="card-rank-badge font-new">NEW</div>
+            <div class="card-logo-container">
+              <img src="images/Bisonrb.png" alt="Bison">
+            </div>
+            <h3>BISON CASINO</h3>
+            <h4 class="sub-brand">Bison Casino</h4>
+            <ul class="card-features">
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto/Card deposit/cashout</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 12 Free FS Sweet Bonanza (50x wager and max 32USD max co)</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Cashout 1-2 Day</li>
+              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
+            </ul>
+            <a href="https://m.affs.com/redirect.aspx?mid=1241&sid=12756&cid=&pid=&affid=9279" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+
+          <div class="casino-card dynamic-card">
+            <div class="card-logo-container">
+              <img src="images/1xbitr.png" alt="1xBit">
+            </div>
+            <h3>1XBIT</h3>
+            <h4 class="sub-brand">1xBit</h4>
+            <ul class="card-features">
+              <li><i class="fa-solid fa-circle-check check-icon"></i> <span class="text-accent">AL1VE1X</span> Promocode</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto deposit/cashout</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Sports betting</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Instant Cashout</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 150% Deposit bonus + 50 no wager fs</li>
+              <li class="green-highlight"><i class="fa-solid fa-circle-check check-icon"></i> NO KYC</li>
+            </ul>
+            <a href="https://refpa04636.pro/L?tag=d_4427689m_129584c_AL1VE1X&site=4427689&ad=129584&r=registration" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+
+          <div class="casino-card dynamic-card">
+            <div class="card-rank-badge font-new">NEW</div>
+            <div class="card-logo-container">
+              <img src="images/egolog.png" alt="Ego logó">
+            </div>
+            <h3>EGOGAMES</h3>
+            <h4 class="sub-brand">EgoGames</h4>
+            <ul class="card-features">
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Card/Crypto deposit/withdraw</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 110% Deposit bonus for first time deposit (30x wager)</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Weekly, Monthly bonuses</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> VIP lvl / Cashback</li>
+              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
+            </ul>
+            <a href="https://www.nifoe1md.com/69PDQW/71B7BTM/" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+
+          <div class="casino-card dynamic-card">
+            <div class="card-logo-container">
+              <img src="images/luckybet.png" alt="Luckybet logó">
+            </div>
+            <h3>LUCKY BET</h3>
+            <h4 class="sub-brand">Lucky Bet</h4>
+            <ul class="card-features">
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Card/Crypto deposit/withdraw</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 100% Deposit bonus for first time deposit</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Weekly, Monthly bonuses</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> <span class="text-accent">AL1VE</span> Promocode</li>
+              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
+            </ul>
+            <a href="https://www.nifoe1md.com/69PDQW/5653MC3/" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+
         </div>
       </section>
 
@@ -208,41 +235,55 @@
       <section id="crab-casinos">
         <h2 class="section-title">Crab Casinos</h2>
         <div class="casino-grid">
-          <a href="https://wzbw.xarvilo.com/?mid=240180_1424294" target="_blank" class="casino-card">
-            <img src="images/wazamba.png" alt="Wazamba Logó">
-            <h3>Wazamba</h3>
-            <p>
-              100% Deposit Bonus-500<br>
-              Bonus crab game<br>
-              Weekly Free Spins<br>
-              2-3 day cashout<br>
-              <span class="red">Request KYC</span><br>
-            </p>
-          </a>
 
-          <a href="https://pup.1uptiva.com/?mid=358350_2068504" target="_blank" class="casino-card">
-            <div class="card-badge">New</div>
-            <img src="images/pwrupcasi.png" alt="2up logó">
-            <h3>Power UP Casino</h3>
-            <p>
-              Sport and Slots deposit bonuses+ Free Spins<br>
-              Crypto and card Deposits & Withdrawals<br>
-              payment within 1-7 days<br>
-              <span class="red">Request KYC</span><br>
-            </p>
-          </a>
+          <div class="casino-card dynamic-card">
+            <div class="card-logo-container">
+              <img src="images/wazamba.png" alt="Wazamba Logó">
+            </div>
+            <h3>WAZAMBA</h3>
+            <h4 class="sub-brand">Wazamba</h4>
+            <ul class="card-features">
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 100% Deposit Bonus-500</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Bonus crab game</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Weekly Free Spins</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 2-3 day cashout</li>
+              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
+            </ul>
+            <a href="https://wzbw.xarvilo.com/?mid=240180_1424294" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
 
-          <a href="https://sgc.xarvilo.com/?mid=240180_1424296" target="_blank" class="casino-card">
-            <img src="images/sg.png" alt="Sg Logó">
-            <h3>Sg Casino</h3>
-            <p>
-              100% Deposit Bonus-500<br>
-              Bonus crab game<br>
-              Weekly Free Spins<br>
-              2-3 day cashout<br>
-              <span class="red">Request KYC</span><br>
-            </p>
-          </a>
+          <div class="casino-card dynamic-card">
+            <div class="card-rank-badge font-new">NEW</div>
+            <div class="card-logo-container">
+              <img src="images/pwrupcasi.png" alt="2up logó">
+            </div>
+            <h3>POWER UP CASINO</h3>
+            <h4 class="sub-brand">Power UP Casino</h4>
+            <ul class="card-features">
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Sport and Slots deposit bonuses+ Free Spins</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto and card Deposits & Withdrawals</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> payment within 1-7 days</li>
+              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
+            </ul>
+            <a href="https://pup.1uptiva.com/?mid=358350_2068504" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+
+          <div class="casino-card dynamic-card">
+            <div class="card-logo-container">
+              <img src="images/sg.png" alt="Sg Logó">
+            </div>
+            <h3>SG CASINO</h3>
+            <h4 class="sub-brand">Sg Casino</h4>
+            <ul class="card-features">
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 100% Deposit Bonus-500</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Bonus crab game</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> Weekly Free Spins</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 2-3 day cashout</li>
+              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
+            </ul>
+            <a href="https://sgc.xarvilo.com/?mid=240180_1424296" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+
         </div>
       </section>
 
@@ -261,11 +302,10 @@
 
     <footer>
       <p>Excessive gambling can lead to addiction. Please gamble responsibly and only play with money you can afford to lose.</p>
-      <p>&copy; 2025 al1ve. All rights reserved.</p>
+      <p>&copy; 2026 al1ve. All rights reserved.</p>
     </footer>
-  </div><!-- /#app-root -->
+  </div>
 
-  <!-- GATE LOGIKA (mindig mutat, jóváhagyásig rejt mindent) -->
   <script>
     (function () {
       const OVR = document.getElementById('gateOverlay');
@@ -306,7 +346,6 @@
     })();
   </script>
 
-  <!-- TWITCH státusz (változatlan, a gate után) -->
   <script>
     const TWITCH_CHANNEL = 'al1vehunter';
     const TWITCH_CLIENT_ID = 'jbdr5e5x1wx0idyrg77mxy7m6efcln';
@@ -316,7 +355,7 @@
     async function checkTwitchStatus() {
       if (!TWITCH_CLIENT_ID || !TWITCH_ACCESS_TOKEN || !statusElement ||
           TWITCH_CLIENT_ID.includes('IDE_MASOLD') || TWITCH_ACCESS_TOKEN.includes('IDE_MASOLD')) {
-        console.error("Twitch adatok hiányoznak vagy nincsenek kitöltve! A státusz jelző nem fog működni.");
+        console.error("Twitch adatok hiányoznak! A státusz jelző nem fog működni.");
         return;
       }
       const url = `https://api.twitch.tv/helix/streams?user_login=${TWITCH_CHANNEL}`;
@@ -331,7 +370,7 @@
           statusElement.classList.add('hidden');
         }
       } catch (error) {
-        console.error('Hiba a Twitch API lekérdezése közben:', error);
+        console.error('Hiba a Twitch API közben:', error);
         statusElement.classList.add('hidden');
       }
     }
@@ -340,41 +379,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
