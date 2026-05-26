@@ -168,6 +168,33 @@ header h1 {
   margin-top: 3px;
 }
 
+/* ================================================= */
+/* CSILLAG RAGYOGÁSA HOVERKOR                         */
+/* ================================================= */
+
+/* Amikor a kaszinó kártya fölé visszük a kurzort (.casino-card.dynamic-card:hover),
+   akkor a benne lévő csillagra (.star-icon) a következő stílusok lépjenek érvénybe: */
+.casino-card.dynamic-card:hover .star-icon {
+  /* Fokozzuk a csillag ragyogását és növeljük az auráját */
+  filter: drop-shadow(0 0 14px rgba(250, 204, 21, 0.9));
+  
+  /* Enyhén megnöveljük a csillagot, hogy még hangsúlyosabb legyen */
+  transform: scale(1.05);
+  
+  /* Hozzáadunk egy finom átmenetet az animációhoz, hogy simább legyen */
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Szintén hozzá kell adni egy finom átmenetet az eredeti .star-icon-hoz,
+   hogy a ragyogás megszűnése is sima legyen: */
+.star-icon {
+  /* ... (az eredeti stílusok) ... */
+  filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.7));
+  
+  /* Finom átmenet */
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
 /* LOGÓK ÉS CÍMEK ELRENDEZÉSE */
 .card-logo-container {
   height: 60px;
