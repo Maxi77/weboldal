@@ -498,7 +498,7 @@
       <div id="publicGwTitle" class="gw-title-header">25$ FTD EgoGames</div>
     </div>
 
-    <!-- STOPPER (Helyi 30 másodperces visszaszámláló) -->
+    <!-- STOPPER -->
     <div id="publicTimerCard" class="timer-card">
       <div id="timerTitleText" class="timer-title"><i class="fa-solid fa-stopwatch"></i> Hátralévő Idő</div>
       <div id="timerDisplay" class="timer-display">00:30</div>
@@ -535,15 +535,15 @@
         <h3 style="margin: 0 0 10px 0; color: #ff9900;"><i class="fa-solid fa-stopwatch"></i> Stopper Vezérlő</h3>
         
         <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-          <button class="action-btn" style="background: linear-gradient(90deg, #ff9900, #ff5500);" onclick="localStartTimer()">
+          <button class="action-btn" style="background: linear-gradient(90deg, #ff9900, #ff5500);" onclick="adminStartTimer()">
             <i class="fa-solid fa-play"></i> Indítás (30s)
           </button>
           
-          <button class="action-btn" style="background: linear-gradient(90deg, #eab308, #ca8a04);" onclick="localPauseTimer()">
+          <button class="action-btn" style="background: linear-gradient(90deg, #eab308, #ca8a04);" onclick="adminPauseTimer()">
             <i class="fa-solid fa-pause"></i> Megállítás
           </button>
           
-          <button class="action-btn" style="background: linear-gradient(90deg, #ef4444, #dc2626);" onclick="localResetTimer()">
+          <button class="action-btn" style="background: linear-gradient(90deg, #ef4444, #dc2626);" onclick="adminResetTimer()">
             <i class="fa-solid fa-rotate-left"></i> Nullázás / Elrejtés
           </button>
         </div>
@@ -554,17 +554,17 @@
         <h3 style="margin-top: 0;">Sorsolás Indítása</h3>
         
         <div style="margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px;">
-          <label><strong>Sávok száma:</strong></label>
-          <select id="winnerCountSelect" style="padding: 8px 12px; background: #090910; color: #fff; border: 1px solid #333355; border-radius: 6px;" onchange="changeLaneCount()">
-            <option value="1">1 Sáv</option>
-            <option value="2">2 Sáv</option>
-            <option value="3">3 Sáv</option>
-            <option value="4">4 Sáv</option>
-            <option value="5">5 Sáv</option>
+          <label><strong>Nyertesek száma:</strong></label>
+          <select id="winnerCountSelect" style="padding: 8px 12px; background: #090910; color: #fff; border: 1px solid #333355; border-radius: 6px;" onchange="changeWinnerCount()">
+            <option value="1">1 Nyertes</option>
+            <option value="2">2 Nyertes</option>
+            <option value="3">3 Nyertes</option>
+            <option value="4">4 Nyertes</option>
+            <option value="5">5 Nyertes</option>
           </select>
         </div>
 
-        <button id="adminSpinBtn" class="action-btn" onclick="startSpin()"><i class="fa-solid fa-play"></i> PÖRGETÉS!</button>
+        <button id="adminSpinBtn" class="action-btn" onclick="adminTriggerSpin()"><i class="fa-solid fa-play"></i> PÖRGETÉS!</button>
       </div>
 
       <!-- GIVEAWAY NEVE -->
@@ -609,10 +609,10 @@
     let players = ["Krexy", "Kakos", "Valentino", "Dani", "Gamer123", "Slayer99"];
     let currentWinners = [];
 
-    // Stopper változók
+    // Stopper & Pörgetés szinkronizációhoz BroadcastChannel
     let timerInterval = null;
     let secondsLeft = 30;
-    let isPaused = false;
+    const giveawayChannel = new BroadcastChannel('al1ve_giveaway_channel');
 
     const rollersArea = document.getElementById('rollersArea');
 
@@ -626,6 +626,24 @@
       renderRollerLanes(1);
       renderWinners();
     });
+
+    // Üzenetek kezelése a BroadcastChannel-en keresztül (élő szinkron a vendégeknek)
+    giveawayChannel.onmessage = (event) => {
+      const data = event.data;
+      if (data.action === 'timer_start') {
+        runClientTimer(data.seconds, false);
+      } else if (data.action === 'timer_pause') {
+        runClientTimer(data.seconds, true);
+      } else if (data.action === 'timer_reset') {
+        resetClientTimer();
+      } else if (data.action === 'spin_start') {
+        // Ha az admin rányomott, a vendégek is lefuttatják ugyanazt a pörgetést a kapott nyertesekkel!
+        executeSpinAnimation(data.winnerCount, data.selectedWinners, data.currentPlayers);
+      } else if (data.action === 'title_update') {
+        currentGwTitle = data.title;
+        document.getElementById('publicGwTitle').innerText = currentGwTitle;
+      }
+    };
 
     document.addEventListener('keydown', (e) => {
       if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') verifyAdminAccess();
@@ -645,8 +663,34 @@
       renderAdminTable();
     }
 
-    // --- STOPPER FUNKCIÓK (Helyi, stabil, azonnali visszaszámlálás) ---
-    function localStartTimer() {
+    // --- STOPPER VEZÉRLÉS (ADMIN) ---
+    function adminStartTimer() {
+      secondsLeft = 30;
+      triggerTimerInterval();
+      giveawayChannel.postMessage({ action: 'timer_start', seconds: secondsLeft });
+    }
+
+    function adminPauseTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      giveawayChannel.postMessage({ action: 'timer_pause', seconds: secondsLeft });
+      
+      const timerDisplay = document.getElementById('timerDisplay');
+      const timerTitleText = document.getElementById('timerTitleText');
+      timerDisplay.style.color = "#eab308";
+      timerDisplay.style.textShadow = "0 0 10px #eab308";
+      timerTitleText.innerHTML = '<i class="fa-solid fa-pause"></i> STOPPER MEGÁLLÍTVA';
+    }
+
+    function adminResetTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      secondsLeft = 30;
+      giveawayChannel.postMessage({ action: 'timer_reset' });
+      resetClientTimer();
+    }
+
+    function triggerTimerInterval() {
+      if (timerInterval) clearInterval(timerInterval);
+
       const timerCard = document.getElementById('publicTimerCard');
       const timerDisplay = document.getElementById('timerDisplay');
       const timerTitleText = document.getElementById('timerTitleText');
@@ -655,13 +699,6 @@
       timerDisplay.style.color = "#fff";
       timerDisplay.style.textShadow = "0 0 10px #ff9900";
       timerTitleText.innerHTML = '<i class="fa-solid fa-stopwatch"></i> HÁTRALÉVŐ IDŐ';
-
-      if (timerInterval) clearInterval(timerInterval);
-
-      if (!isPaused) {
-        secondsLeft = 30;
-      }
-      isPaused = false;
 
       updateTimerDisplay(secondsLeft);
 
@@ -679,25 +716,47 @@
       }, 1000);
     }
 
-    function localPauseTimer() {
+    function runClientTimer(sec, isPaused) {
+      secondsLeft = sec;
       if (timerInterval) clearInterval(timerInterval);
-      isPaused = true;
 
+      const timerCard = document.getElementById('publicTimerCard');
       const timerDisplay = document.getElementById('timerDisplay');
       const timerTitleText = document.getElementById('timerTitleText');
 
-      timerDisplay.style.color = "#eab308";
-      timerDisplay.style.textShadow = "0 0 10px #eab308";
-      timerTitleText.innerHTML = '<i class="fa-solid fa-pause"></i> STOPPER MEGÁLLÍTVA';
+      timerCard.style.display = 'block';
+
+      if (isPaused) {
+        timerDisplay.style.color = "#eab308";
+        timerDisplay.style.textShadow = "0 0 10px #eab308";
+        timerTitleText.innerHTML = '<i class="fa-solid fa-pause"></i> STOPPER MEGÁLLÍTVA';
+        updateTimerDisplay(secondsLeft);
+        return;
+      }
+
+      timerDisplay.style.color = "#fff";
+      timerDisplay.style.textShadow = "0 0 10px #ff9900";
+      timerTitleText.innerHTML = '<i class="fa-solid fa-stopwatch"></i> HÁTRALÉVŐ IDŐ';
+      updateTimerDisplay(secondsLeft);
+
+      timerInterval = setInterval(() => {
+        secondsLeft--;
+        if (secondsLeft <= 0) {
+          clearInterval(timerInterval);
+          timerDisplay.innerText = "00:00";
+          timerDisplay.style.color = "#ff0055";
+          timerDisplay.style.textShadow = "0 0 10px #ff0055";
+          timerTitleText.innerText = "LEJÁRT AZ IDŐ!";
+        } else {
+          updateTimerDisplay(secondsLeft);
+        }
+      }, 1000);
     }
 
-    function localResetTimer() {
+    function resetClientTimer() {
       if (timerInterval) clearInterval(timerInterval);
-      isPaused = false;
       secondsLeft = 30;
-
-      const timerCard = document.getElementById('publicTimerCard');
-      timerCard.style.display = 'none';
+      document.getElementById('publicTimerCard').style.display = 'none';
     }
 
     function updateTimerDisplay(sec) {
@@ -705,21 +764,22 @@
       document.getElementById('timerDisplay').innerText = `00:${formatted}`;
     }
 
-    // --- PÖRGETŐ LOGIKA ---
-    function changeLaneCount() {
+    // --- PÖRGETŐ LOGIKA ÉS ÉLŐ SZINKRON ---
+    function changeWinnerCount() {
       const count = parseInt(document.getElementById('winnerCountSelect').value);
-      renderRollerLanes(count);
+      renderRollerLanes(count, players);
     }
 
-    function renderRollerLanes(count) {
+    function renderRollerLanes(count, currentPlayersList) {
       rollersArea.innerHTML = '';
+      const activePlayers = currentPlayersList || players;
 
       for (let i = 0; i < count; i++) {
         const wrapper = document.createElement('div');
         wrapper.className = 'roller-wrapper';
         wrapper.innerHTML = `
           <div class="roller-label">
-            <span><i class="fa-solid fa-circle-play"></i> SÁV #${i + 1}</span>
+            <span><i class="fa-solid fa-circle-play"></i> NYERTES SÁV #${i + 1}</span>
           </div>
           <div class="selector-arrow"></div>
           <div class="roller-container">
@@ -730,21 +790,21 @@
         `;
         rollersArea.appendChild(wrapper);
 
-        fillTrackWithCards(`rollerTrack_${i}`, players[0] || "---");
+        fillTrackWithCards(`rollerTrack_${i}`, activePlayers[0] || "---", activePlayers);
       }
     }
 
-    function fillTrackWithCards(trackId, winnerName) {
+    function fillTrackWithCards(trackId, winnerName, activePlayers) {
       const track = document.getElementById(trackId);
       if (!track) return;
 
       track.innerHTML = '';
       const CARD_COUNT = 80;
       const WINNER_INDEX = 65;
-      const chance = getPlayerChance();
+      const chance = (activePlayers && activePlayers.length > 0) ? (100 / activePlayers.length).toFixed(1) : 0;
 
       for (let i = 0; i < CARD_COUNT; i++) {
-        let name = (i === WINNER_INDEX) ? winnerName : players[Math.floor(Math.random() * players.length)];
+        let name = (i === WINNER_INDEX) ? winnerName : activePlayers[Math.floor(Math.random() * activePlayers.length)];
         const card = document.createElement('div');
         card.className = 'name-card';
         card.innerHTML = `<div>${name || '---'}</div><div class="chance-tag">${chance}%</div>`;
@@ -752,11 +812,12 @@
       }
     }
 
-    function startSpin() {
+    // Admin elindítja a pörgetést, és kiküldi a vendégeknek is a nyerteseket
+    function adminTriggerSpin() {
       const count = parseInt(document.getElementById('winnerCountSelect').value);
 
       if (players.length < count) {
-        alert(`Nincs elég játékos! Legalább ${count} játékos kell ennyi sávhoz.`);
+        alert(`Nincs elég játékos! Legalább ${count} játékos kell ennyi nyerteshez.`);
         return;
       }
 
@@ -770,17 +831,32 @@
         tempPool.splice(randomIndex, 1);
       }
 
+      // Üzenetküldés a vendégek ablakainak/lapjainak
+      giveawayChannel.postMessage({
+        action: 'spin_start',
+        winnerCount: count,
+        selectedWinners: selectedWinners,
+        currentPlayers: [...players]
+      });
+
+      // Lefuttatjuk magánál az adminnál is
+      executeSpinAnimation(count, selectedWinners, [...players]);
+    }
+
+    function executeSpinAnimation(count, selectedWinners, activePlayers) {
       const adminBtn = document.getElementById('adminSpinBtn');
       if (adminBtn) adminBtn.disabled = true;
 
-      renderRollerLanes(count);
+      renderRollerLanes(count, activePlayers);
       selectedWinners.forEach((winnerName, index) => {
-        fillTrackWithCards(`rollerTrack_${index}`, winnerName);
+        fillTrackWithCards(`rollerTrack_${index}`, winnerName, activePlayers);
       });
 
       setTimeout(() => {
         selectedWinners.forEach((winnerName, index) => {
           const track = document.getElementById(`rollerTrack_${index}`);
+          if (!track) return;
+
           const cardWidth = 140; 
           const containerWidth = track.parentElement.clientWidth;
           const WINNER_INDEX = 65;
@@ -811,10 +887,6 @@
 
         if (adminBtn) adminBtn.disabled = false;
       }, 6200);
-    }
-
-    function getPlayerChance() {
-      return players.length === 0 ? 0 : (100 / players.length).toFixed(1);
     }
 
     function toggleWinnersAccordion() {
@@ -849,8 +921,13 @@
       if (input.value.trim() !== "") {
         currentGwTitle = input.value.trim();
         document.getElementById('publicGwTitle').innerText = currentGwTitle;
+        giveawayChannel.postMessage({ action: 'title_update', title: currentGwTitle });
         alert("Giveaway neve frissítve!");
       }
+    }
+
+    function getPlayerChance() {
+      return players.length === 0 ? 0 : (100 / players.length).toFixed(1);
     }
 
     function renderAdminTable() {
