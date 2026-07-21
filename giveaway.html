@@ -89,7 +89,7 @@
       margin: 0 auto;
       padding: 20px;
       position: relative;
-      z-index: 2; /* A tartalom a háttér és a délibáb felett marad */
+      z-index: 2;
     }
 
     .main-nav {
@@ -242,32 +242,38 @@
       backdrop-filter: blur(5px);
     }
 
+    .gw-counter-badge {
+      display: inline-block;
+      background: rgba(0, 255, 204, 0.1);
+      border: 1px solid #00ffcc;
+      color: #00ffcc;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
     .winners-list {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       justify-content: center;
-      margin-top: 15px;
+      margin-top: 10px;
     }
 
     .winner-badge {
       background: rgba(168, 85, 247, 0.15);
       border: 1px solid var(--accent);
       color: #fff;
-      padding: 8px 16px;
+      padding: 10px 18px;
       border-radius: 10px;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 600;
       display: flex;
-      flex-direction: column;
       align-items: center;
-    }
-
-    .winner-badge .gw-title-tag {
-      font-size: 0.75rem;
-      color: #00ffcc;
-      font-weight: 400;
-      margin-top: 2px;
+      gap: 8px;
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
     }
 
     .admin-section {
@@ -384,9 +390,12 @@
     <!-- TÖBBSOROS PÖRGETŐ TERÜLET -->
     <div id="rollersArea"></div>
 
-    <!-- NYERTESEK HISTÓRIA (Publikus) -->
+    <!-- EDDIGI GW SZÁMLÁLÓ ÉS NYERTESEK SÁVA (Publikus) -->
     <div id="publicWinnersContainer" class="winners-section" style="display: none;">
-      <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Nyertesek</h2>
+      <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Eddigi Nyertesek</h2>
+      <div id="gwCounterBadge" class="gw-counter-badge">
+        Összesen: 0 giveaway sorsolás
+      </div>
       <div id="publicWinnersList" class="winners-list">
         <span style="color: var(--subtext);">Még nincs rögzített nyertes.</span>
       </div>
@@ -491,6 +500,7 @@
     let isWinnersPublic = false; 
     let players = ["Krexy", "Kakos", "Valentino", "Dani", "Gamer123", "Slayer99"];
     let winnersHistory = [];
+    let totalGwCount = 0; // Számláló a lefolytatott GW-khez
 
     const rollersArea = document.getElementById('rollersArea');
 
@@ -540,7 +550,7 @@
       }
     });
 
-    // --- TÖBBSOROS PÖRGETŐ ELEMEK REPULETI LEKEZELÉSE ---
+    // --- TÖBBSOROS PÖRGETŐ ELEMEK LEKEZELÉSE ---
 
     function renderRollerLanes(count) {
       rollersArea.innerHTML = '';
@@ -550,7 +560,7 @@
         wrapper.className = 'roller-wrapper';
         wrapper.innerHTML = `
           <div class="roller-label">
-            <span><i class="fa-solid fa-circle-play"></i> ${i + 1}. NYERTES SÁV</span>
+            <span><i class="fa-solid fa-circle-play"></i> ${i + 1}. NYERTES</span>
           </div>
           <div class="selector-arrow"></div>
           <div class="roller-container">
@@ -642,13 +652,16 @@
       }, 100);
 
       setTimeout(() => {
+        totalGwCount++; // Növeljük a megrendezett giveaway-ek számát
+
         winnerList.forEach((winnerName, index) => {
           const resBox = document.getElementById(`winnerResult_${index}`);
           if (resBox) {
             resBox.innerHTML = `🎉 ${index + 1}. NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
           }
 
-          winnersHistory.unshift({ name: winnerName, gw: title });
+          // Csak a nevet mentjük, nem a címet
+          winnersHistory.unshift({ name: winnerName });
         });
 
         renderWinners();
@@ -690,6 +703,11 @@
     function renderWinners() {
       const publicList = document.getElementById('publicWinnersList');
       const adminList = document.getElementById('adminWinnersList');
+      const counterBadge = document.getElementById('gwCounterBadge');
+
+      if (counterBadge) {
+        counterBadge.innerText = `Összesen: ${totalGwCount} giveaway sorsolás`;
+      }
 
       if (winnersHistory.length === 0) {
         publicList.innerHTML = '<span style="color: var(--subtext);">Még nincs rögzített nyertes.</span>';
@@ -697,10 +715,10 @@
         return;
       }
 
+      // Csak a nyertesek jelennek meg egymás mellett, megnevezés/cím nélkül
       const badgesHtml = winnersHistory.map(w => `
         <div class="winner-badge">
-          <div><i class="fa-solid fa-trophy" style="color:#ffd700;"></i> ${w.name}</div>
-          <div class="gw-title-tag">${w.gw}</div>
+          <i class="fa-solid fa-trophy" style="color:#ffd700;"></i> ${w.name}
         </div>
       `).join('');
 
@@ -711,6 +729,7 @@
     function clearWinnersHistory() {
       if (confirm("Törölni szeretnéd a nyertesek előzményeit?")) {
         winnersHistory = [];
+        totalGwCount = 0;
         renderWinners();
       }
     }
