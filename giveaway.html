@@ -671,7 +671,7 @@
     let archivedRounds = [];
     let totalGwCount = 0;
 
-    let timerInterval = null;
+    let countdownInterval = null;
 
     const rollersArea = document.getElementById('rollersArea');
 
@@ -734,28 +734,19 @@
         renderWinners();
       });
 
-      // STOPPER SZINKRON
+      // STOPPER SZINKRONIZÁCIÓ
       db.ref('global_timer').on('value', (snapshot) => {
         const timerData = snapshot.val();
         handleLiveTimerSync(timerData);
       });
     }
 
-    // --- STOPPER LOGIKA ---
+    // --- STOPPER VEZÉRLÉS ---
     function startGlobalTimer(seconds = 30) {
-      db.ref('global_timer').once('value', (snapshot) => {
-        const data = snapshot.val();
-        let duration = seconds;
-
-        if (data && data.state === 'paused' && data.remainingSeconds > 0) {
-          duration = data.remainingSeconds;
-        }
-
-        db.ref('global_timer').set({
-          state: 'running',
-          endTime: Date.now() + (duration * 1000),
-          remainingSeconds: duration
-        });
+      db.ref('global_timer').set({
+        state: 'running',
+        remaining: seconds,
+        timestamp: Date.now()
       });
     }
 
@@ -763,13 +754,10 @@
       db.ref('global_timer').once('value', (snapshot) => {
         const data = snapshot.val();
         if (data && data.state === 'running') {
-          const now = Date.now();
-          const rem = Math.max(0, Math.ceil((data.endTime - now) / 1000));
-          
           db.ref('global_timer').set({
             state: 'paused',
-            endTime: null,
-            remainingSeconds: rem
+            remaining: data.remaining,
+            timestamp: Date.now()
           });
         }
       });
@@ -778,13 +766,13 @@
     function resetGlobalTimer() {
       db.ref('global_timer').set({
         state: 'reset',
-        endTime: null,
-        remainingSeconds: 30
+        remaining: 30,
+        timestamp: Date.now()
       });
     }
 
     function handleLiveTimerSync(timerData) {
-      if (timerInterval) clearInterval(timerInterval);
+      if (countdownInterval) clearInterval(countdownInterval);
 
       const timerCard = document.getElementById('publicTimerCard');
       const timerDisplay = document.getElementById('timerDisplay');
@@ -798,7 +786,7 @@
       timerCard.style.display = 'block';
 
       if (timerData.state === 'paused') {
-        const rem = timerData.remainingSeconds !== undefined ? timerData.remainingSeconds : 30;
+        const rem = timerData.remaining !== undefined ? timerData.remaining : 30;
         const secFormatted = rem < 10 ? `0${rem}` : rem;
         timerDisplay.innerText = `00:${secFormatted}`;
         timerDisplay.style.color = "#eab308";
@@ -812,21 +800,23 @@
         timerDisplay.style.textShadow = "0 0 10px #ff9900";
         timerTitleText.innerHTML = '<i class="fa-solid fa-stopwatch"></i> HÁTRALÉVŐ IDŐ';
 
-        timerInterval = setInterval(() => {
-          const now = Date.now();
-          const remaining = Math.max(0, Math.ceil((timerData.endTime - now) / 1000));
+        let currentRemaining = timerData.remaining;
+        const secFormatted = currentRemaining < 10 ? `0${currentRemaining}` : currentRemaining;
+        timerDisplay.innerText = `00:${secFormatted}`;
 
-          if (remaining <= 0) {
-            clearInterval(timerInterval);
+        countdownInterval = setInterval(() => {
+          currentRemaining--;
+          if (currentRemaining <= 0) {
+            clearInterval(countdownInterval);
             timerDisplay.innerText = "00:00";
             timerDisplay.style.color = "#ff0055";
             timerDisplay.style.textShadow = "0 0 10px #ff0055";
             timerTitleText.innerText = "LEJÁRT AZ IDŐ!";
           } else {
-            const secFormatted = remaining < 10 ? `0${remaining}` : remaining;
-            timerDisplay.innerText = `00:${secFormatted}`;
+            const formatted = currentRemaining < 10 ? `0${currentRemaining}` : currentRemaining;
+            timerDisplay.innerText = `00:${formatted}`;
           }
-        }, 200);
+        }, 1000);
       }
     }
 
@@ -890,10 +880,8 @@
         tempPool.splice(randomIndex, 1);
       }
 
-      // Elindítjuk lokálisan is azonnal az adminnál
       executeSimultaneousSpin(selectedWinners, currentGwTitle, true);
 
-      // Elküldjük Firebase-be, hogy a nézőknél is lefusson
       db.ref('live_spin').set({
         winners: selectedWinners,
         gwTitle: currentGwTitle,
@@ -942,7 +930,8 @@
           currentWinners.unshift(winnerName);
         });
 
-        // Csak az indító menti Firebase-be a nyerteseket, hogy ne legyen duplikáció az adatbázisban
+        renderWinners();
+
         if (isInitiator) {
           saveWinnersToFirebase();
         }
