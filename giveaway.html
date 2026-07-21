@@ -660,18 +660,17 @@
     const DEVICE_SECRET_KEY = "al1ve_authorized_admin_device_2026";
 
     let currentGwTitle = "25$ FTD EgoGames";
-    let players = ["Krexy", "Kakos", "Valentino", "Dani", "Gamer123", "Slayer99"];
+    let players = [];
     let archivedRounds = [];
     let totalGwCount = 0;
 
     let activeTimer = null;
     let currentSecondsLeft = 30;
-    let serverTimeOffset = 0; // SZERVEREKKEL VALÓ ÓRA-SZINKRONIZÁCIÓ KORREKCIÓ
+    let serverTimeOffset = 0;
 
     const rollersArea = document.getElementById('rollersArea');
 
     window.addEventListener('DOMContentLoaded', () => {
-      // Óra eltérés mérése Firebase szerverhez képest
       db.ref('.info/serverTimeOffset').on('value', (snap) => {
         serverTimeOffset = snap.val() || 0;
       });
@@ -701,11 +700,23 @@
 
     function showAdminPanel() {
       document.getElementById('adminPanelSection').style.display = 'block';
-      renderAdminTable();
+      renderAdminTableUI();
     }
 
     // --- FIREBASE LISTENERS ---
     function listenToFirebase() {
+      // JÁTÉKOSOK ÉLŐ SZINKRONIZÁLÁSA
+      db.ref('players').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data && Array.isArray(data)) {
+          players = data;
+        } else {
+          players = [];
+        }
+        renderAdminTableUI();
+        renderRollerLanes(1);
+      });
+
       db.ref('live_spin').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data && data.timestamp > Date.now() - 10000) {
@@ -732,7 +743,6 @@
         renderWinners();
       });
 
-      // PONTOS STOPPER ADATBÁZIS FIGYELŐ
       db.ref('timer_sync').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -741,7 +751,62 @@
       });
     }
 
-    // --- PONTOS STOPPER VEZÉRLÉS ---
+    // --- JÁTÉKOSOK MENTÉSE FIREBASE-BE ---
+    function savePlayersToFirebase() {
+      db.ref('players').set(players);
+    }
+
+    function addPlayer() {
+      const nameInput = document.getElementById('playerNameInput');
+      const name = nameInput.value.trim();
+
+      if (!name) return;
+
+      players.push(name);
+      nameInput.value = '';
+      nameInput.focus();
+      savePlayersToFirebase();
+    }
+
+    function deletePlayer(index) {
+      players.splice(index, 1);
+      savePlayersToFirebase();
+    }
+
+    function clearAllPlayers() {
+      if (confirm("Biztosan törölni szeretnéd az összes játékost?")) {
+        players = [];
+        savePlayersToFirebase();
+      }
+    }
+
+    function shufflePlayers() {
+      for (let i = players.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [players[i], players[j]] = [players[j], players[i]];
+      }
+      savePlayersToFirebase();
+    }
+
+    function renderAdminTableUI() {
+      const tbody = document.getElementById('playerTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      const chance = getPlayerChance();
+
+      players.forEach((p, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${index + 1}.</td>
+          <td><strong>${p}</strong></td>
+          <td><span style="color: var(--accent); font-weight: bold;">${chance}%</span></td>
+          <td><button class="delete-btn" onclick="deletePlayer(${index})"><i class="fa-solid fa-trash"></i></button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // --- STOPPER VEZÉRLÉS ---
     function adminTriggerTimer(actionOrSeconds) {
       let action = 'start';
       let secs = 30;
@@ -785,7 +850,6 @@
       }
 
       if (data.action === 'start') {
-        // Szerver időhöz viszonyított pontos hátralévő idő kiszámítása
         const nowServerTime = Date.now() + serverTimeOffset;
         const elapsedSeconds = Math.floor((nowServerTime - (data.time || nowServerTime)) / 1000);
         currentSecondsLeft = data.seconds - elapsedSeconds;
@@ -858,7 +922,7 @@
       const chance = getPlayerChance();
 
       for (let i = 0; i < CARD_COUNT; i++) {
-        let name = (i === WINNER_INDEX) ? winnerName : players[Math.floor(Math.random() * players.length)];
+        let name = (i === WINNER_INDEX) ? winnerName : players[Math.floor(Math.random() * (players.length || 1))];
         const card = document.createElement('div');
         card.className = 'name-card';
         card.innerHTML = `<div>${name || '---'}</div><div class="chance-tag">${chance}%</div>`;
@@ -924,7 +988,6 @@
         });
       }, 100);
 
-      // PÖRGETÉS VÉGE (6.2s múlva)
       setTimeout(() => {
         winnerList.forEach((winnerName, index) => {
           const resBox = document.getElementById(`winnerResult_${index}`);
@@ -935,7 +998,6 @@
 
         if (adminBtn) adminBtn.disabled = false;
 
-        // AMINT KIHÚZTUK A NYERTEST: RÁKÉRDEZÉS AZ ELMENTÉSRE (ADMINNÁL)
         if (isInitiator) {
           setTimeout(() => {
             const confirmSave = confirm(`🎉 A PÖRGETÉS VÉGET ÉRT!\n\nKihúzott nyertes(ek):\n${winnerList.join(', ')}\n\nSzeretnéd elmenteni a nyerteseket az 'Eddigi Nyertesek' archívumba a vendégek számára?`);
@@ -948,7 +1010,6 @@
       }, 6200);
     }
 
-    // NYERTESEK MENTÉSE AZ EDDIGI NYERTESEK ARCHÍVUMÁBA
     function saveWinnersToArchive(winnerList) {
       const now = new Date();
       const dateStr = now.toLocaleDateString('hu-HU') + ' ' + now.toLocaleTimeString('hu-HU', {hour: '2-digit', minute:'2-digit'});
@@ -1033,57 +1094,6 @@
         db.ref('gw_title').set(currentGwTitle);
         alert("Giveaway neve frissítve!");
       }
-    }
-
-    function renderAdminTable() {
-      const tbody = document.getElementById('playerTableBody');
-      tbody.innerHTML = '';
-      const chance = getPlayerChance();
-
-      players.forEach((p, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${index + 1}.</td>
-          <td><strong>${p}</strong></td>
-          <td><span style="color: var(--accent); font-weight: bold;">${chance}%</span></td>
-          <td><button class="delete-btn" onclick="deletePlayer(${index})"><i class="fa-solid fa-trash"></i></button></td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      renderRollerLanes(1);
-    }
-
-    function addPlayer() {
-      const nameInput = document.getElementById('playerNameInput');
-      const name = nameInput.value.trim();
-
-      if (!name) return;
-
-      players.push(name);
-      nameInput.value = '';
-      nameInput.focus();
-      renderAdminTable();
-    }
-
-    function deletePlayer(index) {
-      players.splice(index, 1);
-      renderAdminTable();
-    }
-
-    function clearAllPlayers() {
-      if (confirm("Biztosan törölni szeretnéd az összes játékost?")) {
-        players = [];
-        renderAdminTable();
-      }
-    }
-
-    function shufflePlayers() {
-      for (let i = players.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [players[i], players[j]] = [players[j], players[i]];
-      }
-      renderAdminTable();
     }
   </script>
 </body>
