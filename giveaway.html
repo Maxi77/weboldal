@@ -18,7 +18,7 @@
   <style>
     :root {
       --bg-color: #0b0b14;
-      --card-bg: rgba(19, 19, 34, 0.88); /* Kicsit áttetsző, hogy átsejtsen a háttér */
+      --card-bg: rgba(19, 19, 34, 0.88);
       --accent: #a855f7;
       --text: #e0e0e0;
       --subtext: #a0a0a0;
@@ -44,44 +44,65 @@
       width: 700px;
       max-width: 90vw;
       height: auto;
-      opacity: 0.18; /* Finom háttérhatás */
-      filter: blur(8px) grayscale(20%); /* Elhomályosítva */
+      opacity: 0.22;
+      filter: blur(6px) grayscale(20%);
       pointer-events: none;
       z-index: 0;
     }
 
-    /* --- SIVATAGI DÉLIBÁB / HŐHULLÁM EFFEKT (FELFELÉ MOZGÓ VONALAK) --- */
+    /* --- DÉLIBÁB / IZZÓ FURFUS LEVEGŐ EFFEKTUS (MINDENKINEK LÁTHATÓ) --- */
     .mirage-overlay {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       pointer-events: none;
-      z-index: 1;
+      z-index: 10; /* A tartalom előtt lebeg finom áttetszőséggel */
       background: repeating-linear-gradient(
         0deg,
-        rgba(168, 85, 247, 0.03) 0px,
-        rgba(168, 85, 247, 0.03) 2px,
-        transparent 2px,
-        transparent 8px
+        rgba(168, 85, 247, 0.08) 0px,
+        rgba(255, 0, 85, 0.05) 10px,
+        rgba(255, 255, 255, 0.02) 20px,
+        transparent 30px
       );
-      animation: heatHaze 8s linear infinite;
-      opacity: 0.7;
+      background-size: 100% 200%;
+      animation: heatRise 4s linear infinite;
+      mix-blend-mode: screen;
+      opacity: 0.85;
+      filter: url('#heatDistortion') blur(1px);
     }
 
-    @keyframes heatHaze {
+    /* Második réteg a finomabb izzásért */
+    .mirage-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9;
+      background: linear-gradient(0deg, rgba(168, 85, 247, 0.12) 0%, transparent 80%);
+      animation: pulseGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes heatRise {
       0% {
-        transform: translateY(0) scaleY(1);
-        filter: hue-rotate(0deg);
+        background-position: 0% 100%;
+        transform: scaleY(1) skewX(0deg);
       }
       50% {
-        transform: translateY(-20px) scaleY(1.02);
+        transform: scaleY(1.02) skewX(0.5deg);
       }
       100% {
-        transform: translateY(-40px) scaleY(1);
-        filter: hue-rotate(10deg);
+        background-position: 0% 0%;
+        transform: scaleY(1) skewX(0deg);
       }
+    }
+
+    @keyframes pulseGlow {
+      0% { opacity: 0.4; }
+      100% { opacity: 0.9; }
     }
 
     .main-container {
@@ -89,12 +110,12 @@
       margin: 0 auto;
       padding: 20px;
       position: relative;
-      z-index: 2;
+      z-index: 20; /* Felfelé hozva a délibáb fölé */
     }
 
     .main-nav {
       position: relative;
-      z-index: 2;
+      z-index: 20;
     }
 
     /* TÖBBSOROS PÖRGETŐ STÍLUSOK */
@@ -370,8 +391,19 @@
 
 <body>
 
-  <!-- HÁTTÉR ELEMEK (.PNG) -->
+  <!-- SVG SZŰRŐ A DÉLIBÁB / LEVEGŐ IZZÁS TORZÍTÁSHOZ -->
+  <svg style="display:none;">
+    <filter id="heatDistortion">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.08" numOctaves="1" result="noise">
+        <animate attributeName="baseFrequency" dur="6s" values="0.02 0.08; 0.02 0.15; 0.02 0.08" repeatCount="indefinite"/>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
+  <!-- HÁTTÉR ELEMEK (.PNG ÉS LÁTHATÓ IZZÓ DÉLIBÁB RÉTEGEK) -->
   <img src="images/hiena.png" alt="Hyena Background" class="bg-hyena">
+  <div class="mirage-glow"></div>
   <div class="mirage-overlay"></div>
 
   <nav class="main-nav">
@@ -500,7 +532,7 @@
     let isWinnersPublic = false; 
     let players = ["Krexy", "Kakos", "Valentino", "Dani", "Gamer123", "Slayer99"];
     let winnersHistory = [];
-    let totalGwCount = 0; // Számláló a lefolytatott GW-khez
+    let totalGwCount = 0;
 
     const rollersArea = document.getElementById('rollersArea');
 
@@ -593,7 +625,7 @@
       }
     }
 
-    // --- SORSOLÁSI LOGIKA (DUPLIKÁCIÓ SZŰRÉSSEL) ---
+    // --- SORSOLÁSI LOGIKA ---
 
     function startLiveSpin() {
       const countSelect = document.getElementById('winnerCountSelect');
@@ -652,7 +684,7 @@
       }, 100);
 
       setTimeout(() => {
-        totalGwCount++; // Növeljük a megrendezett giveaway-ek számát
+        totalGwCount++;
 
         winnerList.forEach((winnerName, index) => {
           const resBox = document.getElementById(`winnerResult_${index}`);
@@ -660,7 +692,6 @@
             resBox.innerHTML = `🎉 ${index + 1}. NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
           }
 
-          // Csak a nevet mentjük, nem a címet
           winnersHistory.unshift({ name: winnerName });
         });
 
@@ -715,7 +746,6 @@
         return;
       }
 
-      // Csak a nyertesek jelennek meg egymás mellett, megnevezés/cím nélkül
       const badgesHtml = winnersHistory.map(w => `
         <div class="winner-badge">
           <i class="fa-solid fa-trophy" style="color:#ffd700;"></i> ${w.name}
