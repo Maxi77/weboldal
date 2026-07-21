@@ -574,15 +574,15 @@
         <h3 style="margin: 0 0 10px 0; color: #ff9900;"><i class="fa-solid fa-stopwatch"></i> Stopper Vezérlő</h3>
         
         <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-          <button class="action-btn" style="background: linear-gradient(90deg, #ff9900, #ff5500);" onclick="startGlobalTimer(30)">
+          <button class="action-btn" style="background: linear-gradient(90deg, #ff9900, #ff5500);" onclick="adminTriggerTimer(30)">
             <i class="fa-solid fa-play"></i> Indítás (30s)
           </button>
           
-          <button class="action-btn" style="background: linear-gradient(90deg, #eab308, #ca8a04);" onclick="pauseGlobalTimer()">
+          <button class="action-btn" style="background: linear-gradient(90deg, #eab308, #ca8a04);" onclick="adminTriggerTimer('pause')">
             <i class="fa-solid fa-pause"></i> Megállítás
           </button>
           
-          <button class="action-btn" style="background: linear-gradient(90deg, #ef4444, #dc2626);" onclick="resetGlobalTimer()">
+          <button class="action-btn" style="background: linear-gradient(90deg, #ef4444, #dc2626);" onclick="adminTriggerTimer('reset')">
             <i class="fa-solid fa-rotate-left"></i> Nullázás / Elrejtés
           </button>
         </div>
@@ -671,7 +671,8 @@
     let archivedRounds = [];
     let totalGwCount = 0;
 
-    let countdownInterval = null;
+    let activeTimer = null;
+    let currentSecondsLeft = 30;
 
     const rollersArea = document.getElementById('rollersArea');
 
@@ -704,7 +705,7 @@
       renderAdminTable();
     }
 
-    // --- ÉLŐ DB SZINKRONIZÁCIÓ ---
+    // --- FIREBASE LISTENERS ---
     function listenToFirebase() {
       db.ref('live_spin').on('value', (snapshot) => {
         const data = snapshot.val();
@@ -734,90 +735,81 @@
         renderWinners();
       });
 
-      // STOPPER SZINKRONIZÁCIÓ
-      db.ref('global_timer').on('value', (snapshot) => {
-        const timerData = snapshot.val();
-        handleLiveTimerSync(timerData);
-      });
-    }
-
-    // --- STOPPER VEZÉRLÉS ---
-    function startGlobalTimer(seconds = 30) {
-      db.ref('global_timer').set({
-        state: 'running',
-        remaining: seconds,
-        timestamp: Date.now()
-      });
-    }
-
-    function pauseGlobalTimer() {
-      db.ref('global_timer').once('value', (snapshot) => {
+      // EGYSZERŰSÍTETT STOPPER ADATBÁZIS FIGYELŐ
+      db.ref('timer_sync').on('value', (snapshot) => {
         const data = snapshot.val();
-        if (data && data.state === 'running') {
-          db.ref('global_timer').set({
-            state: 'paused',
-            remaining: data.remaining,
-            timestamp: Date.now()
-          });
+        if (data) {
+          applyTimerCommand(data.action, data.seconds);
         }
       });
     }
 
-    function resetGlobalTimer() {
-      db.ref('global_timer').set({
-        state: 'reset',
-        remaining: 30,
-        timestamp: Date.now()
+    // --- STABIL STOPPER VEZÉRLÉS ---
+    function adminTriggerTimer(actionOrSeconds) {
+      let action = 'start';
+      let secs = 30;
+
+      if (typeof actionOrSeconds === 'number') {
+        action = 'start';
+        secs = actionOrSeconds;
+      } else {
+        action = actionOrSeconds; // 'pause' vagy 'reset'
+      }
+
+      db.ref('timer_sync').set({
+        action: action,
+        seconds: secs,
+        time: Date.now()
       });
     }
 
-    function handleLiveTimerSync(timerData) {
-      if (countdownInterval) clearInterval(countdownInterval);
-
+    function applyTimerCommand(action, seconds) {
       const timerCard = document.getElementById('publicTimerCard');
       const timerDisplay = document.getElementById('timerDisplay');
       const timerTitleText = document.getElementById('timerTitleText');
 
-      if (!timerData || timerData.state === 'reset') {
+      if (activeTimer) clearInterval(activeTimer);
+
+      if (action === 'reset') {
         timerCard.style.display = 'none';
         return;
       }
 
       timerCard.style.display = 'block';
 
-      if (timerData.state === 'paused') {
-        const rem = timerData.remaining !== undefined ? timerData.remaining : 30;
-        const secFormatted = rem < 10 ? `0${rem}` : rem;
-        timerDisplay.innerText = `00:${secFormatted}`;
+      if (action === 'pause') {
         timerDisplay.style.color = "#eab308";
         timerDisplay.style.textShadow = "0 0 10px #eab308";
         timerTitleText.innerHTML = '<i class="fa-solid fa-pause"></i> STOPPER MEGÁLLÍTVA';
         return;
       }
 
-      if (timerData.state === 'running') {
+      if (action === 'start') {
+        currentSecondsLeft = seconds || 30;
         timerDisplay.style.color = "#fff";
         timerDisplay.style.textShadow = "0 0 10px #ff9900";
         timerTitleText.innerHTML = '<i class="fa-solid fa-stopwatch"></i> HÁTRALÉVŐ IDŐ';
+        
+        updateDisplay(currentSecondsLeft);
 
-        let currentRemaining = timerData.remaining;
-        const secFormatted = currentRemaining < 10 ? `0${currentRemaining}` : currentRemaining;
-        timerDisplay.innerText = `00:${secFormatted}`;
-
-        countdownInterval = setInterval(() => {
-          currentRemaining--;
-          if (currentRemaining <= 0) {
-            clearInterval(countdownInterval);
+        activeTimer = setInterval(() => {
+          currentSecondsLeft--;
+          if (currentSecondsLeft <= 0) {
+            clearInterval(activeTimer);
             timerDisplay.innerText = "00:00";
             timerDisplay.style.color = "#ff0055";
             timerDisplay.style.textShadow = "0 0 10px #ff0055";
             timerTitleText.innerText = "LEJÁRT AZ IDŐ!";
           } else {
-            const formatted = currentRemaining < 10 ? `0${currentRemaining}` : currentRemaining;
-            timerDisplay.innerText = `00:${formatted}`;
+            updateDisplay(currentSecondsLeft);
           }
         }, 1000);
       }
+    }
+
+    function updateDisplay(sec) {
+      const formatted = sec < 10 ? `0${sec}` : sec;
+      document.getElementById('timerDisplay').innerText = `00:${formatted}`;
     }
 
     function renderRollerLanes(count) {
@@ -932,9 +924,8 @@
 
         renderWinners();
 
-        if (isInitiator) {
-          saveWinnersToFirebase();
-        }
+        // AZONNALI ÉS BIZTOS MENTÉS A FIREBASE-BE
+        saveWinnersToFirebase();
 
         if (adminBtn) adminBtn.disabled = false;
       }, 6200);
