@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Al1ve Giveaway - Case Opener</title>
+  <title>Al1ve Giveaway - Live Multi-Opener</title>
   <link rel="icon" type="image/png" href="images/hiena.png">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-  <!-- Firebase SDK-k az élő szinkronizációhoz -->
+  <!-- Firebase SDK-k -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -32,20 +32,43 @@
       padding: 0;
     }
 
+    .main-container {
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* TÖBBSOROS PÖRGETŐ STÍLUSOK */
+    #rollersArea {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      margin-top: 20px;
+    }
+
     .roller-wrapper {
-      max-width: 900px;
-      margin: 20px auto;
       background: var(--card-bg);
       border: 2px solid rgba(168, 85, 247, 0.4);
       border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 0 30px rgba(124, 58, 237, 0.2);
+      padding: 15px;
+      box-shadow: 0 0 25px rgba(124, 58, 237, 0.15);
       position: relative;
+    }
+
+    .roller-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
     }
 
     .roller-container {
       width: 100%;
-      height: 120px;
+      height: 100px;
       overflow: hidden;
       position: relative;
       background: #090910;
@@ -67,14 +90,14 @@
 
     .selector-arrow {
       position: absolute;
-      top: -10px;
+      top: -8px;
       left: 50%;
       transform: translateX(-50%);
       width: 0; 
       height: 0; 
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-top: 12px solid #ff0055;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 10px solid #ff0055;
       z-index: 11;
     }
 
@@ -89,8 +112,8 @@
     }
 
     .name-card {
-      min-width: 140px;
-      height: 90px;
+      min-width: 130px;
+      height: 80px;
       margin: 0 5px;
       background: linear-gradient(145deg, #1a1a2e, #161626);
       border: 1px solid #333355;
@@ -100,19 +123,30 @@
       justify-content: center;
       align-items: center;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #fff;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
       user-select: none;
     }
 
     .name-card .chance-tag {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--accent);
       font-weight: 600;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
+    .single-winner-result {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 8px #00ffcc;
+      min-height: 28px;
+      text-align: center;
+    }
+
+    /* GOMBOK ÉS VEZÉRLŐK */
     .action-btn {
       display: inline-block;
       background: linear-gradient(90deg, #7c3aed, #6d28d9);
@@ -138,23 +172,13 @@
       transform: none;
     }
 
-    .winner-box {
-      margin-top: 20px;
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc;
-      min-height: 40px;
-    }
-
     .winners-section {
-      max-width: 900px;
-      margin: 20px auto;
       background: var(--card-bg);
       border: 1px solid #2a2a40;
       border-radius: 12px;
       padding: 20px;
       text-align: center;
+      margin-top: 30px;
     }
 
     .winners-list {
@@ -186,12 +210,11 @@
     }
 
     .admin-section {
-      max-width: 900px;
-      margin: 40px auto;
       background: var(--card-bg);
       border: 2px solid #ff0055;
       border-radius: 12px;
       padding: 20px;
+      margin-top: 40px;
       display: none;
     }
 
@@ -286,117 +309,109 @@
     </ul>
   </nav>
 
-  <div style="text-align: center; margin-top: 30px;">
-    <h1><i class="fa-solid fa-gift"></i> Live Giveaway Opener</h1>
-    <div id="publicGwTitle" class="gw-title-header">25$ FTD EgoGames</div>
-  </div>
-
-  <!-- SORSOLÓ FELÜLET (Nézők & Admin) -->
-  <div class="roller-wrapper" style="text-align: center;">
-    <div class="selector-arrow"></div>
-    <div class="roller-container">
-      <div class="selector-line"></div>
-      <div id="rollerTrack" class="roller-track"></div>
+  <div class="main-container">
+    <div style="text-align: center; margin-top: 10px;">
+      <h1><i class="fa-solid fa-gift"></i> Live Giveaway Opener</h1>
+      <div id="publicGwTitle" class="gw-title-header">25$ FTD EgoGames</div>
     </div>
 
-    <div id="guestStatusMsg" style="margin-top: 20px; color: var(--subtext); font-style: italic;">
-      <i class="fa-solid fa-clock"></i> Várakozás a sorsolásra...
+    <!-- TÖBBSOROS PÖRGETŐ TERÜLET -->
+    <div id="rollersArea">
+      <!-- A JS ide generálja dinamikusan a sávokat (1, 2, 3 vagy amennyit kiválasztasz) -->
     </div>
 
-    <div id="winnerBox" class="winner-box"></div>
-  </div>
-
-  <!-- NYERTESEK SZEKCIÓ -->
-  <div id="publicWinnersContainer" class="winners-section" style="display: none;">
-    <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Nyertesek</h2>
-    <div id="publicWinnersList" class="winners-list">
-      <span style="color: var(--subtext);">Még nincs rögzített nyertes.</span>
-    </div>
-  </div>
-
-  <!-- ADMIN PANEL -->
-  <div id="adminPanelSection" class="admin-section">
-    <div class="admin-header">
-      <h2 style="color: #ff0055;"><i class="fa-solid fa-user-shield"></i> ADMIN CONTROL PANEL</h2>
-      <span style="background: #00ffcc; color: #000; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem;">
-        <i class="fa-solid fa-desktop"></i> Admin Eszköz
-      </span>
-    </div>
-
-    <!-- PÖRGETÉS BEÁLLÍTÁSOK -->
-    <div style="background: #1c1a36; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 25px; border: 1px solid var(--accent);">
-      <h3 style="margin-top: 0;">Sorsolás Indítása Élőben</h3>
-      
-      <div style="margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px;">
-        <label><strong>Nyertesek száma:</strong></label>
-        <select id="winnerCountSelect" style="padding: 8px 12px; background: #090910; color: #fff; border: 1px solid #333355; border-radius: 6px;">
-          <option value="1">1 Nyertes</option>
-          <option value="2">2 Nyertes</option>
-          <option value="3">3 Nyertes</option>
-          <option value="4">4 Nyertes</option>
-          <option value="5">5 Nyertes</option>
-        </select>
-      </div>
-
-      <button id="adminSpinBtn" class="action-btn" onclick="startLiveSpin()"><i class="fa-solid fa-play"></i> ÉLŐ PÖRGETÉS INDÍTÁSA!</button>
-    </div>
-
-    <!-- LÁTHATÓSÁG KAPCSOLÓ -->
-    <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2a2a40;">
-      <div>
-        <strong>Nyertesek Lista Láthatósága:</strong>
-        <p style="margin: 0; font-size: 0.85rem; color: var(--subtext);">Lássák a vendégek a Nyertesek dobozt?</p>
-      </div>
-      <button id="lockToggleBtn" class="toggle-lock-btn" onclick="togglePublicWinnersVisibility()">
-        <i class="fa-solid fa-lock"></i> REJTVE a publikum elől
-      </button>
-    </div>
-
-    <!-- GIVEAWAY NEVE -->
-    <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2a2a40;">
-      <label style="display: block; font-weight: 600; margin-bottom: 8px;"><i class="fa-solid fa-tag"></i> Giveaway Neve / Nyeremény:</label>
-      <div class="admin-input-group" style="margin-bottom: 0;">
-        <input type="text" id="gwTitleInput" value="25$ FTD EgoGames" placeholder="pl: 25$ FTD EgoGames" style="flex: 1;">
-        <button class="secondary-btn" onclick="updateGwTitle()">Mentés</button>
+    <!-- NYERTESEK HISTÓRIA (Publikus) -->
+    <div id="publicWinnersContainer" class="winners-section" style="display: none;">
+      <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Nyertesek</h2>
+      <div id="publicWinnersList" class="winners-list">
+        <span style="color: var(--subtext);">Még nincs rögzített nyertes.</span>
       </div>
     </div>
 
-    <h3>Játékosok hozzáadása</h3>
-    <div class="admin-input-group">
-      <input type="text" id="playerNameInput" placeholder="Játékos neve..." style="flex: 1;" onkeypress="if(event.key === 'Enter') addPlayer()">
-      <button class="action-btn" style="padding: 10px 20px;" onclick="addPlayer()">Hozzáadás</button>
-    </div>
+    <!-- ADMIN CONTROL PANEL -->
+    <div id="adminPanelSection" class="admin-section">
+      <div class="admin-header">
+        <h2 style="color: #ff0055;"><i class="fa-solid fa-user-shield"></i> ADMIN CONTROL PANEL</h2>
+        <span style="background: #00ffcc; color: #000; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem;">
+          <i class="fa-solid fa-desktop"></i> Admin Eszköz
+        </span>
+      </div>
 
-    <div style="margin-bottom: 15px; display: flex; gap: 10px;">
-      <button class="secondary-btn" onclick="shufflePlayers()"><i class="fa-solid fa-shuffle"></i> Nevek Megkavarása</button>
-      <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearAllPlayers()">Összes törlése</button>
-    </div>
+      <!-- SORSOLÁSI VEZÉRLŐ -->
+      <div style="background: #1c1a36; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 25px; border: 1px solid var(--accent);">
+        <h3 style="margin-top: 0;">Sorsolás Indítása Élőben</h3>
+        
+        <div style="margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+          <label><strong>Nyertesek száma (pörgető sávok):</strong></label>
+          <select id="winnerCountSelect" style="padding: 8px 12px; background: #090910; color: #fff; border: 1px solid #333355; border-radius: 6px;">
+            <option value="1">1 Nyertes (1 Sáv)</option>
+            <option value="2">2 Nyertes (2 Sáv Szimultán)</option>
+            <option value="3">3 Nyertes (3 Sáv Szimultán)</option>
+            <option value="4">4 Nyertes (4 Sáv Szimultán)</option>
+            <option value="5">5 Nyertes (5 Sáv Szimultán)</option>
+          </select>
+        </div>
 
-    <table class="player-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Név</th>
-          <th>Nyerési Esély (%)</th>
-          <th>Művelet</th>
-        </tr>
-      </thead>
-      <tbody id="playerTableBody"></tbody>
-    </table>
+        <button id="adminSpinBtn" class="action-btn" onclick="startLiveSpin()"><i class="fa-solid fa-play"></i> ÉLŐ SZIMULTÁN PÖRGETÉS!</button>
+      </div>
 
-    <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
+      <!-- LÁTHATÓSÁG KAPCSOLÓ -->
+      <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2a2a40;">
+        <div>
+          <strong>Nyertesek Lista Láthatósága:</strong>
+          <p style="margin: 0; font-size: 0.85rem; color: var(--subtext);">Lássák a nézők a Nyertesek előzmény dobozt?</p>
+        </div>
+        <button id="lockToggleBtn" class="toggle-lock-btn" onclick="togglePublicWinnersVisibility()">
+          <i class="fa-solid fa-lock"></i> REJTVE a publikum elől
+        </button>
+      </div>
 
-    <h3><i class="fa-solid fa-trophy"></i> Admin Nyertes Történet</h3>
-    <div style="margin-bottom: 10px;">
-      <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearWinnersHistory()">Nyertes előzmények törlése</button>
-    </div>
-    <div id="adminWinnersList" class="winners-list" style="justify-content: flex-start;">
-      <span style="color: var(--subtext);">Még nem volt sorsolás.</span>
+      <!-- GIVEAWAY NEVE -->
+      <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2a2a40;">
+        <label style="display: block; font-weight: 600; margin-bottom: 8px;"><i class="fa-solid fa-tag"></i> Giveaway Neve / Nyeremény:</label>
+        <div class="admin-input-group" style="margin-bottom: 0;">
+          <input type="text" id="gwTitleInput" value="25$ FTD EgoGames" placeholder="pl: 25$ FTD EgoGames" style="flex: 1;">
+          <button class="secondary-btn" onclick="updateGwTitle()">Mentés</button>
+        </div>
+      </div>
+
+      <h3>Játékosok hozzáadása</h3>
+      <div class="admin-input-group">
+        <input type="text" id="playerNameInput" placeholder="Játékos neve..." style="flex: 1;" onkeypress="if(event.key === 'Enter') addPlayer()">
+        <button class="action-btn" style="padding: 10px 20px;" onclick="addPlayer()">Hozzáadás</button>
+      </div>
+
+      <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+        <button class="secondary-btn" onclick="shufflePlayers()"><i class="fa-solid fa-shuffle"></i> Nevek Megkavarása</button>
+        <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearAllPlayers()">Összes törlése</button>
+      </div>
+
+      <table class="player-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Név</th>
+            <th>Nyerési Esély (%)</th>
+            <th>Művelet</th>
+          </tr>
+        </thead>
+        <tbody id="playerTableBody"></tbody>
+      </table>
+
+      <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
+
+      <h3><i class="fa-solid fa-trophy"></i> Admin Nyertes Történet</h3>
+      <div style="margin-bottom: 10px;">
+        <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearWinnersHistory()">Nyertes előzmények törlése</button>
+      </div>
+      <div id="adminWinnersList" class="winners-list" style="justify-content: flex-start;">
+        <span style="color: var(--subtext);">Még nem volt sorsolás.</span>
+      </div>
     </div>
   </div>
 
   <script>
-    // FIREBASE BEÁLLÍTÁSOK A MEGADOTT ADATBÁZIS CÍMMEL
+    // FIREBASE BEÁLLÍTÁSOK
     const firebaseConfig = {
       databaseURL: "https://giveawy-6e8f6-default-rtdb.europe-west1.firebasedatabase.app/",
       projectId: "giveawy-6e8f6"
@@ -410,11 +425,10 @@
 
     let currentGwTitle = "25$ FTD EgoGames";
     let isWinnersPublic = false; 
-    let players = ["Krexy", "Kakos", "Valentino", "Dani"];
+    let players = ["Krexy", "Kakos", "Valentino", "Dani", "Gamer123", "Slayer99"];
     let winnersHistory = [];
 
-    const rollerTrack = document.getElementById('rollerTrack');
-    const winnerBox = document.getElementById('winnerBox');
+    const rollersArea = document.getElementById('rollersArea');
 
     // Autentikáció és Eszköz Ellenőrzés
     window.addEventListener('DOMContentLoaded', () => {
@@ -423,6 +437,9 @@
       }
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('admin')) verifyAdminAccess();
+
+      // Alapértelmezett 1 sáv létrehozása betöltéskor
+      renderRollerLanes(1);
     });
 
     document.addEventListener('keydown', (e) => {
@@ -449,7 +466,7 @@
     db.ref('live_spin').on('value', (snapshot) => {
       const data = snapshot.val();
       if (data && data.timestamp > Date.now() - 10000) {
-        executeSpinAnimation(data.winners, data.gwTitle);
+        executeSimultaneousSpin(data.winners, data.gwTitle);
       }
     });
 
@@ -460,27 +477,74 @@
       }
     });
 
-    // --- SORSOLÁSI LOGIKA ---
+    // --- TÖBBSOROS PÖRGETŐ ELEMEK REPULETI LEKEZELÉSE ---
+
+    function renderRollerLanes(count) {
+      rollersArea.innerHTML = '';
+      const chance = getPlayerChance();
+
+      for (let i = 0; i < count; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'roller-wrapper';
+        wrapper.innerHTML = `
+          <div class="roller-label">
+            <span><i class="fa-solid fa-circle-play"></i> ${i + 1}. NYERTES SÁV</span>
+          </div>
+          <div class="selector-arrow"></div>
+          <div class="roller-container">
+            <div class="selector-line"></div>
+            <div id="rollerTrack_${i}" class="roller-track"></div>
+          </div>
+          <div id="winnerResult_${i}" class="single-winner-result"></div>
+        `;
+        rollersArea.appendChild(wrapper);
+
+        // Alapértelmezett kártyák feltöltése
+        fillTrackWithCards(`rollerTrack_${i}`, players[0] || "---");
+      }
+    }
+
+    function fillTrackWithCards(trackId, winnerName) {
+      const track = document.getElementById(trackId);
+      if (!track) return;
+
+      track.innerHTML = '';
+      const CARD_COUNT = 80;
+      const WINNER_INDEX = 65;
+      const chance = getPlayerChance();
+
+      for (let i = 0; i < CARD_COUNT; i++) {
+        let name = (i === WINNER_INDEX) ? winnerName : players[Math.floor(Math.random() * players.length)];
+        const card = document.createElement('div');
+        card.className = 'name-card';
+        card.innerHTML = `<div>${name || '---'}</div><div class="chance-tag">${chance}%</div>`;
+        track.appendChild(card);
+      }
+    }
+
+    // --- SORSOLÁSI LOGIKA (DUPLIKÁCIÓ SZŰRÉSSEL) ---
 
     function startLiveSpin() {
-      if (players.length === 0) {
-        alert("Nincs egyetlen játékos sem!");
+      const countSelect = document.getElementById('winnerCountSelect');
+      const requestedCount = parseInt(countSelect.value);
+
+      if (players.length < requestedCount) {
+        alert(`Nincs elég játékos! legalább ${requestedCount} játékos kell ennyi nyerteshez.`);
         return;
       }
 
-      const countSelect = document.getElementById('winnerCountSelect');
-      const winnerCount = parseInt(countSelect.value);
-      
+      // GARANTÁLTAN EGYEDI NYERTESEK KIVÁLASZTÁSA:
+      let tempPool = [...players];
       let selectedWinners = [];
-      let tempPlayers = [...players];
 
-      for (let i = 0; i < winnerCount; i++) {
-        if (tempPlayers.length === 0) break;
-        const randomIndex = Math.floor(Math.random() * tempPlayers.length);
-        selectedWinners.push(tempPlayers[randomIndex]);
-        tempPlayers.splice(randomIndex, 1);
+      for (let i = 0; i < requestedCount; i++) {
+        const randomIndex = Math.floor(Math.random() * tempPool.length);
+        const winner = tempPool[randomIndex];
+        selectedWinners.push(winner);
+        tempPool.splice(randomIndex, 1); // Eltávolítjuk a kiválasztottat, hogy többször ne nyerhessen!
       }
 
+      // Üzenet küldése a Firebase-nek (Élő szinkron)
       db.ref('live_spin').set({
         winners: selectedWinners,
         gwTitle: currentGwTitle,
@@ -488,72 +552,55 @@
       });
     }
 
-    function executeSpinAnimation(winnerList, title) {
+    function executeSimultaneousSpin(winnerList, title) {
       const adminBtn = document.getElementById('adminSpinBtn');
       if (adminBtn) adminBtn.disabled = true;
 
-      winnerBox.innerText = '';
-      let currentSpin = 0;
+      // 1. Legeneráljuk a pontosan szükséges számú pörgető sávot
+      renderRollerLanes(winnerList.length);
 
-      function runSingleSpin() {
-        if (currentSpin >= winnerList.length) {
-          if (adminBtn) adminBtn.disabled = false;
-          return;
-        }
+      // 2. Minden sávot előkészítünk a saját egyedi nyertesével
+      winnerList.forEach((winnerName, index) => {
+        fillTrackWithCards(`rollerTrack_${index}`, winnerName);
+      });
 
-        const currentWinner = winnerList[currentSpin];
-        const winnerCardIndex = buildTrackWithWinner(currentWinner);
+      // 3. EGYSZERRE (SZIMULTÁN) INDÍTJUK EL AZ ÖSSZES PÖRGETÉST
+      setTimeout(() => {
+        winnerList.forEach((winnerName, index) => {
+          const track = document.getElementById(`rollerTrack_${index}`);
+          const cardWidth = 140; 
+          const containerWidth = track.parentElement.clientWidth;
+          const WINNER_INDEX = 65;
 
-        const cardWidth = 150; 
-        const containerWidth = document.querySelector('.roller-container').clientWidth;
-        const randomOffset = Math.floor(Math.random() * 80) - 40; 
-        const targetX = (winnerCardIndex * cardWidth) - (containerWidth / 2) + (cardWidth / 2) + randomOffset;
+          // Egy kis véletlenszerű eltolás, hogy még élethűbb legyen a stop
+          const randomOffset = Math.floor(Math.random() * 60) - 30; 
+          const targetX = (WINNER_INDEX * cardWidth) - (containerWidth / 2) + (cardWidth / 2) + randomOffset;
 
-        rollerTrack.style.transition = 'none';
-        rollerTrack.style.transform = 'translateX(0px)';
+          track.style.transition = 'none';
+          track.style.transform = 'translateX(0px)';
 
-        setTimeout(() => {
-          rollerTrack.style.transition = 'transform 6s cubic-bezier(0.15, 0.9, 0.15, 1)';
-          rollerTrack.style.transform = `translateX(-${targetX}px)`;
-        }, 50);
+          setTimeout(() => {
+            track.style.transition = 'transform 6s cubic-bezier(0.15, 0.9, 0.15, 1)';
+            track.style.transform = `translateX(-${targetX}px)`;
+          }, 50);
+        });
+      }, 100);
 
-        setTimeout(() => {
-          if (winnerList.length > 1) {
-            winnerBox.innerHTML += `<div>🎉 NYERTES (${currentSpin + 1}): <span style="color:#fff;">${currentWinner}</span> 🎉</div>`;
-          } else {
-            winnerBox.innerHTML = `🎉 NYERTES: <span style="color:#fff;">${currentWinner}</span> 🎉`;
+      // 4. ANIMÁCIÓ VÉGE (6 másodperc múlva kiírjuk az eredményeket pontosan a sávok alatt)
+      setTimeout(() => {
+        winnerList.forEach((winnerName, index) => {
+          const resBox = document.getElementById(`winnerResult_${index}`);
+          if (resBox) {
+            resBox.innerHTML = `🎉 ${index + 1}. NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
           }
 
-          winnersHistory.unshift({ name: currentWinner, gw: title });
-          renderWinners();
+          // Nyertes hozzáadása a történethez
+          winnersHistory.unshift({ name: winnerName, gw: title });
+        });
 
-          currentSpin++;
-          if (currentSpin < winnerList.length) {
-            setTimeout(runSingleSpin, 2000);
-          } else {
-            if (adminBtn) adminBtn.disabled = false;
-          }
-        }, 6100);
-      }
-
-      runSingleSpin();
-    }
-
-    function buildTrackWithWinner(winnerName) {
-      rollerTrack.innerHTML = '';
-      const CARD_COUNT = 80;
-      const WINNER_CARD_INDEX = 65;
-      const chance = getPlayerChance();
-
-      for (let i = 0; i < CARD_COUNT; i++) {
-        let name = (i === WINNER_CARD_INDEX) ? winnerName : players[Math.floor(Math.random() * players.length)];
-        const card = document.createElement('div');
-        card.className = 'name-card';
-        card.innerHTML = `<div>${name}</div><div class="chance-tag">${chance}%</div>`;
-        rollerTrack.appendChild(card);
-      }
-
-      return WINNER_CARD_INDEX;
+        renderWinners();
+        if (adminBtn) adminBtn.disabled = false;
+      }, 6200);
     }
 
     function getPlayerChance() {
@@ -631,7 +678,7 @@
         tbody.appendChild(tr);
       });
 
-      if(players.length > 0) buildTrackWithWinner(players[0]);
+      renderRollerLanes(1);
     }
 
     function addPlayer() {
@@ -665,8 +712,6 @@
       }
       renderAdminTable();
     }
-
-    buildTrackWithWinner(players[0] || "");
   </script>
 </body>
 </html>
