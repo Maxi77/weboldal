@@ -606,16 +606,9 @@
   </div>
 
   <script>
-    // --- FIREBASE KONFIGURÁCIÓ ---
-    // Cseréld ki a saját ingyenes Firebase projekt adataidra! (https://console.firebase.google.com/)
+    // --- FIREBASE KONFIGURÁCIÓ (Beillesztve a linked alapján) ---
     const firebaseConfig = {
-      apiKey: "IDE_JÖN_A_SAJÁT_API_KULCSOD",
-      authDomain: "projekt-nev.firebaseapp.com",
-      databaseURL: "https://projekt-nev-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "projekt-nev",
-      storageBucket: "projekt-nev.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "1:123456789:web:abcdef"
+      databaseURL: "https://giveawy-6e8f6-default-rtdb.europe-west1.firebasedatabase.app/"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -641,10 +634,9 @@
       renderRollerLanes(1);
       renderWinners();
 
-      // --- FIREBASE ADATBÁZIS FIGYELÉSE (Valós idejű szinkron) ---
+      // --- FIREBASE ADATBÁZIS FIGYELÉSE ---
       
       // 1. Stopper figyelése
-      db.ref('giveaway/timer').on('snapshot', (snapshot) => {}); // Biztonsági dummy, rögzítjük az on() alább:
       db.ref('giveaway/timer').on('value', (snapshot) => {
         const timerData = snapshot.val();
         if (!timerData) return;
@@ -655,7 +647,6 @@
       db.ref('giveaway/spinEvent').on('value', (snapshot) => {
         const spinData = snapshot.val();
         if (!spinData) return;
-        // Csak akkor indítjuk el a animációt, ha ez egy friss esemény (időbélyeg alapján, hogy ne pörgessön újra betöltéskor)
         if (spinData.timestamp && (Date.now() - spinData.timestamp < 10000)) {
           executeSpinAnimation(spinData.winnerCount, spinData.selectedWinners, spinData.currentPlayers);
         }
@@ -691,7 +682,7 @@
       renderAdminTable();
     }
 
-    // --- STOPPER VEZÉRLÉS (ADMIN -> ADATBÁZISBA ÍR) ---
+    // --- STOPPER VEZÉRLÉS (ADMIN) ---
     function adminStartTimer() {
       db.ref('giveaway/timer').set({
         action: 'start',
@@ -722,7 +713,7 @@
       });
     }
 
-    // --- STOPPER MEGJELENÍTÉSE ÉS VISSZASZÁMLÁLÁS A VENDÉGEKNÉL IS ---
+    // --- STOPPER MEGJELENÍTÉSE ---
     function syncStopperWithFirebase(data) {
       if (localTimerInterval) clearInterval(localTimerInterval);
 
@@ -745,7 +736,6 @@
         return;
       }
 
-      // Ha start állapotban van, elindítjuk a helyi visszaszámlálást a megadott időtől
       timerDisplay.style.color = "#fff";
       timerDisplay.style.textShadow = "0 0 10px #ff9900";
       timerTitleText.innerHTML = '<i class="fa-solid fa-stopwatch"></i> HÁTRALÉVŐ IDŐ';
@@ -772,10 +762,10 @@
       document.getElementById('timerDisplay').innerText = `00:${formatted}`;
     }
 
-    // --- PÖRGETŐ LOGIKA ÉS VALÓS IDEJŰ SZINKRON ---
+    // --- PÖRGETŐ LOGIKA ---
     function changeWinnerCount() {
       const count = parseInt(document.getElementById('winnerCountSelect').value);
-      renderRollerLanes(1, players); // Alaphelyzetben frissítés
+      renderRollerLanes(1, players);
     }
 
     function renderRollerLanes(count, currentPlayersList) {
@@ -820,7 +810,6 @@
       }
     }
 
-    // Admin elindítja a pörgetést -> elmenti Firebase-be, így mindenkié egyszerre indul
     function adminTriggerSpin() {
       const count = parseInt(document.getElementById('winnerCountSelect').value);
 
@@ -839,7 +828,6 @@
         tempPool.splice(randomIndex, 1);
       }
 
-      // Küldés a Firebase-be
       db.ref('giveaway/spinEvent').set({
         winnerCount: count,
         selectedWinners: selectedWinners,
