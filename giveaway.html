@@ -375,20 +375,24 @@
 
     .archive-card {
       background: rgba(10, 10, 20, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 204, 0.3);
       border-radius: 10px;
-      padding: 12px;
+      padding: 14px;
       margin-top: 15px;
       text-align: left;
+      box-shadow: 0 0 10px rgba(0,255,204,0.05);
     }
 
     .archive-card-title {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       color: #00ffcc;
       font-weight: bold;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       border-bottom: 1px dashed rgba(255,255,255,0.1);
-      padding-bottom: 4px;
+      padding-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .action-btn {
@@ -547,16 +551,12 @@
       <div class="winners-header" onclick="toggleWinnersAccordion()">
         <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Eddigi Nyertesek</h2>
         <div id="gwCounterBadge" class="gw-counter-badge">
-          Összesen: 0 giveaway sorsolás
+          Összesen: 0 lezárt giveaway sorsolás
         </div>
         <i id="accordionArrow" class="fa-solid fa-chevron-down toggle-icon"></i>
       </div>
       <div id="winnersContent" class="winners-content">
-        <h4 style="margin: 5px 0 10px 0; color: var(--accent);">🏆 Jelenlegi kör nyertesei:</h4>
-        <div id="publicWinnersList" class="winners-list">
-          <span style="color: var(--subtext);">Még nincs rögzített nyertes a jelenlegi körben.</span>
-        </div>
-        <div id="archivedWinnersContainer" style="margin-top: 20px;"></div>
+        <div id="archivedWinnersContainer"></div>
       </div>
     </div>
 
@@ -604,12 +604,6 @@
         </div>
 
         <button id="adminSpinBtn" class="action-btn" onclick="startLiveSpin()"><i class="fa-solid fa-play"></i> ÉLŐ SZIMULTÁN PÖRGETÉS!</button>
-      </div>
-
-      <!-- KÖR LEZÁRÁSA -->
-      <div style="background: rgba(0, 255, 204, 0.05); border: 1px solid #00ffcc; padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
-        <h4 style="margin: 0 0 8px 0; color: #00ffcc;"><i class="fa-solid fa-box-archive"></i> Kör Lezárása & Archívumba Mentése</h4>
-        <button class="secondary-btn" style="border-color: #00ffcc; color: #00ffcc; font-weight: bold;" onclick="archiveCurrentRound()"><i class="fa-solid fa-lock"></i> Jelenlegi nyertesek lezárása & Új kör indítása</button>
       </div>
 
       <!-- GIVEAWAY NEVE -->
@@ -667,16 +661,21 @@
 
     let currentGwTitle = "25$ FTD EgoGames";
     let players = ["Krexy", "Kakos", "Valentino", "Dani", "Gamer123", "Slayer99"];
-    let currentWinners = [];
     let archivedRounds = [];
     let totalGwCount = 0;
 
     let activeTimer = null;
     let currentSecondsLeft = 30;
+    let serverTimeOffset = 0; // SZERVEREKKEL VALÓ ÓRA-SZINKRONIZÁCIÓ KORREKCIÓ
 
     const rollersArea = document.getElementById('rollersArea');
 
     window.addEventListener('DOMContentLoaded', () => {
+      // Óra eltérés mérése Firebase szerverhez képest
+      db.ref('.info/serverTimeOffset').on('value', (snap) => {
+        serverTimeOffset = snap.val() || 0;
+      });
+
       if (localStorage.getItem('al1ve_admin_device') === DEVICE_SECRET_KEY) {
         showAdminPanel();
       }
@@ -724,27 +723,25 @@
       db.ref('winners_history').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          currentWinners = data.currentWinners || [];
           archivedRounds = data.archivedRounds || [];
-          totalGwCount = data.totalCount || 0;
+          totalGwCount = data.totalCount || archivedRounds.length;
         } else {
-          currentWinners = [];
           archivedRounds = [];
           totalGwCount = 0;
         }
         renderWinners();
       });
 
-      // EGYSZERŰSÍTETT STOPPER ADATBÁZIS FIGYELŐ
+      // PONTOS STOPPER ADATBÁZIS FIGYELŐ
       db.ref('timer_sync').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          applyTimerCommand(data.action, data.seconds);
+          applyTimerCommand(data);
         }
       });
     }
 
-    // --- STABIL STOPPER VEZÉRLÉS ---
+    // --- PONTOS STOPPER VEZÉRLÉS ---
     function adminTriggerTimer(actionOrSeconds) {
       let action = 'start';
       let secs = 30;
@@ -753,39 +750,54 @@
         action = 'start';
         secs = actionOrSeconds;
       } else {
-        action = actionOrSeconds; // 'pause' vagy 'reset'
+        action = actionOrSeconds;
       }
 
       db.ref('timer_sync').set({
         action: action,
         seconds: secs,
-        time: Date.now()
+        time: firebase.database.ServerValue.TIMESTAMP
       });
     }
 
-    function applyTimerCommand(action, seconds) {
+    function applyTimerCommand(data) {
       const timerCard = document.getElementById('publicTimerCard');
       const timerDisplay = document.getElementById('timerDisplay');
       const timerTitleText = document.getElementById('timerTitleText');
 
-      if (activeTimer) clearInterval(activeTimer);
+      if (activeTimer) {
+        clearInterval(activeTimer);
+        activeTimer = null;
+      }
 
-      if (action === 'reset') {
+      if (data.action === 'reset') {
         timerCard.style.display = 'none';
         return;
       }
 
       timerCard.style.display = 'block';
 
-      if (action === 'pause') {
+      if (data.action === 'pause') {
         timerDisplay.style.color = "#eab308";
         timerDisplay.style.textShadow = "0 0 10px #eab308";
         timerTitleText.innerHTML = '<i class="fa-solid fa-pause"></i> STOPPER MEGÁLLÍTVA';
         return;
       }
 
-      if (action === 'start') {
-        currentSecondsLeft = seconds || 30;
+      if (data.action === 'start') {
+        // Szerver időhöz viszonyított pontos hátralévő idő kiszámítása
+        const nowServerTime = Date.now() + serverTimeOffset;
+        const elapsedSeconds = Math.floor((nowServerTime - (data.time || nowServerTime)) / 1000);
+        currentSecondsLeft = data.seconds - elapsedSeconds;
+
+        if (currentSecondsLeft <= 0) {
+          timerDisplay.innerText = "00:00";
+          timerDisplay.style.color = "#ff0055";
+          timerDisplay.style.textShadow = "0 0 10px #ff0055";
+          timerTitleText.innerText = "LEJÁRT AZ IDŐ!";
+          return;
+        }
+
         timerDisplay.style.color = "#fff";
         timerDisplay.style.textShadow = "0 0 10px #ff9900";
         timerTitleText.innerHTML = '<i class="fa-solid fa-stopwatch"></i> HÁTRALÉVŐ IDŐ';
@@ -796,6 +808,7 @@
           currentSecondsLeft--;
           if (currentSecondsLeft <= 0) {
             clearInterval(activeTimer);
+            activeTimer = null;
             timerDisplay.innerText = "00:00";
             timerDisplay.style.color = "#ff0055";
             timerDisplay.style.textShadow = "0 0 10px #ff0055";
@@ -911,24 +924,49 @@
         });
       }, 100);
 
+      // PÖRGETÉS VÉGE (6.2s múlva)
       setTimeout(() => {
-        totalGwCount++;
-
         winnerList.forEach((winnerName, index) => {
           const resBox = document.getElementById(`winnerResult_${index}`);
           if (resBox) {
             resBox.innerHTML = `🎉 ${index + 1}. NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
           }
-          currentWinners.unshift(winnerName);
         });
 
-        renderWinners();
-
-        // AZONNALI ÉS BIZTOS MENTÉS A FIREBASE-BE
-        saveWinnersToFirebase();
-
         if (adminBtn) adminBtn.disabled = false;
+
+        // AMINT KIHÚZTUK A NYERTEST: RÁKÉRDEZÉS AZ ELMENTÉSRE (ADMINNÁL)
+        if (isInitiator) {
+          setTimeout(() => {
+            const confirmSave = confirm(`🎉 A PÖRGETÉS VÉGET ÉRT!\n\nKihúzott nyertes(ek):\n${winnerList.join(', ')}\n\nSzeretnéd elmenteni a nyerteseket az 'Eddigi Nyertesek' archívumba a vendégek számára?`);
+            if (confirmSave) {
+              saveWinnersToArchive(winnerList);
+            }
+          }, 400);
+        }
+
       }, 6200);
+    }
+
+    // NYERTESEK MENTÉSE AZ EDDIGI NYERTESEK ARCHÍVUMÁBA
+    function saveWinnersToArchive(winnerList) {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('hu-HU') + ' ' + now.toLocaleTimeString('hu-HU', {hour: '2-digit', minute:'2-digit'});
+
+      archivedRounds.unshift({
+        title: currentGwTitle,
+        date: dateStr,
+        winners: [...winnerList]
+      });
+
+      totalGwCount = archivedRounds.length;
+
+      db.ref('winners_history').set({
+        archivedRounds: archivedRounds,
+        totalCount: totalGwCount
+      });
+
+      alert("Nyertesek elmentve az eddigi nyertesek közé!");
     }
 
     function getPlayerChance() {
@@ -949,82 +987,42 @@
     }
 
     function renderWinners() {
-      const publicList = document.getElementById('publicWinnersList');
       const archiveContainer = document.getElementById('archivedWinnersContainer');
       const counterBadge = document.getElementById('gwCounterBadge');
 
       if (counterBadge) {
-        counterBadge.innerText = `Összesen: ${totalGwCount} giveaway sorsolás`;
-      }
-
-      if (currentWinners.length === 0) {
-        publicList.innerHTML = '<span style="color: var(--subtext);">Még nincs rögzített nyertes a jelenlegi körben.</span>';
-      } else {
-        publicList.innerHTML = currentWinners.map(w => `
-          <div class="winner-badge">
-            <i class="fa-solid fa-trophy" style="color:#ffd700;"></i> ${w}
-          </div>
-        `).join('');
+        counterBadge.innerText = `Összesen: ${totalGwCount} lezárt giveaway sorsolás`;
       }
 
       if (archivedRounds.length > 0) {
-        archiveContainer.innerHTML = `
-          <h4 style="margin: 20px 0 10px 0; color: var(--subtext); border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
-            <i class="fa-solid fa-box-archive"></i> Előző lezárt sorsolások:
-          </h4>
-        ` + archivedRounds.map((round) => `
+        archiveContainer.innerHTML = archivedRounds.map((round) => `
           <div class="archive-card">
-            <div class="archive-card-title">${round.title || 'Giveaway'} - (${round.date})</div>
+            <div class="archive-card-title">
+              <span><i class="fa-solid fa-gift"></i> ${round.title || 'Giveaway'}</span>
+              <span style="font-size: 0.8rem; color: #a0a0a0; font-weight: normal;"><i class="fa-regular fa-clock"></i> ${round.date}</span>
+            </div>
             <div class="winners-list">
               ${round.winners.map(w => `
-                <div class="winner-badge" style="background: rgba(255,255,255,0.05); border-color: #555;">
-                  <i class="fa-solid fa-medal" style="color:#aaa;"></i> ${w}
+                <div class="winner-badge">
+                  <i class="fa-solid fa-trophy" style="color:#ffd700;"></i> ${w}
                 </div>
               `).join('')}
             </div>
           </div>
         `).join('');
       } else {
-        archiveContainer.innerHTML = '';
+        archiveContainer.innerHTML = '<div style="color: var(--subtext); padding: 10px 0;">Még nincs mentett nyertes az eddigi nyertesek között.</div>';
       }
-    }
-
-    function archiveCurrentRound() {
-      if (currentWinners.length === 0) {
-        alert("A jelenlegi körben még nincsenek nyertesek, amit le lehetne zárni!");
-        return;
-      }
-
-      if (confirm("Biztosan lezárod a jelenlegi kör nyerteseit és átteszed őket az archívumba?")) {
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('hu-HU') + ' ' + now.toLocaleTimeString('hu-HU', {hour: '2-digit', minute:'2-digit'});
-
-        archivedRounds.unshift({
-          title: currentGwTitle,
-          date: dateStr,
-          winners: [...currentWinners]
-        });
-
-        currentWinners = []; 
-        saveWinnersToFirebase();
-        alert("A jelenlegi kör sikeresen lezárva és elmentve az archívumba!");
-      }
-    }
-
-    function saveWinnersToFirebase() {
-      db.ref('winners_history').set({
-        currentWinners: currentWinners,
-        archivedRounds: archivedRounds,
-        totalCount: totalGwCount
-      });
     }
 
     function clearWinnersHistory() {
       if (confirm("Figyelem! Ez az ÖSSZES nyertes előzményt ÉS az archívumot is törli! Folytatod?")) {
-        currentWinners = [];
         archivedRounds = [];
         totalGwCount = 0;
-        saveWinnersToFirebase();
+        db.ref('winners_history').set({
+          archivedRounds: [],
+          totalCount: 0
+        });
       }
     }
 
