@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Al1ve Kaszik</title>
+  <title>Al1ve GW</title>
   <link rel="icon" type="image/png" href="images/hiena.png">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,375 +11,1100 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+  <!-- Firebase SDK-k -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
   <style>
     :root {
-      --card-background:#131322; --border-color:#333; --primary-text-color:#e0e0e0;
-      --secondary-text-color:#a0a0a0; --accent-color:#a855f7;
+      --bg-color: #0b0b14;
+      --card-bg: rgba(19, 19, 34, 0.88);
+      --accent: #a855f7;
+      --text: #e0e0e0;
+      --subtext: #a0a0a0;
     }
-    /* Gate overlay */
-    .gate-overlay{position:fixed;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.85);z-index:3000}
-    .gate-hidden{display:none!important}
-    .gate-dialog{width:min(640px,92vw);background:var(--card-background);border:1px solid rgba(147, 51, 234, 0.3);
-      border-radius:16px;padding:1.25rem 1.25rem 1rem;box-shadow:0 24px 48px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.02) inset}
-    .gate-dialog h2{margin-bottom:.75rem;font-size:1.4rem;color:var(--primary-text-color);text-align:center}
-    .gate-text{text-align:center;max-width:60ch;margin:0 auto 1.25rem auto;color:var(--secondary-text-color);line-height:1.55;font-size:.98rem}
-    .gate-checks{display:flex;flex-direction:column;align-items:center;gap:.8rem;margin-bottom:1rem}
-    .gate-row{display:grid;grid-template-columns:20px 1fr;column-gap:.6rem;align-items:start;width:100%;max-width:640px;text-align:left;cursor:pointer}
-    .gate-row input[type="checkbox"]{width:18px;height:18px;margin-top:2px;accent-color:var(--accent-color);cursor:pointer}
-    .gate-row span{display:block;line-height:1.45;color:#b3b3c6}
-    .gate-actions{display:flex;justify-content:center;gap:.6rem}
-    .gbtn{border:1px solid rgba(147, 51, 234, 0.3);background:#0f0f1a;color:var(--primary-text-color);
-      padding:.6rem 1rem;border-radius:10px;font-weight:600;cursor:pointer;transition:transform .15s ease,background-color .2s ease,border-color .2s ease,opacity .2s ease}
-    .gbtn:hover{transform:translateY(-1px);border-color:var(--accent-color)}
-    .gbtn-primary{background:linear-gradient(90deg, #7c3aed, #6d28d9);color:#fff;border-color:transparent;opacity:.6}
-    .gbtn-primary:disabled{cursor:not-allowed;opacity:.45}
-    .gbtn-primary:not(:disabled){opacity:1}
-    .gbtn-secondary{background:#262626}
-    /* A teljes app rejtése a jóváhagyásig */
-    .app-hidden{display:none!important}
-    @media (max-width:480px){.gate-dialog{padding:1rem}.gate-dialog h2{font-size:1.2rem}.gate-text{max-width:48ch}}
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg-hyena {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      max-width: 90vw;
+      height: auto;
+      opacity: 0.22;
+      filter: blur(6px) grayscale(20%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .flying-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .flying-winged-hyena {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      filter: opacity(0.5);
+      animation: flyUpAndWobble 6s infinite ease-in-out;
+      opacity: 0;
+    }
+
+    .flying-winged-hyena img {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+      z-index: 2;
+    }
+
+    .flying-winged-hyena::before,
+    .flying-winged-hyena::after {
+      content: '🪽';
+      font-size: 1.8rem;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      opacity: 0.6;
+    }
+
+    .flying-winged-hyena::before {
+      left: -22px;
+      transform: translateY(-50%) scaleX(-1) rotate(-10deg);
+    }
+
+    .flying-winged-hyena::after {
+      right: -22px;
+      transform: translateY(-50%) rotate(-10deg);
+    }
+
+    .hyena-1  { left: 4%;  transform: scale(0.7); animation-duration: 5.2s; animation-delay: 0.0s; }
+    .hyena-2  { left: 9%;  transform: scale(1.1); animation-duration: 6.8s; animation-delay: 1.5s; }
+    .hyena-3  { left: 14%; transform: scale(0.8); animation-duration: 5.5s; animation-delay: 3.2s; }
+    .hyena-4  { left: 19%; transform: scale(1.0); animation-duration: 7.2s; animation-delay: 0.7s; }
+    .hyena-5  { left: 25%; transform: scale(0.9); animation-duration: 4.8s; animation-delay: 2.1s; }
+    .hyena-6  { left: 30%; transform: scale(1.2); animation-duration: 6.1s; animation-delay: 4.0s; }
+    .hyena-7  { left: 36%; transform: scale(0.75); animation-duration: 6.7s; animation-delay: 1.1s; }
+    .hyena-8  { left: 41%; transform: scale(1.05); animation-duration: 5.3s; animation-delay: 2.8s; }
+    .hyena-9  { left: 47%; transform: scale(0.85); animation-duration: 5.8s; animation-delay: 0.3s; }
+    .hyena-10 { left: 52%; transform: scale(1.15); animation-duration: 6.4s; animation-delay: 3.7s; }
+    .hyena-11 { left: 58%; transform: scale(0.7); animation-duration: 4.9s; animation-delay: 1.9s; }
+    .hyena-12 { left: 63%; transform: scale(1.0); animation-duration: 6.2s; animation-delay: 0.5s; }
+    .hyena-13 { left: 69%; transform: scale(0.9); animation-duration: 7.0s; animation-delay: 2.4s; }
+    .hyena-14 { left: 74%; transform: scale(1.1); animation-duration: 5.4s; animation-delay: 4.2s; }
+    .hyena-15 { left: 79%; transform: scale(0.8); animation-duration: 6.6s; animation-delay: 1.3s; }
+    .hyena-16 { left: 84%; transform: scale(1.05); animation-duration: 5.1s; animation-delay: 3.0s; }
+    .hyena-17 { left: 89%; transform: scale(0.85); animation-duration: 5.9s; animation-delay: 0.8s; }
+    .hyena-18 { left: 93%; transform: scale(1.2); animation-duration: 7.1s; animation-delay: 2.6s; }
+    .hyena-19 { left: 96%; transform: scale(0.75); animation-duration: 5.6s; animation-delay: 1.7s; }
+    .hyena-20 { left: 98%; transform: scale(0.95); animation-duration: 4.7s; animation-delay: 3.9s; }
+
+    @keyframes flyUpAndWobble {
+      0% { top: 105vh; transform: translateX(0px) rotate(0deg); opacity: 0; }
+      15% { opacity: 0.45; }
+      30% { transform: translateX(20px) rotate(14deg); }
+      50% { transform: translateX(-18px) rotate(-12deg); }
+      75% { transform: translateX(12px) rotate(8deg); }
+      85% { opacity: 0.45; }
+      100% { top: -100px; transform: translateX(-8px) rotate(-6deg); opacity: 0; }
+    }
+
+    .main-container {
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 20;
+    }
+
+    .main-nav {
+      position: relative;
+      z-index: 20;
+    }
+
+    .timer-card {
+      background: rgba(19, 19, 34, 0.95);
+      border: 2px solid #ff9900;
+      border-radius: 16px;
+      padding: 15px 25px;
+      margin: 20px auto;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 153, 0, 0.3);
+      max-width: 400px;
+      display: none;
+      backdrop-filter: blur(8px);
+      animation: pulseGlow 1.5s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 15px rgba(255, 153, 0, 0.3); }
+      to { box-shadow: 0 0 30px rgba(255, 153, 0, 0.7); }
+    }
+
+    .timer-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ff9900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    .timer-display {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: monospace;
+      text-shadow: 0 0 10px #ff9900;
+    }
+
+    #rollersArea {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      margin-top: 20px;
+    }
+
+    .roller-wrapper {
+      background: var(--card-bg);
+      border: 2px solid rgba(168, 85, 247, 0.4);
+      border-radius: 16px;
+      padding: 15px;
+      box-shadow: 0 0 25px rgba(124, 58, 237, 0.15);
+      position: relative;
+      backdrop-filter: blur(5px);
+    }
+
+    .roller-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .roller-container {
+      width: 100%;
+      height: 100px;
+      overflow: hidden;
+      position: relative;
+      background: #090910;
+      border-radius: 10px;
+      border: 1px solid #2a2a40;
+    }
+
+    .selector-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      background: #ff0055;
+      box-shadow: 0 0 15px #ff0055, 0 0 5px #fff;
+      z-index: 10;
+      transform: translateX(-50%);
+    }
+
+    .selector-arrow {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; 
+      height: 0; 
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 10px solid #ff0055;
+      z-index: 11;
+    }
+
+    .roller-track {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      will-change: transform;
+    }
+
+    .name-card {
+      min-width: 130px;
+      height: 80px;
+      margin: 0 5px;
+      background: linear-gradient(145deg, #1a1a2e, #161626);
+      border: 1px solid #333355;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+      user-select: none;
+    }
+
+    .name-card .chance-tag {
+      font-size: 0.7rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    .single-winner-result {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 8px #00ffcc;
+      min-height: 28px;
+      text-align: center;
+    }
+
+    .winners-section {
+      background: var(--card-bg);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 16px;
+      margin-top: 30px;
+      backdrop-filter: blur(5px);
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .winners-header {
+      padding: 18px 25px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .winners-header:hover {
+      background: rgba(168, 85, 247, 0.08);
+    }
+
+    .winners-header h2 {
+      margin: 0 0 8px 0;
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .gw-counter-badge {
+      display: inline-block;
+      background: rgba(0, 255, 204, 0.1);
+      border: 1px solid #00ffcc;
+      color: #00ffcc;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .toggle-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: var(--accent);
+      transition: transform 0.3s ease;
+    }
+
+    .winners-content {
+      padding: 0 20px 20px 20px;
+      text-align: center;
+      display: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: 5px;
+      padding-top: 15px;
+    }
+
+    .winners-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .winner-badge {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--accent);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+    }
+
+    .archive-card {
+      background: rgba(10, 10, 20, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    .archive-card-title {
+      font-size: 0.85rem;
+      color: #00ffcc;
+      font-weight: bold;
+      margin-bottom: 8px;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+      padding-bottom: 4px;
+    }
+
+    .action-btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #7c3aed, #6d28d9);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(124, 58, 237, 0.7);
+    }
+
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .admin-section {
+      background: var(--card-bg);
+      border: 2px solid #ff0055;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 40px;
+      display: none;
+      backdrop-filter: blur(5px);
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #333;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .admin-input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .admin-input-group input, .admin-input-group select {
+      background: #090910;
+      border: 1px solid #333355;
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-family: inherit;
+    }
+
+    .player-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .player-table th, .player-table td {
+      border: 1px solid #2a2a40;
+      padding: 10px;
+      text-align: left;
+    }
+
+    .player-table th {
+      background: #090910;
+    }
+
+    .delete-btn {
+      background: #ff0055;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .secondary-btn {
+      background: #262638;
+      color: #fff;
+      border: 1px solid #444466;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .gw-title-header {
+      color: #00ffcc;
+      font-size: 1.5rem;
+      margin-top: 5px;
+      font-weight: 700;
+    }
   </style>
 </head>
 
 <body>
-  <div id="gateOverlay" class="gate-overlay" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
-    <div class="gate-dialog">
-      <h2 id="gateTitle">Verification Required</h2>
-      <p class="gate-text">
-        Only persons over the age of 18 may continue. The content of this site is intended for users residing abroad.
-        By continuing, you confirm your age and accept responsibility for your access. Please confirm this.
-      </p>
-      <div class="gate-checks">
-        <label class="gate-row">
-          <input type="checkbox" id="gateAgeAck">
-          <span>I'm 18+ years old.</span>
-        </label>
-        <label class="gate-row">
-          <input type="checkbox" id="gateResidencyAck">
-          <span>I confirm I reside abroad and accept responsibility for my access.</span>
-        </label>
+
+  <img src="images/hiena.png" alt="Hyena Background" class="bg-hyena">
+
+  <div class="flying-container">
+    <div class="flying-winged-hyena hyena-1"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-2"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-3"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-4"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-5"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-6"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-7"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-8"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-9"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-10"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-11"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-12"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-13"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-14"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-15"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-16"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-17"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-18"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-19"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-20"><img src="images/hiena.png" alt="flying hyena"></div>
+  </div>
+
+  <nav class="main-nav">
+    <ul>
+      <li><a href="index.html">Mainpage</a></li>
+      <li><a href="giveaway.html" class="active">Giveaways</a></li>
+    </ul>
+  </nav>
+
+  <div class="main-container">
+    <div style="text-align: center; margin-top: 10px;">
+      <h1><i class="fa-solid fa-gift"></i> Live Giveaway</h1>
+      <div id="publicGwTitle" class="gw-title-header">25$ FTD EgoGames</div>
+    </div>
+
+    <!-- ÉLŐ STOPPER A VENDÉGEKNEK -->
+    <div id="publicTimerCard" class="timer-card">
+      <div id="timerTitleText" class="timer-title"><i class="fa-solid fa-stopwatch"></i> Hátralévő Idő</div>
+      <div id="timerDisplay" class="timer-display">00:30</div>
+    </div>
+
+    <!-- PÖRGETŐ TERÜLET -->
+    <div id="rollersArea"></div>
+
+    <!-- NYERTESEK SECTION -->
+    <div class="winners-section">
+      <div class="winners-header" onclick="toggleWinnersAccordion()">
+        <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Eddigi Nyertesek</h2>
+        <div id="gwCounterBadge" class="gw-counter-badge">
+          Összesen: 0 giveaway sorsolás
+        </div>
+        <i id="accordionArrow" class="fa-solid fa-chevron-down toggle-icon"></i>
       </div>
-      <div class="gate-actions">
-        <button id="gateExit" class="gbtn gbtn-secondary" type="button">Exit</button>
-        <button id="gateGo" class="gbtn gbtn-primary" type="button" disabled>Continue</button>
+      <div id="winnersContent" class="winners-content">
+        <h4 style="margin: 5px 0 10px 0; color: var(--accent);">🏆 Jelenlegi kör nyertesei:</h4>
+        <div id="publicWinnersList" class="winners-list">
+          <span style="color: var(--subtext);">Még nincs rögzített nyertes a jelenlegi körben.</span>
+        </div>
+        <div id="archivedWinnersContainer" style="margin-top: 20px;"></div>
+      </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="adminPanelSection" class="admin-section">
+      <div class="admin-header">
+        <h2 style="color: #ff0055;"><i class="fa-solid fa-user-shield"></i> ADMIN CONTROL PANEL</h2>
+        <span style="background: #00ffcc; color: #000; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem;">
+          <i class="fa-solid fa-desktop"></i> Admin Eszköz
+        </span>
+      </div>
+
+      <!-- STOPPER VEZÉRLÉS -->
+      <div style="background: rgba(255, 153, 0, 0.1); border: 1px solid #ff9900; padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
+        <h3 style="margin: 0 0 10px 0; color: #ff9900;"><i class="fa-solid fa-stopwatch"></i> Stopper Vezérlő</h3>
+        
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button class="action-btn" style="background: linear-gradient(90deg, #ff9900, #ff5500);" onclick="adminTriggerTimer(30)">
+            <i class="fa-solid fa-play"></i> Indítás (30s)
+          </button>
+          
+          <button class="action-btn" style="background: linear-gradient(90deg, #eab308, #ca8a04);" onclick="adminTriggerTimer('pause')">
+            <i class="fa-solid fa-pause"></i> Megállítás
+          </button>
+          
+          <button class="action-btn" style="background: linear-gradient(90deg, #ef4444, #dc2626);" onclick="adminTriggerTimer('reset')">
+            <i class="fa-solid fa-rotate-left"></i> Nullázás / Elrejtés
+          </button>
+        </div>
+      </div>
+
+      <!-- SORSOLÁSI VEZÉRLŐ -->
+      <div style="background: rgba(28, 26, 54, 0.9); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 25px; border: 1px solid var(--accent);">
+        <h3 style="margin-top: 0;">Sorsolás Indítása Élőben</h3>
+        
+        <div style="margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+          <label><strong>Nyertesek száma (pörgető sávok):</strong></label>
+          <select id="winnerCountSelect" style="padding: 8px 12px; background: #090910; color: #fff; border: 1px solid #333355; border-radius: 6px;">
+            <option value="1">1 Nyertes (1 Sáv)</option>
+            <option value="2">2 Nyertes (2 Sáv Szimultán)</option>
+            <option value="3">3 Nyertes (3 Sáv Szimultán)</option>
+            <option value="4">4 Nyertes (4 Sáv Szimultán)</option>
+            <option value="5">5 Nyertes (5 Sáv Szimultán)</option>
+          </select>
+        </div>
+
+        <button id="adminSpinBtn" class="action-btn" onclick="startLiveSpin()"><i class="fa-solid fa-play"></i> ÉLŐ SZIMULTÁN PÖRGETÉS!</button>
+      </div>
+
+      <!-- KÖR LEZÁRÁSA -->
+      <div style="background: rgba(0, 255, 204, 0.05); border: 1px solid #00ffcc; padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
+        <h4 style="margin: 0 0 8px 0; color: #00ffcc;"><i class="fa-solid fa-box-archive"></i> Kör Lezárása & Archívumba Mentése</h4>
+        <button class="secondary-btn" style="border-color: #00ffcc; color: #00ffcc; font-weight: bold;" onclick="archiveCurrentRound()"><i class="fa-solid fa-lock"></i> Jelenlegi nyertesek lezárása & Új kör indítása</button>
+      </div>
+
+      <!-- GIVEAWAY NEVE -->
+      <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2a2a40;">
+        <label style="display: block; font-weight: 600; margin-bottom: 8px;"><i class="fa-solid fa-tag"></i> Giveaway Neve / Nyeremény:</label>
+        <div class="admin-input-group" style="margin-bottom: 0;">
+          <input type="text" id="gwTitleInput" value="25$ FTD EgoGames" placeholder="pl: 25$ FTD EgoGames" style="flex: 1;">
+          <button class="secondary-btn" onclick="updateGwTitle()">Mentés</button>
+        </div>
+      </div>
+
+      <h3>Játékosok hozzáadása</h3>
+      <div class="admin-input-group">
+        <input type="text" id="playerNameInput" placeholder="Játékos neve..." style="flex: 1;" onkeypress="if(event.key === 'Enter') addPlayer()">
+        <button class="action-btn" style="padding: 10px 20px;" onclick="addPlayer()">Hozzáadás</button>
+      </div>
+
+      <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+        <button class="secondary-btn" onclick="shufflePlayers()"><i class="fa-solid fa-shuffle"></i> Nevek Megkavarása</button>
+        <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearAllPlayers()">Összes törlése</button>
+      </div>
+
+      <table class="player-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Név</th>
+            <th>Nyerési Esély (%)</th>
+            <th>Művelet</th>
+          </tr>
+        </thead>
+        <tbody id="playerTableBody"></tbody>
+      </table>
+
+      <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
+
+      <h3><i class="fa-solid fa-trash-can"></i> Nyertes Előzmények Kezelése</h3>
+      <div>
+        <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearWinnersHistory()">Minden előzmény törlése teljesen</button>
       </div>
     </div>
   </div>
 
-  <div id="app-root" class="app-hidden">
-    <nav class="main-nav">
-      <ul>
-        <li><a href="#">Mainpage</a></li>
-        <li><a href="#best-offers">Best Offers</a></li>
-        <li><a href="#crab-casinos">Crab Casinos</a></li>
-        <li><a href="giveaway.html">Giveaways</a></li>
-        <li><a href="#socials">Contact details</a></li>
-      </ul>
-      <a id="twitch-status" href="https://www.twitch.tv/al1vehunter" target="_blank" class="hidden">
-        <div class="live-dot"></div>
-        <i class="fab fa-twitch"></i>
-        <span>LIVE</span>
-      </a>
-    </nav>
-
-    <header>
-      <h1>Casinos</h1>
-    </header>
-
-    <main>
-      <section id="best-offers">
-        <h2 class="section-title">Best Offers</h2>
-        <div class="casino-grid">
-
-          <div class="casino-card dynamic-card">
-            <div class="card-rank-badge">#1</div>
-            <div class="star-rating">
-              <i class="fa-solid fa-star star-icon"></i>
-              <span class="star-text">9.8</span>
-            </div>
-            <div class="card-logo-container">
-              <img src="images/shuffle.png" alt="Shuffle">
-            </div>
-            <h3>SHUFFLE</h3>
-            <h4 class="sub-brand">Shuffle</h4>
-            <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 100% welcome bonus first deposit up to 1k$</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto Deposits & Withdrawals</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Weekly/Monthly Promotions, Rakeback, Cashback</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Instant Cashout</li>
-              <li class="green-highlight"><i class="fa-solid fa-circle-check check-icon"></i> NO KYC</li>
-            </ul>
-            <a href="https://shuffle.com?r=Al1ve" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-        <div class="casino-card dynamic-card">
-          <div class="card-rank-badge">#2</div>
-          <div class="card-logo-container">
-              <img src="images/1xbitr.png" alt="1xBit">
-            </div>
-            <h3>1XBIT</h3>
-            <h4 class="sub-brand">1xBit</h4>
-            <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> <span class="text-accent">Promocode</span>&nbsp;<span class="text-cyan">AL1VE1X</span></li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 125% First Deposit bonus + 100FS with 30x wager</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto deposit/cashout</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Sports betting</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Instant Cashout</li>
-              <li class="green-highlight"><i class="fa-solid fa-circle-check check-icon"></i> NO KYC</li>
-            </ul>
-            <a href="https://refpa04636.pro/L?tag=d_4427689m_129584c_AL1VE1X&site=4427689&ad=129584&r=registration" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-          <div class="casino-card dynamic-card">
-            <div class="card-rank-badge font-new">NEW</div>
-            <div class="card-logo-container">
-              <img src="images/qzinorb.png" alt="Qzino">
-            </div>
-            <h3>Qzino</h3>
-            <h4 class="sub-brand">Qzino</h4>
-            <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> <span class="text-accent">Promocode</span>&nbsp;<span class="text-cyan">HUNTER50</span></li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Welcome bonus up to 1140%</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Fast Crypto deposit/cashout</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Cashback: Up To 40%</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Rakeback: Up To 15%</li>
-              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Non-Strict KYC</li>
-            </ul>
-            <a href="https://qzino-partners.com/tnqbpkm4c" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-           <div class="casino-card dynamic-card">
-            <div class="card-rank-badge font-new">NEW</div>
-            <div class="card-logo-container">
-              <img src="images/stealthrbpng.png" alt="LunuBet">
-            </div>
-            <h3>Stealthbet</h3>
-            <h4 class="sub-brand">Stealthbet</h4>
-            <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 150% Deposit bonuses + 100FS (Gates of Olympus 1000)</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto/Card deposit/cashout</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 1-2 Day Cashout</li>
-              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
-            </ul>
-            <a href="https://tinyurl.com/infiaff?bid=400&lid=317&aid=SRSj9Pdp3&cid=9080" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-          <div class="casino-card dynamic-card">
-            <div class="card-rank-badge font-new">NEW</div>
-            <div class="card-logo-container">
-              <img src="images/lunubetrb.png" alt="LunuBet">
-            </div>
-            <h3>LUNUBET</h3>
-            <h4 class="sub-brand">LunuBet</h4>
-            <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> <span class="text-accent">Promocode</span>&nbsp;<span class="text-cyan">HUNTER</span></li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 120% Deposit bonuses</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto/Card deposit/cashout</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 1-2 Day Cashout</li>
-              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
-            </ul>
-            <a href="https://lunubet.one/al1vehunter.im" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-          <div class="casino-card dynamic-card">
-            <div class="card-rank-badge font-new">NEW</div>
-            <div class="card-logo-container">
-              <img src="images/lemoncasinorb.png" alt="Lemon Casino">
-            </div>
-            <h3>Lemon Casino</h3>
-            <h4 class="sub-brand">Lemon Casino</h4>
-            <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 400% Exclusive Welcome Bonus (40x Wager)</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto/Card deposit/cashout</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> After player verification from 30 minutes up to 3 working days</li>
-              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
-            </ul>
-            <a href="https://m.affs.com/redirect.aspx?mid=1177&sid=13065&cid=&pid=&affid=9279" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-          <div class="casino-card dynamic-card">
-            <div class="card-rank-badge font-new">NEW</div>
-            <div class="card-logo-container">
-              <img src="images/egolog.png" alt="Ego logó">
-            </div>
-            <h3>EGOGAMES</h3>
-            <h4 class="sub-brand">EgoGames</h4>
-            <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 110% Deposit bonus for first time deposit (30x wager)</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Card/Crypto deposit/withdraw</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Weekly, Monthly bonuses // VIP lvl / Cashback</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 1-2 Day Cashout</li>
-              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
-            </ul>
-            <a href="https://www.nifoe1md.com/69PDQW/71B7BTM/" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-                    <div class="casino-card dynamic-card">
-            <div class="card-rank-badge font-new">NEW</div>
-            <div class="card-logo-container">
-              <img src="images/lolabr.png" alt="Lola logó">
-            </div>
-            <h3>LolaJack</h3>
-            <h4 class="sub-brand">LolaJack</h4>
-            <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 400% welcome bonuses</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Card/Crypto deposit/withdraw</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 1-3 Day Cashout</li>
-              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
-            </ul>
-            <a href="https://llj.lynmonkel.com/?mid=368148_2121335" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-        </div>
-      </section>
-
-      <hr class="section-divider">
-
-      <section id="crab-casinos">
-        <h2 class="section-title">Crab Casinos</h2>
-        <div class="casino-grid">
-
-          <div class="casino-card dynamic-card">
-            <div class="card-logo-container">
-              <img src="images/wazamba.png" alt="Wazamba Logó">
-            </div>
-            <h3>WAZAMBA</h3>
-            <h4 class="sub-brand">Wazamba</h4>
-            <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 100% Deposit Bonus-500</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Bonus crab game</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Weekly Free Spins</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 2-3 day cashout</li>
-              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
-            </ul>
-            <a href="https://wzbw.xarvilo.com/?mid=240180_1424294" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-          <div class="casino-card dynamic-card">
-            <div class="card-logo-container">
-              <img src="images/bethall.png" alt="BetHall">
-            </div>
-            <h3>BetHall</h3>
-            <h4 class="sub-brand">BetHall</h4>
-            <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 1st deposit bonus - 100% up to 500 EUR + 200 FS + 1 bonus crab</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 2nd deposit bonus - 75% up to 750 EUR</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 3d deposit bonus - 125% up to 1250 EUR</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Weekly free spins</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 2-5 day cashout</li>
-              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
-            </ul>
-            <a href="https://bhll.naralvin.com/?mid=377006_2183015" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-          <div class="casino-card dynamic-card">
-            <div class="card-logo-container">
-              <img src="images/sg.png" alt="Sg Logó">
-            </div>
-            <h3>SG CASINO</h3>
-            <h4 class="sub-brand">Sg Casino</h4>
-            <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 100% Deposit Bonus-500</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Bonus crab game</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> Weekly Free Spins</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 2-3 day cashout</li>
-              <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
-            </ul>
-            <a href="https://sgc.xarvilo.com/?mid=240180_1424296" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-        </div>
-      </section>
-
-      <section class="socials" id="socials">
-        <h2>Contact details</h2>
-        <div class="social-links">
-          <a href="https://www.twitch.tv/al1vehunter" target="_blank" class="social-link twitch">
-            <i class="fab fa-twitch"></i> Twitch
-          </a>
-          <a href="https://discord.gg/gMGMVKE9jz" target="_blank" class="social-link discord">
-            <i class="fab fa-discord"></i> Discord
-          </a>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <p>Excessive gambling can lead to addiction. Please <a href="https://www.gambleaware.org/" target="_blank" style="color: #a855f7; text-decoration: underline; font-weight: 600;">gamble responsibly</a> and only play with money you can afford to lose.</p>
-      <p>&copy; <span id="current-year">2026</span> al1ve. All rights reserved.</p>
-    </footer>
-  </div>
-
   <script>
-    (function () {
-      const OVR = document.getElementById('gateOverlay');
-      const APP = document.getElementById('app-root');
-      const age = document.getElementById('gateAgeAck');
-      const res = document.getElementById('gateResidencyAck');
-      const btnExit = document.getElementById('gateExit');
-      const btnGo = document.getElementById('gateGo');
+    const firebaseConfig = {
+      databaseURL: "https://giveawy-6e8f6-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "giveawy-6e8f6"
+    };
 
-      function update() {
-        const ok = !!(age?.checked && res?.checked);
-        if (btnGo) btnGo.disabled = !ok;
-      }
-      function showGate() {
-        OVR?.classList.remove('gate-hidden');
-        APP?.classList.add('app-hidden');
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-        age?.focus();
-      }
-      function hideGate() {
-        OVR?.classList.add('gate-hidden');
-        APP?.classList.remove('app-hidden');
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-      }
-      function init() {
-        if (!OVR || !APP) return;
-        age?.addEventListener('change', update);
-        res?.addEventListener('change', update);
-        btnExit?.addEventListener('click', () => { window.location.href = 'https://www.google.com'; });
-        btnGo?.addEventListener('click', () => { hideGate(); });
-        showGate(); update();
-      }
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init, { once: true });
-      } else { init(); }
-    })();
-  </script>
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-  <script>
-    const TWITCH_CHANNEL = 'al1vehunter';
-    const TWITCH_CLIENT_ID = 'jbdr5e5x1wx0idyrg77mxy7m6efcln';
-    const TWITCH_ACCESS_TOKEN = 'iwgyh0o4c6az9oo5v2prr0hnj12wge';
-    const statusElement = document.getElementById('twitch-status');
+    const ADMIN_PASSWORD = "al1ve2026"; 
+    const DEVICE_SECRET_KEY = "al1ve_authorized_admin_device_2026";
 
-    async function checkTwitchStatus() {
-      if (!TWITCH_CLIENT_ID || !TWITCH_ACCESS_TOKEN || !statusElement ||
-          TWITCH_CLIENT_ID.includes('IDE_MASOLD') || TWITCH_ACCESS_TOKEN.includes('IDE_MASOLD')) {
-        console.error("Twitch adatok hiányoznak! A státusz jelző nem fog működni.");
-        return;
+    let currentGwTitle = "25$ FTD EgoGames";
+    let players = ["Krexy", "Kakos", "Valentino", "Dani", "Gamer123", "Slayer99"];
+    let currentWinners = [];
+    let archivedRounds = [];
+    let totalGwCount = 0;
+
+    let activeTimer = null;
+    let currentSecondsLeft = 30;
+
+    const rollersArea = document.getElementById('rollersArea');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('al1ve_admin_device') === DEVICE_SECRET_KEY) {
+        showAdminPanel();
       }
-      const url = `https://api.twitch.tv/helix/streams?user_login=${TWITCH_CHANNEL}`;
-      try {
-        const response = await fetch(url, {
-          headers: { 'Client-ID': TWITCH_CLIENT_ID, 'Authorization': `Bearer ${TWITCH_ACCESS_TOKEN}` }
-        });
-        const data = await response.json();
-        if (data.data && data.data.length > 0) {
-          statusElement.classList.remove('hidden');
-        } else {
-          statusElement.classList.add('hidden');
-        }
-      } catch (error) {
-        console.error('Hiba a Twitch API közben:', error);
-        statusElement.classList.add('hidden');
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('admin')) verifyAdminAccess();
+
+      renderRollerLanes(1);
+      listenToFirebase();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') verifyAdminAccess();
+    });
+
+    function verifyAdminAccess() {
+      const pass = prompt("Admin Hitelesítés:");
+      if (pass === ADMIN_PASSWORD) {
+        localStorage.setItem('al1ve_admin_device', DEVICE_SECRET_KEY);
+        showAdminPanel();
+        alert("Sikeres belépés!");
       }
     }
-    document.addEventListener('DOMContentLoaded', checkTwitchStatus);
-    setInterval(checkTwitchStatus, 180000);
+
+    function showAdminPanel() {
+      document.getElementById('adminPanelSection').style.display = 'block';
+      renderAdminTable();
+    }
+
+    // --- FIREBASE LISTENERS ---
+    function listenToFirebase() {
+      db.ref('live_spin').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data && data.timestamp > Date.now() - 10000) {
+          executeSimultaneousSpin(data.winners, data.gwTitle, false);
+        }
+      });
+
+      db.ref('gw_title').on('value', (snapshot) => {
+        if (snapshot.val()) {
+          currentGwTitle = snapshot.val();
+          document.getElementById('publicGwTitle').innerText = currentGwTitle;
+        }
+      });
+
+      db.ref('winners_history').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          currentWinners = data.currentWinners || [];
+          archivedRounds = data.archivedRounds || [];
+          totalGwCount = data.totalCount || 0;
+        } else {
+          currentWinners = [];
+          archivedRounds = [];
+          totalGwCount = 0;
+        }
+        renderWinners();
+      });
+
+      // EGYSZERŰSÍTETT STOPPER ADATBÁZIS FIGYELŐ
+      db.ref('timer_sync').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          applyTimerCommand(data);
+        }
+      });
+    }
+
+    // --- STABIL STOPPER VEZÉRLÉS ---
+    function adminTriggerTimer(actionOrSeconds) {
+      let action = 'start';
+      let secs = 30;
+
+      if (typeof actionOrSeconds === 'number') {
+        action = 'start';
+        secs = actionOrSeconds;
+      } else {
+        action = actionOrSeconds; // 'pause' vagy 'reset'
+      }
+
+      db.ref('timer_sync').set({
+        action: action,
+        seconds: secs,
+        time: Date.now()
+      });
+    }
+
+    function applyTimerCommand(data) {
+      const timerCard = document.getElementById('publicTimerCard');
+      const timerDisplay = document.getElementById('timerDisplay');
+      const timerTitleText = document.getElementById('timerTitleText');
+
+      // Ha már fut egy stopper, azt leállítjuk, hogy ne akadjanak össze
+      if (activeTimer) {
+        clearInterval(activeTimer);
+        activeTimer = null;
+      }
+
+      if (data.action === 'reset') {
+        timerCard.style.display = 'none';
+        return;
+      }
+
+      timerCard.style.display = 'block';
+
+      if (data.action === 'pause') {
+        timerDisplay.style.color = "#eab308";
+        timerDisplay.style.textShadow = "0 0 10px #eab308";
+        timerTitleText.innerHTML = '<i class="fa-solid fa-pause"></i> STOPPER MEGÁLLÍTVA';
+        return;
+      }
+
+      if (data.action === 'start') {
+        // Kiszámoljuk, pontosan hány másodperc telt el a gombnyomás óta
+        const elapsedSeconds = Math.floor((Date.now() - data.time) / 1000);
+        currentSecondsLeft = data.seconds - elapsedSeconds;
+
+        // Ha egy vendég olyan későn jön be, hogy már lejárt
+        if (currentSecondsLeft <= 0) {
+          timerDisplay.innerText = "00:00";
+          timerDisplay.style.color = "#ff0055";
+          timerDisplay.style.textShadow = "0 0 10px #ff0055";
+          timerTitleText.innerText = "LEJÁRT AZ IDŐ!";
+          return;
+        }
+
+        // Alap kinézet visszaállítása indításkor
+        timerDisplay.style.color = "#fff";
+        timerDisplay.style.textShadow = "0 0 10px #ff9900";
+        timerTitleText.innerHTML = '<i class="fa-solid fa-stopwatch"></i> HÁTRALÉVŐ IDŐ';
+        
+        updateDisplay(currentSecondsLeft);
+
+        activeTimer = setInterval(() => {
+          currentSecondsLeft--;
+          if (currentSecondsLeft <= 0) {
+            clearInterval(activeTimer);
+            activeTimer = null;
+            timerDisplay.innerText = "00:00";
+            timerDisplay.style.color = "#ff0055";
+            timerDisplay.style.textShadow = "0 0 10px #ff0055";
+            timerTitleText.innerText = "LEJÁRT AZ IDŐ!";
+          } else {
+            updateDisplay(currentSecondsLeft);
+          }
+        }, 1000);
+      }
+    }
+
+    function updateDisplay(sec) {
+      const formatted = sec < 10 ? `0${sec}` : sec;
+      document.getElementById('timerDisplay').innerText = `00:${formatted}`;
+    }
+
+    function renderRollerLanes(count) {
+      rollersArea.innerHTML = '';
+
+      for (let i = 0; i < count; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'roller-wrapper';
+        wrapper.innerHTML = `
+          <div class="roller-label">
+            <span><i class="fa-solid fa-circle-play"></i> ${i + 1}. NYERTES</span>
+          </div>
+          <div class="selector-arrow"></div>
+          <div class="roller-container">
+            <div class="selector-line"></div>
+            <div id="rollerTrack_${i}" class="roller-track"></div>
+          </div>
+          <div id="winnerResult_${i}" class="single-winner-result"></div>
+        `;
+        rollersArea.appendChild(wrapper);
+
+        fillTrackWithCards(`rollerTrack_${i}`, players[0] || "---");
+      }
+    }
+
+    function fillTrackWithCards(trackId, winnerName) {
+      const track = document.getElementById(trackId);
+      if (!track) return;
+
+      track.innerHTML = '';
+      const CARD_COUNT = 80;
+      const WINNER_INDEX = 65;
+      const chance = getPlayerChance();
+
+      for (let i = 0; i < CARD_COUNT; i++) {
+        let name = (i === WINNER_INDEX) ? winnerName : players[Math.floor(Math.random() * players.length)];
+        const card = document.createElement('div');
+        card.className = 'name-card';
+        card.innerHTML = `<div>${name || '---'}</div><div class="chance-tag">${chance}%</div>`;
+        track.appendChild(card);
+      }
+    }
+
+    function startLiveSpin() {
+      const countSelect = document.getElementById('winnerCountSelect');
+      const requestedCount = parseInt(countSelect.value);
+
+      if (players.length < requestedCount) {
+        alert(`Nincs elég játékos! Legalább ${requestedCount} játékos kell ennyi nyerteshez.`);
+        return;
+      }
+
+      let tempPool = [...players];
+      let selectedWinners = [];
+
+      for (let i = 0; i < requestedCount; i++) {
+        const randomIndex = Math.floor(Math.random() * tempPool.length);
+        const winner = tempPool[randomIndex];
+        selectedWinners.push(winner);
+        tempPool.splice(randomIndex, 1);
+      }
+
+      executeSimultaneousSpin(selectedWinners, currentGwTitle, true);
+
+      db.ref('live_spin').set({
+        winners: selectedWinners,
+        gwTitle: currentGwTitle,
+        timestamp: Date.now()
+      });
+    }
+
+    function executeSimultaneousSpin(winnerList, title, isInitiator) {
+      const adminBtn = document.getElementById('adminSpinBtn');
+      if (adminBtn) adminBtn.disabled = true;
+
+      renderRollerLanes(winnerList.length);
+
+      winnerList.forEach((winnerName, index) => {
+        fillTrackWithCards(`rollerTrack_${index}`, winnerName);
+      });
+
+      setTimeout(() => {
+        winnerList.forEach((winnerName, index) => {
+          const track = document.getElementById(`rollerTrack_${index}`);
+          const cardWidth = 140; 
+          const containerWidth = track.parentElement.clientWidth;
+          const WINNER_INDEX = 65;
+
+          const randomOffset = Math.floor(Math.random() * 60) - 30; 
+          const targetX = (WINNER_INDEX * cardWidth) - (containerWidth / 2) + (cardWidth / 2) + randomOffset;
+
+          track.style.transition = 'none';
+          track.style.transform = 'translateX(0px)';
+
+          setTimeout(() => {
+            track.style.transition = 'transform 6s cubic-bezier(0.15, 0.9, 0.15, 1)';
+            track.style.transform = `translateX(-${targetX}px)`;
+          }, 50);
+        });
+      }, 100);
+
+      setTimeout(() => {
+        totalGwCount++;
+
+        winnerList.forEach((winnerName, index) => {
+          const resBox = document.getElementById(`winnerResult_${index}`);
+          if (resBox) {
+            resBox.innerHTML = `🎉 ${index + 1}. NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
+          }
+          currentWinners.unshift(winnerName);
+        });
+
+        renderWinners();
+
+        // AZONNALI ÉS BIZTOS MENTÉS A FIREBASE-BE
+        saveWinnersToFirebase();
+
+        if (adminBtn) adminBtn.disabled = false;
+      }, 6200);
+    }
+
+    function getPlayerChance() {
+      return players.length === 0 ? 0 : (100 / players.length).toFixed(1);
+    }
+
+    function toggleWinnersAccordion() {
+      const content = document.getElementById('winnersContent');
+      const arrow = document.getElementById('accordionArrow');
+
+      if (content.style.display === 'block') {
+        content.style.display = 'none';
+        arrow.style.transform = 'translateY(-50%) rotate(0deg)';
+      } else {
+        content.style.display = 'block';
+        arrow.style.transform = 'translateY(-50%) rotate(180deg)';
+      }
+    }
+
+    function renderWinners() {
+      const publicList = document.getElementById('publicWinnersList');
+      const archiveContainer = document.getElementById('archivedWinnersContainer');
+      const counterBadge = document.getElementById('gwCounterBadge');
+
+      if (counterBadge) {
+        counterBadge.innerText = `Összesen: ${totalGwCount} giveaway sorsolás`;
+      }
+
+      if (currentWinners.length === 0) {
+        publicList.innerHTML = '<span style="color: var(--subtext);">Még nincs rögzített nyertes a jelenlegi körben.</span>';
+      } else {
+        publicList.innerHTML = currentWinners.map(w => `
+          <div class="winner-badge">
+            <i class="fa-solid fa-trophy" style="color:#ffd700;"></i> ${w}
+          </div>
+        `).join('');
+      }
+
+      if (archivedRounds.length > 0) {
+        archiveContainer.innerHTML = `
+          <h4 style="margin: 20px 0 10px 0; color: var(--subtext); border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
+            <i class="fa-solid fa-box-archive"></i> Előző lezárt sorsolások:
+          </h4>
+        ` + archivedRounds.map((round) => `
+          <div class="archive-card">
+            <div class="archive-card-title">${round.title || 'Giveaway'} - (${round.date})</div>
+            <div class="winners-list">
+              ${round.winners.map(w => `
+                <div class="winner-badge" style="background: rgba(255,255,255,0.05); border-color: #555;">
+                  <i class="fa-solid fa-medal" style="color:#aaa;"></i> ${w}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+      } else {
+        archiveContainer.innerHTML = '';
+      }
+    }
+
+    function archiveCurrentRound() {
+      if (currentWinners.length === 0) {
+        alert("A jelenlegi körben még nincsenek nyertesek, amit le lehetne zárni!");
+        return;
+      }
+
+      if (confirm("Biztosan lezárod a jelenlegi kör nyerteseit és átteszed őket az archívumba?")) {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('hu-HU') + ' ' + now.toLocaleTimeString('hu-HU', {hour: '2-digit', minute:'2-digit'});
+
+        archivedRounds.unshift({
+          title: currentGwTitle,
+          date: dateStr,
+          winners: [...currentWinners]
+        });
+
+        currentWinners = []; 
+        saveWinnersToFirebase();
+        alert("A jelenlegi kör sikeresen lezárva és elmentve az archívumba!");
+      }
+    }
+
+    function saveWinnersToFirebase() {
+      db.ref('winners_history').set({
+        currentWinners: currentWinners,
+        archivedRounds: archivedRounds,
+        totalCount: totalGwCount
+      });
+    }
+
+    function clearWinnersHistory() {
+      if (confirm("Figyelem! Ez az ÖSSZES nyertes előzményt ÉS az archívumot is törli! Folytatod?")) {
+        currentWinners = [];
+        archivedRounds = [];
+        totalGwCount = 0;
+        saveWinnersToFirebase();
+      }
+    }
+
+    function updateGwTitle() {
+      const input = document.getElementById('gwTitleInput');
+      if (input.value.trim() !== "") {
+        currentGwTitle = input.value.trim();
+        db.ref('gw_title').set(currentGwTitle);
+        alert("Giveaway neve frissítve!");
+      }
+    }
+
+    function renderAdminTable() {
+      const tbody = document.getElementById('playerTableBody');
+      tbody.innerHTML = '';
+      const chance = getPlayerChance();
+
+      players.forEach((p, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${index + 1}.</td>
+          <td><strong>${p}</strong></td>
+          <td><span style="color: var(--accent); font-weight: bold;">${chance}%</span></td>
+          <td><button class="delete-btn" onclick="deletePlayer(${index})"><i class="fa-solid fa-trash"></i></button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      renderRollerLanes(1);
+    }
+
+    function addPlayer() {
+      const nameInput = document.getElementById('playerNameInput');
+      const name = nameInput.value.trim();
+
+      if (!name) return;
+
+      players.push(name);
+      nameInput.value = '';
+      nameInput.focus();
+      renderAdminTable();
+    }
+
+    function deletePlayer(index) {
+      players.splice(index, 1);
+      renderAdminTable();
+    }
+
+    function clearAllPlayers() {
+      if (confirm("Biztosan törölni szeretnéd az összes játékost?")) {
+        players = [];
+        renderAdminTable();
+      }
+    }
+
+    function shufflePlayers() {
+      for (let i = players.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [players[i], players[j]] = [players[j], players[i]];
+      }
+      renderAdminTable();
+    }
   </script>
 </body>
 </html>
