@@ -50,7 +50,7 @@
       z-index: 0;
     }
 
-    /* --- DÉLIBÁB CSÍKOK (1cm széles x 4-5cm magas, FELFELÉ MOZGÓ IZZÓ LEVEGŐ) --- */
+    /* --- VÉKONY, HULLÁMZO DÉLIBÁB CSÍKOK (0.2cm VASTAG) --- */
     .mirage-container {
       position: fixed;
       top: 0;
@@ -64,51 +64,69 @@
 
     .heat-stripe {
       position: absolute;
-      width: 38px; /* kb 1 cm */
-      height: 170px; /* kb 4.5 cm */
+      width: 0.2cm; /* pontosan 0.2 cm vastag */
+      height: 160px;
       background: linear-gradient(
         0deg,
         rgba(168, 85, 247, 0) 0%,
-        rgba(168, 85, 247, 0.25) 30%,
-        rgba(255, 0, 85, 0.3) 70%,
+        rgba(168, 85, 247, 0.4) 30%,
+        rgba(255, 0, 85, 0.5) 70%,
         rgba(255, 255, 255, 0) 100%
       );
-      border-radius: 20px;
-      filter: blur(6px);
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
-      animation: riseAndWobble 5s infinite ease-in-out;
-      opacity: 0.8;
+      border-radius: 10px;
+      filter: blur(3px);
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+      animation: riseAndWobble 6s infinite ease-in-out;
+      opacity: 0;
     }
 
-    /* A 9 DARAB CSÍK EGYEDI POZÍCIÓJA ÉS IDŐZÍTÉSE SZÉTSZÓRVA */
-    .stripe-1 { left: 5%;  animation-duration: 4.2s; animation-delay: 0s; }
-    .stripe-2 { left: 16%; animation-duration: 5.5s; animation-delay: 1.2s; }
-    .stripe-3 { left: 28%; animation-duration: 4.8s; animation-delay: 2.5s; }
-    .stripe-4 { left: 39%; animation-duration: 6.0s; animation-delay: 0.7s; }
-    .stripe-5 { left: 50%; animation-duration: 4.5s; animation-delay: 3.1s; }
-    .stripe-6 { left: 62%; animation-duration: 5.2s; animation-delay: 1.8s; }
-    .stripe-7 { left: 73%; animation-duration: 4.7s; animation-delay: 0.4s; }
-    .stripe-8 { left: 84%; animation-duration: 5.8s; animation-delay: 2.2s; }
-    .stripe-9 { left: 93%; animation-duration: 4.3s; animation-delay: 1.0s; }
+    /* 20 DARAB CSÍK KÜLÖNBÖZŐ HELYEN, VÁLTOZÓ SEBESSÉGGEL ÉS KÉSLELTETÉSSEL */
+    .stripe-1  { left: 3%;  animation-duration: 4.8s; animation-delay: 0.0s; }
+    .stripe-2  { left: 8%;  animation-duration: 6.2s; animation-delay: 1.5s; }
+    .stripe-3  { left: 13%; animation-duration: 5.1s; animation-delay: 3.2s; }
+    .stripe-4  { left: 18%; animation-duration: 7.0s; animation-delay: 0.7s; }
+    .stripe-5  { left: 24%; animation-duration: 4.5s; animation-delay: 2.1s; }
+    .stripe-6  { left: 29%; animation-duration: 5.8s; animation-delay: 4.0s; }
+    .stripe-7  { left: 35%; animation-duration: 6.5s; animation-delay: 1.1s; }
+    .stripe-8  { left: 40%; animation-duration: 4.9s; animation-delay: 2.8s; }
+    .stripe-9  { left: 46%; animation-duration: 5.5s; animation-delay: 0.3s; }
+    .stripe-10 { left: 51%; animation-duration: 6.1s; animation-delay: 3.7s; }
+    .stripe-11 { left: 57%; animation-duration: 4.3s; animation-delay: 1.9s; }
+    .stripe-12 { left: 62%; animation-duration: 5.9s; animation-delay: 0.5s; }
+    .stripe-13 { left: 68%; animation-duration: 6.7s; animation-delay: 2.4s; }
+    .stripe-14 { left: 73%; animation-duration: 5.0s; animation-delay: 4.2s; }
+    .stripe-15 { left: 78%; animation-duration: 6.3s; animation-delay: 1.3s; }
+    .stripe-16 { left: 83%; animation-duration: 4.7s; animation-delay: 3.0s; }
+    .stripe-17 { left: 88%; animation-duration: 5.6s; animation-delay: 0.8s; }
+    .stripe-18 { left: 92%; animation-duration: 6.8s; animation-delay: 2.6s; }
+    .stripe-19 { left: 96%; animation-duration: 5.2s; animation-delay: 1.7s; }
+    .stripe-20 { left: 98%; animation-duration: 4.4s; animation-delay: 3.9s; }
 
+    /* S-ALAKÚ HULLÁMZÓ ÉS EMELKEDŐ ANIMÁCIÓ */
     @keyframes riseAndWobble {
       0% {
         top: 105vh;
-        transform: scaleX(1) skewX(0deg);
+        transform: translateX(0px) skewX(0deg) scaleY(1);
         opacity: 0;
       }
       15% {
         opacity: 0.85;
       }
+      25% {
+        transform: translateX(12px) skewX(6deg) scaleY(1.1);
+      }
       50% {
-        transform: scaleX(1.3) skewX(4deg);
+        transform: translateX(-10px) skewX(-6deg) scaleY(0.95);
+      }
+      75% {
+        transform: translateX(8px) skewX(4deg) scaleY(1.05);
       }
       85% {
         opacity: 0.85;
       }
       100% {
-        top: -200px;
-        transform: scaleX(0.9) skewX(-3deg);
+        top: -180px;
+        transform: translateX(-5px) skewX(-2deg) scaleY(1);
         opacity: 0;
       }
     }
@@ -402,7 +420,7 @@
   <!-- HÁTTÉR HIÉNA KÉP -->
   <img src="images/hiena.png" alt="Hyena Background" class="bg-hyena">
 
-  <!-- 9 DARAB IZZÓ FÜGGŐLEGES DÉLIBÁB CSÍK -->
+  <!-- 20 DARAB 0.2 CM VASTAG HULLÁMZÓ DÉLIBÁB CSÍK -->
   <div class="mirage-container">
     <div class="heat-stripe stripe-1"></div>
     <div class="heat-stripe stripe-2"></div>
@@ -413,6 +431,17 @@
     <div class="heat-stripe stripe-7"></div>
     <div class="heat-stripe stripe-8"></div>
     <div class="heat-stripe stripe-9"></div>
+    <div class="heat-stripe stripe-10"></div>
+    <div class="heat-stripe stripe-11"></div>
+    <div class="heat-stripe stripe-12"></div>
+    <div class="heat-stripe stripe-13"></div>
+    <div class="heat-stripe stripe-14"></div>
+    <div class="heat-stripe stripe-15"></div>
+    <div class="heat-stripe stripe-16"></div>
+    <div class="heat-stripe stripe-17"></div>
+    <div class="heat-stripe stripe-18"></div>
+    <div class="heat-stripe stripe-19"></div>
+    <div class="heat-stripe stripe-20"></div>
   </div>
 
   <nav class="main-nav">
