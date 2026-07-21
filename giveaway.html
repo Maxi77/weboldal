@@ -50,7 +50,7 @@
       z-index: 0;
     }
 
-    /* --- IZZÓ SZÁRNYAS HIÉNA FEJEK KONTÉNER --- */
+    /* --- REPKEDŐ HIÉNA FEJEK KONTÉNER --- */
     .flying-container {
       position: fixed;
       top: 0;
@@ -62,15 +62,14 @@
       overflow: hidden;
     }
 
-    /* KÜLÖNLEGES SZÁRNYAS HIÉNA DÍSZ (PNG + SZÁRNYAK + IZZÁS) */
     .flying-winged-hyena {
       position: absolute;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       user-select: none;
-      /* Erőteljes izzás mögötte */
-      filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.85)) drop-shadow(0 0 20px rgba(255, 0, 85, 0.5));
+      /* Erős izzás eltávolítva, nagyon halvány és lágy lett */
+      filter: opacity(0.5);
       animation: flyUpAndWobble 6s infinite ease-in-out;
       opacity: 0;
     }
@@ -82,7 +81,6 @@
       z-index: 2;
     }
 
-    /* Angyalszárnyak a fej két oldalán */
     .flying-winged-hyena::before,
     .flying-winged-hyena::after {
       content: '🪽';
@@ -91,20 +89,19 @@
       top: 50%;
       transform: translateY(-50%);
       z-index: 1;
-      filter: drop-shadow(0 0 8px #a855f7);
+      opacity: 0.6;
     }
 
     .flying-winged-hyena::before {
       left: -22px;
-      transform: translateY(-50%) scaleX(-1) rotate(-10deg); /* Bal szárny megfordítva */
+      transform: translateY(-50%) scaleX(-1) rotate(-10deg);
     }
 
     .flying-winged-hyena::after {
       right: -22px;
-      transform: translateY(-50%) rotate(-10deg); /* Jobb szárny */
+      transform: translateY(-50%) rotate(-10deg);
     }
 
-    /* 20 DARAB SZÁRNYAS HIÉNA KÜLÖNBÖZŐ HELYEN ÉS SEBESSÉGGEL */
     .hyena-1  { left: 4%;  transform: scale(0.7); animation-duration: 5.2s; animation-delay: 0.0s; }
     .hyena-2  { left: 9%;  transform: scale(1.1); animation-duration: 6.8s; animation-delay: 1.5s; }
     .hyena-3  { left: 14%; transform: scale(0.8); animation-duration: 5.5s; animation-delay: 3.2s; }
@@ -126,33 +123,14 @@
     .hyena-19 { left: 96%; transform: scale(0.75); animation-duration: 5.6s; animation-delay: 1.7s; }
     .hyena-20 { left: 98%; transform: scale(0.95); animation-duration: 4.7s; animation-delay: 3.9s; }
 
-    /* SZÁRNYALÓ ÉS HULLÁMZÓ REPÜLÉSI ANIMÁCIÓ IZZÁSSAL */
     @keyframes flyUpAndWobble {
-      0% {
-        top: 105vh;
-        transform: translateX(0px) rotate(0deg);
-        opacity: 0;
-      }
-      15% {
-        opacity: 0.85;
-      }
-      30% {
-        transform: translateX(20px) rotate(14deg);
-      }
-      50% {
-        transform: translateX(-18px) rotate(-12deg);
-      }
-      75% {
-        transform: translateX(12px) rotate(8deg);
-      }
-      85% {
-        opacity: 0.85;
-      }
-      100% {
-        top: -100px;
-        transform: translateX(-8px) rotate(-6deg);
-        opacity: 0;
-      }
+      0% { top: 105vh; transform: translateX(0px) rotate(0deg); opacity: 0; }
+      15% { opacity: 0.45; }
+      30% { transform: translateX(20px) rotate(14deg); }
+      50% { transform: translateX(-18px) rotate(-12deg); }
+      75% { transform: translateX(12px) rotate(8deg); }
+      85% { opacity: 0.45; }
+      100% { top: -100px; transform: translateX(-8px) rotate(-6deg); opacity: 0; }
     }
 
     .main-container {
@@ -168,7 +146,6 @@
       z-index: 20;
     }
 
-    /* TÖBBSOROS PÖRGETŐ STÍLUSOK */
     #rollersArea {
       display: flex;
       flex-direction: column;
@@ -277,7 +254,94 @@
       text-align: center;
     }
 
-    /* GOMBOK ÉS VEZÉRLŐK */
+    /* KINYITHATÓ PUBLIKUS NYERTESEK DOBOZ */
+    .winners-section {
+      background: var(--card-bg);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 16px;
+      margin-top: 30px;
+      backdrop-filter: blur(5px);
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .winners-header {
+      padding: 18px 25px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .winners-header:hover {
+      background: rgba(168, 85, 247, 0.08);
+    }
+
+    .winners-header h2 {
+      margin: 0 0 8px 0;
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .gw-counter-badge {
+      display: inline-block;
+      background: rgba(0, 255, 204, 0.1);
+      border: 1px solid #00ffcc;
+      color: #00ffcc;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .toggle-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: var(--accent);
+      transition: transform 0.3s ease;
+    }
+
+    .winners-content {
+      padding: 0 20px 20px 20px;
+      text-align: center;
+      display: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: 5px;
+      padding-top: 15px;
+    }
+
+    .winners-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .winner-badge {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--accent);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+    }
+
+    /* ADMIN VEZÉRLŐK */
     .action-btn {
       display: inline-block;
       background: linear-gradient(90deg, #7c3aed, #6d28d9);
@@ -301,50 +365,6 @@
       opacity: 0.5;
       cursor: not-allowed;
       transform: none;
-    }
-
-    .winners-section {
-      background: var(--card-bg);
-      border: 1px solid #2a2a40;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      margin-top: 30px;
-      backdrop-filter: blur(5px);
-    }
-
-    .gw-counter-badge {
-      display: inline-block;
-      background: rgba(0, 255, 204, 0.1);
-      border: 1px solid #00ffcc;
-      color: #00ffcc;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 15px;
-    }
-
-    .winners-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      margin-top: 10px;
-    }
-
-    .winner-badge {
-      background: rgba(168, 85, 247, 0.15);
-      border: 1px solid var(--accent);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
     }
 
     .admin-section {
@@ -415,21 +435,6 @@
       cursor: pointer;
     }
 
-    .toggle-lock-btn {
-      background: #102a43;
-      border: 1px solid #334e68;
-      color: #bccadc;
-      padding: 10px 15px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .toggle-lock-btn.unlocked {
-      background: #064e3b;
-      border-color: #059669;
-      color: #a7f3d0;
-    }
-
     .gw-title-header {
       color: #00ffcc;
       font-size: 1.5rem;
@@ -444,7 +449,7 @@
   <!-- HÁTTÉR HIÉNA KÉP -->
   <img src="images/hiena.png" alt="Hyena Background" class="bg-hyena">
 
-  <!-- 20 DARAB SZÁRNYAS, IZZÓ HIÉNA FEJ KÖRÜLBEN LEBEGVE -->
+  <!-- REPKEDŐ HIÉNA FEJEK KONTÉNER -->
   <div class="flying-container">
     <div class="flying-winged-hyena hyena-1"><img src="images/hiena.png" alt="flying hyena"></div>
     <div class="flying-winged-hyena hyena-2"><img src="images/hiena.png" alt="flying hyena"></div>
@@ -484,14 +489,19 @@
     <!-- TÖBBSOROS PÖRGETŐ TERÜLET -->
     <div id="rollersArea"></div>
 
-    <!-- EDDIGI GW SZÁMLÁLÓ ÉS NYERTESEK SÁVA (Publikus) -->
-    <div id="publicWinnersContainer" class="winners-section" style="display: none;">
-      <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Eddigi Nyertesek</h2>
-      <div id="gwCounterBadge" class="gw-counter-badge">
-        Összesen: 0 giveaway sorsolás
+    <!-- EDDIGI NYERTESEK (PUBLIKUS KINYITHATÓ DOBOZ) -->
+    <div class="winners-section">
+      <div class="winners-header" onclick="toggleWinnersAccordion()">
+        <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Eddigi Nyertesek</h2>
+        <div id="gwCounterBadge" class="gw-counter-badge">
+          Összesen: 0 giveaway sorsolás
+        </div>
+        <i id="accordionArrow" class="fa-solid fa-chevron-down toggle-icon"></i>
       </div>
-      <div id="publicWinnersList" class="winners-list">
-        <span style="color: var(--subtext);">Még nincs rögzített nyertes.</span>
+      <div id="winnersContent" class="winners-content">
+        <div id="publicWinnersList" class="winners-list">
+          <span style="color: var(--subtext);">Még nincs rögzített nyertes.</span>
+        </div>
       </div>
     </div>
 
@@ -520,17 +530,6 @@
         </div>
 
         <button id="adminSpinBtn" class="action-btn" onclick="startLiveSpin()"><i class="fa-solid fa-play"></i> ÉLŐ SZIMULTÁN PÖRGETÉS!</button>
-      </div>
-
-      <!-- LÁTHATÓSÁG KAPCSOLÓ -->
-      <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2a2a40;">
-        <div>
-          <strong>Nyertesek Lista Láthatósága:</strong>
-          <p style="margin: 0; font-size: 0.85rem; color: var(--subtext);">Lássák a nézők a Nyertesek előzmény dobozt?</p>
-        </div>
-        <button id="lockToggleBtn" class="toggle-lock-btn" onclick="togglePublicWinnersVisibility()">
-          <i class="fa-solid fa-lock"></i> REJTVE a publikum elől
-        </button>
       </div>
 
       <!-- GIVEAWAY NEVE -->
@@ -567,12 +566,9 @@
 
       <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
 
-      <h3><i class="fa-solid fa-trophy"></i> Admin Nyertes Történet</h3>
-      <div style="margin-bottom: 10px;">
+      <h3><i class="fa-solid fa-trash-can"></i> Nyertes Előzmények Kezelése</h3>
+      <div>
         <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearWinnersHistory()">Nyertes előzmények törlése</button>
-      </div>
-      <div id="adminWinnersList" class="winners-list" style="justify-content: flex-start;">
-        <span style="color: var(--subtext);">Még nem volt sorsolás.</span>
       </div>
     </div>
   </div>
@@ -591,14 +587,12 @@
     const DEVICE_SECRET_KEY = "al1ve_authorized_admin_device_2026";
 
     let currentGwTitle = "25$ FTD EgoGames";
-    let isWinnersPublic = false; 
     let players = ["Krexy", "Kakos", "Valentino", "Dani", "Gamer123", "Slayer99"];
     let winnersHistory = [];
     let totalGwCount = 0;
 
     const rollersArea = document.getElementById('rollersArea');
 
-    // Autentikáció és Eszköz Ellenőrzés
     window.addEventListener('DOMContentLoaded', () => {
       if (localStorage.getItem('al1ve_admin_device') === DEVICE_SECRET_KEY) {
         showAdminPanel();
@@ -607,6 +601,7 @@
       if (urlParams.has('admin')) verifyAdminAccess();
 
       renderRollerLanes(1);
+      listenToFirebase();
     });
 
     document.addEventListener('keydown', (e) => {
@@ -625,24 +620,36 @@
     function showAdminPanel() {
       document.getElementById('adminPanelSection').style.display = 'block';
       renderAdminTable();
-      renderWinners();
     }
 
     // --- ÉLŐ DB SZINKRONIZÁCIÓ ---
+    function listenToFirebase() {
+      db.ref('live_spin').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data && data.timestamp > Date.now() - 10000) {
+          executeSimultaneousSpin(data.winners, data.gwTitle);
+        }
+      });
 
-    db.ref('live_spin').on('value', (snapshot) => {
-      const data = snapshot.val();
-      if (data && data.timestamp > Date.now() - 10000) {
-        executeSimultaneousSpin(data.winners, data.gwTitle);
-      }
-    });
+      db.ref('gw_title').on('value', (snapshot) => {
+        if (snapshot.val()) {
+          currentGwTitle = snapshot.val();
+          document.getElementById('publicGwTitle').innerText = currentGwTitle;
+        }
+      });
 
-    db.ref('gw_title').on('value', (snapshot) => {
-      if (snapshot.val()) {
-        currentGwTitle = snapshot.val();
-        document.getElementById('publicGwTitle').innerText = currentGwTitle;
-      }
-    });
+      db.ref('winners_history').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          winnersHistory = data.history || [];
+          totalGwCount = data.totalCount || 0;
+        } else {
+          winnersHistory = [];
+          totalGwCount = 0;
+        }
+        renderWinners();
+      });
+    }
 
     // --- TÖBBSOROS PÖRGETŐ ELEMEK LEKEZELÉSE ---
 
@@ -753,11 +760,14 @@
           if (resBox) {
             resBox.innerHTML = `🎉 ${index + 1}. NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
           }
-
           winnersHistory.unshift({ name: winnerName });
         });
 
-        renderWinners();
+        db.ref('winners_history').set({
+          history: winnersHistory,
+          totalCount: totalGwCount
+        });
+
         if (adminBtn) adminBtn.disabled = false;
       }, 6200);
     }
@@ -766,36 +776,22 @@
       return players.length === 0 ? 0 : (100 / players.length).toFixed(1);
     }
 
-    // --- ADMIN KEZELŐ FUNKCIÓK ---
+    // --- ACCORDION FUNKCIÓ ---
+    function toggleWinnersAccordion() {
+      const content = document.getElementById('winnersContent');
+      const arrow = document.getElementById('accordionArrow');
 
-    function updateGwTitle() {
-      const input = document.getElementById('gwTitleInput');
-      if (input.value.trim() !== "") {
-        currentGwTitle = input.value.trim();
-        db.ref('gw_title').set(currentGwTitle);
-        alert("Giveaway neve elmentve és frissítve élőben!");
-      }
-    }
-
-    function togglePublicWinnersVisibility() {
-      isWinnersPublic = !isWinnersPublic;
-      const btn = document.getElementById('lockToggleBtn');
-      const publicContainer = document.getElementById('publicWinnersContainer');
-
-      if (isWinnersPublic) {
-        btn.className = "toggle-lock-btn unlocked";
-        btn.innerHTML = '<i class="fa-solid fa-lock-open"></i> LÁTHATÓ a publikumnak';
-        publicContainer.style.display = 'block';
+      if (content.style.display === 'block') {
+        content.style.display = 'none';
+        arrow.style.transform = 'translateY(-50%) rotate(0deg)';
       } else {
-        btn.className = "toggle-lock-btn";
-        btn.innerHTML = '<i class="fa-solid fa-lock"></i> REJTVE a publikum elől';
-        publicContainer.style.display = 'none';
+        content.style.display = 'block';
+        arrow.style.transform = 'translateY(-50%) rotate(180deg)';
       }
     }
 
     function renderWinners() {
       const publicList = document.getElementById('publicWinnersList');
-      const adminList = document.getElementById('adminWinnersList');
       const counterBadge = document.getElementById('gwCounterBadge');
 
       if (counterBadge) {
@@ -804,25 +800,34 @@
 
       if (winnersHistory.length === 0) {
         publicList.innerHTML = '<span style="color: var(--subtext);">Még nincs rögzített nyertes.</span>';
-        adminList.innerHTML = '<span style="color: var(--subtext);">Még nem volt sorsolás.</span>';
         return;
       }
 
-      const badgesHtml = winnersHistory.map(w => `
+      publicList.innerHTML = winnersHistory.map(w => `
         <div class="winner-badge">
           <i class="fa-solid fa-trophy" style="color:#ffd700;"></i> ${w.name}
         </div>
       `).join('');
-
-      publicList.innerHTML = badgesHtml;
-      adminList.innerHTML = badgesHtml;
     }
 
     function clearWinnersHistory() {
       if (confirm("Törölni szeretnéd a nyertesek előzményeit?")) {
         winnersHistory = [];
         totalGwCount = 0;
-        renderWinners();
+        db.ref('winners_history').set({
+          history: [],
+          totalCount: 0
+        });
+      }
+    }
+
+    // --- ADMIN FUNKCIÓK ---
+    function updateGwTitle() {
+      const input = document.getElementById('gwTitleInput');
+      if (input.value.trim() !== "") {
+        currentGwTitle = input.value.trim();
+        db.ref('gw_title').set(currentGwTitle);
+        alert("Giveaway neve frissítve!");
       }
     }
 
