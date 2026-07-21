@@ -16,7 +16,6 @@
       --bg-color: #0b0b14;
       --card-bg: #131322;
       --accent: #a855f7;
-      --accent-glow: #7c3aed;
       --text: #e0e0e0;
       --subtext: #a0a0a0;
     }
@@ -32,7 +31,7 @@
     /* CS GO / Upgrade style roller container */
     .roller-wrapper {
       max-width: 900px;
-      margin: 50px auto 20px auto;
+      margin: 30px auto 20px auto;
       background: var(--card-bg);
       border: 2px solid rgba(168, 85, 247, 0.4);
       border-radius: 16px;
@@ -51,7 +50,6 @@
       border: 1px solid #2a2a40;
     }
 
-    /* A piros/lila jelölő nyíl középen */
     .selector-line {
       position: absolute;
       top: 0;
@@ -77,7 +75,6 @@
       z-index: 11;
     }
 
-    /* A szalag, amin a nevek futnak */
     .roller-track {
       display: flex;
       align-items: center;
@@ -88,7 +85,6 @@
       will-change: transform;
     }
 
-    /* Egyes kártyák a szalagon */
     .name-card {
       min-width: 140px;
       height: 90px;
@@ -107,14 +103,13 @@
       user-select: none;
     }
 
-    .name-card .weight-tag {
+    .name-card .chance-tag {
       font-size: 0.75rem;
-      color: var(--subtext);
-      font-weight: 400;
+      color: var(--accent);
+      font-weight: 600;
       margin-top: 4px;
     }
 
-    /* Gombok */
     .action-btn {
       display: inline-block;
       background: linear-gradient(90deg, #7c3aed, #6d28d9);
@@ -140,7 +135,6 @@
       transform: none;
     }
 
-    /* Nyertes kijelző popup */
     .winner-box {
       margin-top: 20px;
       font-size: 1.5rem;
@@ -148,6 +142,35 @@
       color: #00ffcc;
       text-shadow: 0 0 10px #00ffcc;
       min-height: 40px;
+    }
+
+    /* Nyertesek szekció */
+    .winners-section {
+      max-width: 900px;
+      margin: 20px auto;
+      background: var(--card-bg);
+      border: 1px solid #2a2a40;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .winners-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .winner-badge {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--accent);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
     }
 
     /* Admin Panel stílusok */
@@ -173,7 +196,6 @@
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
-      flex-wrap: wrap;
     }
 
     .admin-input-group input {
@@ -222,6 +244,21 @@
     .secondary-btn:hover {
       background: #333355;
     }
+
+    .toggle-lock-btn {
+      background: #102a43;
+      border: 1px solid #334e68;
+      color: #bccadc;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .toggle-lock-btn.unlocked {
+      background: #064e3b;
+      border-color: #059669;
+      color: #a7f3d0;
+    }
   </style>
 </head>
 
@@ -236,10 +273,9 @@
 
   <div style="text-align: center; margin-top: 30px;">
     <h1><i class="fa-solid fa-gift"></i> Live Giveaway Opener</h1>
-    <p style="color: var(--subtext);">Nézd élőben a sorsolást! Száguldó nevek, fair esélyek.</p>
   </div>
 
-  <!-- CS GO STYLE ROLLER -->
+  <!-- CS GO / UPGRADE STYLE ROLLER -->
   <div class="roller-wrapper" style="text-align: center;">
     <div class="selector-arrow"></div>
     <div class="roller-container">
@@ -254,6 +290,14 @@
     <div id="winnerBox" class="winner-box"></div>
   </div>
 
+  <!-- NYERTESEK SZEKCIÓ (Publikusan ki/be kapcsolható) -->
+  <div id="publicWinnersContainer" class="winners-section" style="display: none;">
+    <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Nyertesek</h2>
+    <div id="publicWinnersList" class="winners-list">
+      <span style="color: var(--subtext);">Még nincs rögzített nyertes.</span>
+    </div>
+  </div>
+
   <!-- ADMIN PANEL SECTION -->
   <div class="admin-section">
     <div class="admin-header">
@@ -262,14 +306,20 @@
     </div>
 
     <div id="adminContent" style="display: none;">
-      <h3>Nevek és Esélyek (Súlyozás) hozzáadása</h3>
-      <p style="font-size: 0.85rem; color: var(--subtext);">
-        A "Súly" határozza meg az esélyt. Pl: Ha 'A' súlya 2, 'B' súlya 1, akkor A-nak dupla akkora esélye van nyerni mint B-nek. A rendszer automatikusan kiszámolja a %-os esélyt!
-      </p>
+      <!-- LÁTHATÓSÁG KAPCSOLÓ (LOCK) -->
+      <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2a2a40;">
+        <div>
+          <strong>Nyertesek Lista Láthatósága:</strong>
+          <p style="margin: 0; font-size: 0.85rem; color: var(--subtext);">Itt zárhatod/nyithatod, hogy a publikus látogatók lássák-e a Nyertesek dobozt.</p>
+        </div>
+        <button id="lockToggleBtn" class="toggle-lock-btn" onclick="togglePublicWinnersVisibility()">
+          <i class="fa-solid fa-lock"></i> Rejtve a publikum elől
+        </button>
+      </div>
 
+      <h3>Játékosok hozzáadása</h3>
       <div class="admin-input-group">
-        <input type="text" id="playerNameInput" placeholder="Játékos neve..." style="flex: 2;">
-        <input type="number" id="playerWeightInput" placeholder="Súly (pl: 100)" value="100" style="flex: 1;">
+        <input type="text" id="playerNameInput" placeholder="Játékos neve..." style="flex: 1;" onkeypress="if(event.key === 'Enter') addPlayer()">
         <button class="action-btn" style="padding: 10px 20px;" onclick="addPlayer()">Hozzáadás</button>
       </div>
 
@@ -281,29 +331,35 @@
       <table class="player-table">
         <thead>
           <tr>
+            <th>#</th>
             <th>Név</th>
-            <th>Súly</th>
             <th>Nyerési Esély (%)</th>
             <th>Művelet</th>
           </tr>
         </thead>
         <tbody id="playerTableBody"></tbody>
       </table>
+
+      <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
+
+      <h3><i class="fa-solid fa-trophy"></i> Admin Nyertes Történet</h3>
+      <div style="margin-bottom: 10px;">
+        <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearWinnersHistory()">Nyertes előzmények törlése</button>
+      </div>
+      <div id="adminWinnersList" class="winners-list" style="justify-content: flex-start;">
+        <span style="color: var(--subtext);">Még nem volt sorsolás.</span>
+      </div>
     </div>
   </div>
 
   <script>
-    // Alapértelmezett Admin Jelszó
     const ADMIN_PASSWORD = "al1ve2026"; 
     let isAdminLoggedIn = false;
 
-    // Kezdő teszt adatok
-    let players = [
-      { name: "Sanyi", weight: 100 },
-      { name: "Peti", weight: 100 },
-      { name: "Gábor", weight: 200 },
-      { name: "Kitti", weight: 50 }
-    ];
+    // Beállítások és adatok
+    let isWinnersPublic = false; // Alapból rejtve van a látogatók elől
+    let players = ["Sanyi", "Peti", "Gábor", "Kitti", "Dani"];
+    let winnersHistory = [];
 
     const rollerTrack = document.getElementById('rollerTrack');
     const spinBtn = document.getElementById('spinBtn');
@@ -316,8 +372,9 @@
         if (pass === ADMIN_PASSWORD) {
           isAdminLoggedIn = true;
           document.getElementById('adminContent').style.display = 'block';
-          document.getElementById('authBtn').innerHTML = '<i class="fa-solid fa-lock-open"></i> Admin Kijelentkezés';
+          document.getElementById('authBtn').innerHTML = '<i class="fa-solid fa-lock-open"></i> Kijelentkezés';
           renderAdminTable();
+          renderWinners();
         } else {
           alert("Helytelen jelszó!");
         }
@@ -328,127 +385,142 @@
       }
     }
 
-    // Összes súly kiszámítása
-    function getTotalWeight() {
-      return players.reduce((sum, p) => sum + p.weight, 0);
-    }
+    // Láthatóság zárolása / feloldása
+    function togglePublicWinnersVisibility() {
+      isWinnersPublic = !isWinnersPublic;
+      const btn = document.getElementById('lockToggleBtn');
+      const publicContainer = document.getElementById('publicWinnersContainer');
 
-    // Százalékos nyertes kiválasztás (Weighted Random)
-    function pickWeightedWinner() {
-      const totalWeight = getTotalWeight();
-      let random = Math.random() * totalWeight;
-      for (let player of players) {
-        if (random < player.weight) {
-          return player;
-        }
-        random -= player.weight;
+      if (isWinnersPublic) {
+        btn.className = "toggle-lock-btn unlocked";
+        btn.innerHTML = '<i class="fa-solid fa-lock-open"></i> LÁTHATÓ a publikumnak';
+        publicContainer.style.display = 'block';
+      } else {
+        btn.className = "toggle-lock-btn";
+        btn.innerHTML = '<i class="fa-solid fa-lock"></i> REJTVE a publikum elől';
+        publicContainer.style.display = 'none';
       }
-      return players[0];
     }
 
-    // Szalag feltöltése a pörgetéshez
-    function buildTrack(winner) {
+    function getPlayerChance() {
+      if (players.length === 0) return 0;
+      return (100 / players.length).toFixed(1);
+    }
+
+    function buildTrack(winnerIndexInList) {
       rollerTrack.innerHTML = '';
-      
-      // Létrehozunk egy hosszú sort (pl. 80 kártya), hogy kényelmesen lehessen pörgetni
       const CARD_COUNT = 80;
-      const WINNER_INDEX = 65; // A nyertes kártya helye a szalagon
+      const WINNER_CARD_INDEX = 65;
+      const chance = getPlayerChance();
 
       for (let i = 0; i < CARD_COUNT; i++) {
-        let p;
-        if (i === WINNER_INDEX) {
-          p = winner;
+        let name;
+        if (i === WINNER_CARD_INDEX) {
+          name = players[winnerIndexInList];
         } else {
-          // Véletlenszerű játékosok a dekorációnak
-          p = players[Math.floor(Math.random() * players.length)];
+          name = players[Math.floor(Math.random() * players.length)];
         }
 
         const card = document.createElement('div');
         card.className = 'name-card';
-        card.innerHTML = `<div>${p.name}</div><div class="weight-tag">${((p.weight/getTotalWeight())*100).toFixed(1)}%</div>`;
+        card.innerHTML = `<div>${name}</div><div class="chance-tag">${chance}%</div>`;
         rollerTrack.appendChild(card);
       }
 
-      return WINNER_INDEX;
+      return WINNER_CARD_INDEX;
     }
 
-    // Pörgetés animáció (Upgrade.com / Case Opener Style)
     spinBtn.addEventListener('click', () => {
       if (players.length === 0) {
-        alert("Nincs egyetlen játékos sem felvéve!");
+        alert("Nincs egyetlen játékos sem a listában!");
         return;
       }
 
       spinBtn.disabled = true;
       winnerBox.innerText = '';
       
-      const winner = pickWeightedWinner();
-      const winnerIndex = buildTrack(winner);
+      const winnerIndex = Math.floor(Math.random() * players.length);
+      const winnerName = players[winnerIndex];
+      const winnerCardIndex = buildTrack(winnerIndex);
 
-      // Kártya méretek kiszámítása
-      const cardWidth = 150; // 140px width + 10px margin
+      const cardWidth = 150; 
       const containerWidth = document.querySelector('.roller-container').clientWidth;
-      
-      // Pozíció kiszámítása: a nyertes kártya pontosan a piros vonal (közép) alá essen, kis véletlen eltolással a kártyán belül
       const randomOffset = Math.floor(Math.random() * 80) - 40; 
-      const targetX = (winnerIndex * cardWidth) - (containerWidth / 2) + (cardWidth / 2) + randomOffset;
+      const targetX = (winnerCardIndex * cardWidth) - (containerWidth / 2) + (cardWidth / 2) + randomOffset;
 
-      // Reset szalag pozíció
       rollerTrack.style.transition = 'none';
       rollerTrack.style.transform = 'translateX(0px)';
 
-      // Kis szünet után indítjuk az animációt
       setTimeout(() => {
-        // 6 másodperces, gyönyörűen lassuló (cubic-bezier) pörgés
         rollerTrack.style.transition = 'transform 6s cubic-bezier(0.15, 0.9, 0.15, 1)';
         rollerTrack.style.transform = `translateX(-${targetX}px)`;
       }, 50);
 
-      // Animáció vége
       setTimeout(() => {
-        winnerBox.innerHTML = `🎉 NYERTES: <span style="color:#fff;">${winner.name}</span> 🎉`;
+        winnerBox.innerHTML = `🎉 NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
         spinBtn.disabled = false;
+        
+        // Nyertes mentése a történetbe
+        winnersHistory.unshift(winnerName);
+        renderWinners();
       }, 6100);
     });
 
-    // --- ADMIN FUNKCIÓK ---
+    // Nyertesek kirajzolása
+    function renderWinners() {
+      const publicList = document.getElementById('publicWinnersList');
+      const adminList = document.getElementById('adminWinnersList');
 
+      if (winnersHistory.length === 0) {
+        publicList.innerHTML = '<span style="color: var(--subtext);">Még nincs rögzített nyertes.</span>';
+        adminList.innerHTML = '<span style="color: var(--subtext);">Még nem volt sorsolás.</span>';
+        return;
+      }
+
+      const badgesHtml = winnersHistory.map(w => `<div class="winner-badge"><i class="fa-solid fa-trophy"></i> ${w}</div>`).join('');
+      publicList.innerHTML = badgesHtml;
+      adminList.innerHTML = badgesHtml;
+    }
+
+    function clearWinnersHistory() {
+      if (confirm("Törölni szeretnéd a nyertesek előzményeit?")) {
+        winnersHistory = [];
+        renderWinners();
+      }
+    }
+
+    // ADMIN TÁBLÁZAT FUNKCIÓK
     function renderAdminTable() {
       const tbody = document.getElementById('playerTableBody');
       tbody.innerHTML = '';
-      const totalWeight = getTotalWeight();
+      const chance = getPlayerChance();
 
       players.forEach((p, index) => {
-        const chance = totalWeight > 0 ? ((p.weight / totalWeight) * 100).toFixed(2) : 0;
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><strong>${p.name}</strong></td>
-          <td>${p.weight}</td>
+          <td>${index + 1}.</td>
+          <td><strong>${p}</strong></td>
           <td><span style="color: var(--accent); font-weight: bold;">${chance}%</span></td>
           <td><button class="delete-btn" onclick="deletePlayer(${index})"><i class="fa-solid fa-trash"></i></button></td>
         `;
         tbody.appendChild(tr);
       });
 
-      // Kezdő vizuális szalag építés
-      if(players.length > 0) buildTrack(players[0]);
+      if(players.length > 0) buildTrack(0);
     }
 
     function addPlayer() {
       const nameInput = document.getElementById('playerNameInput');
-      const weightInput = document.getElementById('playerWeightInput');
-
       const name = nameInput.value.trim();
-      const weight = parseFloat(weightInput.value);
 
-      if (!name || isNaN(weight) || weight <= 0) {
-        alert("Kérlek adj meg érvényes nevet és súlyt!");
+      if (!name) {
+        alert("Kérlek adj meg egy nevet!");
         return;
       }
 
-      players.push({ name, weight });
+      players.push(name);
       nameInput.value = '';
-      weightInput.value = '100';
+      nameInput.focus();
       renderAdminTable();
     }
 
@@ -472,8 +544,7 @@
       renderAdminTable();
     }
 
-    // Kezdő betöltés
-    buildTrack(players[0]);
+    buildTrack(0);
   </script>
 </body>
 </html>
