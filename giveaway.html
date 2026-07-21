@@ -31,7 +31,7 @@
     /* CS GO / Upgrade style roller container */
     .roller-wrapper {
       max-width: 900px;
-      margin: 30px auto 20px auto;
+      margin: 20px auto;
       background: var(--card-bg);
       border: 2px solid rgba(168, 85, 247, 0.4);
       border-radius: 16px;
@@ -158,7 +158,7 @@
     .winners-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
       justify-content: center;
       margin-top: 15px;
     }
@@ -167,10 +167,20 @@
       background: rgba(168, 85, 247, 0.15);
       border: 1px solid var(--accent);
       color: #fff;
-      padding: 6px 14px;
-      border-radius: 20px;
+      padding: 8px 16px;
+      border-radius: 10px;
       font-size: 0.95rem;
       font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .winner-badge .gw-title-tag {
+      font-size: 0.75rem;
+      color: #00ffcc;
+      font-weight: 400;
+      margin-top: 2px;
     }
 
     /* Admin Panel stílusok */
@@ -259,6 +269,13 @@
       border-color: #059669;
       color: #a7f3d0;
     }
+
+    .gw-title-header {
+      color: #00ffcc;
+      font-size: 1.2rem;
+      margin-top: 5px;
+      font-weight: 600;
+    }
   </style>
 </head>
 
@@ -273,6 +290,7 @@
 
   <div style="text-align: center; margin-top: 30px;">
     <h1><i class="fa-solid fa-gift"></i> Live Giveaway Opener</h1>
+    <div id="publicGwTitle" class="gw-title-header">25$ FTD EgoGames</div>
   </div>
 
   <!-- CS GO / UPGRADE STYLE ROLLER -->
@@ -306,6 +324,7 @@
     </div>
 
     <div id="adminContent" style="display: none;">
+      
       <!-- LÁTHATÓSÁG KAPCSOLÓ (LOCK) -->
       <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2a2a40;">
         <div>
@@ -313,8 +332,17 @@
           <p style="margin: 0; font-size: 0.85rem; color: var(--subtext);">Itt zárhatod/nyithatod, hogy a publikus látogatók lássák-e a Nyertesek dobozt.</p>
         </div>
         <button id="lockToggleBtn" class="toggle-lock-btn" onclick="togglePublicWinnersVisibility()">
-          <i class="fa-solid fa-lock"></i> Rejtve a publikum elől
+          <i class="fa-solid fa-lock"></i> REJTVE a publikum elől
         </button>
+      </div>
+
+      <!-- GIVEAWAY NEVÉNEK BEÁLLÍTÁSA -->
+      <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2a2a40;">
+        <label style="display: block; font-weight: 600; margin-bottom: 8px;"><i class="fa-solid fa-tag"></i> Giveaway Neve / Nyeremény:</label>
+        <div class="admin-input-group" style="margin-bottom: 0;">
+          <input type="text" id="gwTitleInput" value="25$ FTD EgoGames" placeholder="pl: 25$ FTD EgoGames" style="flex: 1;">
+          <button class="secondary-btn" onclick="updateGwTitle()">Mentés</button>
+        </div>
       </div>
 
       <h3>Játékosok hozzáadása</h3>
@@ -356,10 +384,10 @@
     const ADMIN_PASSWORD = "al1ve2026"; 
     let isAdminLoggedIn = false;
 
-    // Beállítások és adatok
-    let isWinnersPublic = false; // Alapból rejtve van a látogatók elől
+    let currentGwTitle = "25$ FTD EgoGames";
+    let isWinnersPublic = false; 
     let players = ["Sanyi", "Peti", "Gábor", "Kitti", "Dani"];
-    let winnersHistory = [];
+    let winnersHistory = []; // { name: "", gw: "" } szerkezetű elemek
 
     const rollerTrack = document.getElementById('rollerTrack');
     const spinBtn = document.getElementById('spinBtn');
@@ -382,6 +410,16 @@
         isAdminLoggedIn = false;
         document.getElementById('adminContent').style.display = 'none';
         document.getElementById('authBtn').innerHTML = '<i class="fa-solid fa-lock"></i> Belépés Adminak';
+      }
+    }
+
+    // Giveaway cím frissítése
+    function updateGwTitle() {
+      const input = document.getElementById('gwTitleInput');
+      if (input.value.trim() !== "") {
+        currentGwTitle = input.value.trim();
+        document.getElementById('publicGwTitle').innerText = currentGwTitle;
+        alert("Giveaway neve frissítve!");
       }
     }
 
@@ -460,8 +498,8 @@
         winnerBox.innerHTML = `🎉 NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
         spinBtn.disabled = false;
         
-        // Nyertes mentése a történetbe
-        winnersHistory.unshift(winnerName);
+        // Nyertes mentése a történetbe a GW nevével együtt
+        winnersHistory.unshift({ name: winnerName, gw: currentGwTitle });
         renderWinners();
       }, 6100);
     });
@@ -477,7 +515,13 @@
         return;
       }
 
-      const badgesHtml = winnersHistory.map(w => `<div class="winner-badge"><i class="fa-solid fa-trophy"></i> ${w}</div>`).join('');
+      const badgesHtml = winnersHistory.map(w => `
+        <div class="winner-badge">
+          <div><i class="fa-solid fa-trophy" style="color:#ffd700;"></i> ${w.name}</div>
+          <div class="gw-title-tag">${w.gw}</div>
+        </div>
+      `).join('');
+
       publicList.innerHTML = badgesHtml;
       adminList.innerHTML = badgesHtml;
     }
