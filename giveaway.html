@@ -11,6 +11,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+  <!-- Firebase SDK-k az élő szinkronizációhoz -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
   <style>
     :root {
       --bg-color: #0b0b14;
@@ -181,7 +185,6 @@
       margin-top: 2px;
     }
 
-    /* REJTETT ADMIN PANEL */
     .admin-section {
       max-width: 900px;
       margin: 40px auto;
@@ -189,7 +192,7 @@
       border: 2px solid #ff0055;
       border-radius: 12px;
       padding: 20px;
-      display: none; /* Alapból rejtve van mindenki elől */
+      display: none;
     }
 
     .admin-header {
@@ -207,7 +210,7 @@
       margin-bottom: 20px;
     }
 
-    .admin-input-group input {
+    .admin-input-group input, .admin-input-group select {
       background: #090910;
       border: 1px solid #333355;
       color: #fff;
@@ -250,10 +253,6 @@
       cursor: pointer;
     }
 
-    .secondary-btn:hover {
-      background: #333355;
-    }
-
     .toggle-lock-btn {
       background: #102a43;
       border: 1px solid #334e68;
@@ -271,9 +270,9 @@
 
     .gw-title-header {
       color: #00ffcc;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       margin-top: 5px;
-      font-weight: 600;
+      font-weight: 700;
     }
   </style>
 </head>
@@ -292,7 +291,7 @@
     <div id="publicGwTitle" class="gw-title-header">25$ FTD EgoGames</div>
   </div>
 
-  <!-- ROLLER (Vendégek felülete) -->
+  <!-- SORSOLÓ FELÜLET (Nézők & Admin) -->
   <div class="roller-wrapper" style="text-align: center;">
     <div class="selector-arrow"></div>
     <div class="roller-container">
@@ -300,7 +299,6 @@
       <div id="rollerTrack" class="roller-track"></div>
     </div>
 
-    <!-- Vendégeknek nincs pörgetés gomb, csak státusz szöveg -->
     <div id="guestStatusMsg" style="margin-top: 20px; color: var(--subtext); font-style: italic;">
       <i class="fa-solid fa-clock"></i> Várakozás a sorsolásra...
     </div>
@@ -316,19 +314,31 @@
     </div>
   </div>
 
-  <!-- TELJESEN REJTETT ADMIN PANEL (Csak a te gépeden jelenik meg) -->
+  <!-- ADMIN PANEL -->
   <div id="adminPanelSection" class="admin-section">
     <div class="admin-header">
       <h2 style="color: #ff0055;"><i class="fa-solid fa-user-shield"></i> ADMIN CONTROL PANEL</h2>
       <span style="background: #00ffcc; color: #000; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem;">
-        <i class="fa-solid fa-desktop"></i> Felismert Admin Eszköz
+        <i class="fa-solid fa-desktop"></i> Admin Eszköz
       </span>
     </div>
 
-    <!-- PÖRGETÉS GOMB (Kizárólag az Admin Panelben érhető el) -->
+    <!-- PÖRGETÉS BEÁLLÍTÁSOK -->
     <div style="background: #1c1a36; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 25px; border: 1px solid var(--accent);">
-      <h3 style="margin-top: 0;">Sorsolás Indítása</h3>
-      <button id="adminSpinBtn" class="action-btn" onclick="triggerSpin()"><i class="fa-solid fa-play"></i> PÖRGETÉS INDÍTÁSA!</button>
+      <h3 style="margin-top: 0;">Sorsolás Indítása Élőben</h3>
+      
+      <div style="margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+        <label><strong>Nyertesek száma:</strong></label>
+        <select id="winnerCountSelect" style="padding: 8px 12px; background: #090910; color: #fff; border: 1px solid #333355; border-radius: 6px;">
+          <option value="1">1 Nyertes</option>
+          <option value="2">2 Nyertes</option>
+          <option value="3">3 Nyertes</option>
+          <option value="4">4 Nyertes</option>
+          <option value="5">5 Nyertes</option>
+        </select>
+      </div>
+
+      <button id="adminSpinBtn" class="action-btn" onclick="startLiveSpin()"><i class="fa-solid fa-play"></i> ÉLŐ PÖRGETÉS INDÍTÁSA!</button>
     </div>
 
     <!-- LÁTHATÓSÁG KAPCSOLÓ -->
@@ -358,7 +368,7 @@
     </div>
 
     <div style="margin-bottom: 15px; display: flex; gap: 10px;">
-      <button class="secondary-btn" onclick="shufflePlayers()"><i class="fa-solid fa-shuffle"></i> Nevek Megkavarása (Shuffle)</button>
+      <button class="secondary-btn" onclick="shufflePlayers()"><i class="fa-solid fa-shuffle"></i> Nevek Megkavarása</button>
       <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearAllPlayers()">Összes törlése</button>
     </div>
 
@@ -386,48 +396,45 @@
   </div>
 
   <script>
+    // FIREBASE BEÁLLÍTÁSOK A MEGADOTT ADATBÁZIS CÍMMEL
+    const firebaseConfig = {
+      databaseURL: "https://giveawy-6e8f6-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "giveawy-6e8f6"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     const ADMIN_PASSWORD = "al1ve2026"; 
-    const DEVICE_SECRET_KEY = "al1ve_authorized_admin_device_2026"; // Egyedi eszköz azonosító
+    const DEVICE_SECRET_KEY = "al1ve_authorized_admin_device_2026";
 
     let currentGwTitle = "25$ FTD EgoGames";
     let isWinnersPublic = false; 
-    let players = ["Sanyi", "Peti", "Gábor", "Kitti", "Dani"];
+    let players = ["Krexy", "Kakos", "Valentino", "Dani"];
     let winnersHistory = [];
 
     const rollerTrack = document.getElementById('rollerTrack');
     const winnerBox = document.getElementById('winnerBox');
 
-    // --- ESZKÖZ ALAPÚ AUTOMATIKUS BELÉPÉS & REJTETT BILLENTYŰKOMBINÁCIÓ ---
-
+    // Autentikáció és Eszköz Ellenőrzés
     window.addEventListener('DOMContentLoaded', () => {
-      // 1. Ellenőrizzük, hogy ez a gép el lett-e már mentve Admin számítógépként
       if (localStorage.getItem('al1ve_admin_device') === DEVICE_SECRET_KEY) {
         showAdminPanel();
       }
-
-      // 2. Címben lévő rejtett kód ellenőrzése (pl: giveaway.html?admin=true)
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('admin')) {
-        verifyAdminAccess();
-      }
+      if (urlParams.has('admin')) verifyAdminAccess();
     });
 
-    // Rejtett Billentyűkombináció: CTRL + SHIFT + A billentyűk lenyomására megnyílik az admin jelszóbekérő!
     document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
-        verifyAdminAccess();
-      }
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') verifyAdminAccess();
     });
 
     function verifyAdminAccess() {
       const pass = prompt("Admin Hitelesítés:");
       if (pass === ADMIN_PASSWORD) {
-        // Elmentjük ezt a számítógépet mint autorizált Admin Eszköz!
         localStorage.setItem('al1ve_admin_device', DEVICE_SECRET_KEY);
         showAdminPanel();
-        alert("Ez a számítógép sikeresen párosítva lett mint Admin eszköz!");
-      } else if (pass !== null) {
-        alert("Helytelen jelszó!");
+        alert("Sikeres belépés!");
       }
     }
 
@@ -437,27 +444,109 @@
       renderWinners();
     }
 
-    // --- ROLLER FUNKCIÓK ---
+    // --- ÉLŐ DB SZINKRONIZÁCIÓ ---
 
-    function getPlayerChance() {
-      if (players.length === 0) return 0;
-      return (100 / players.length).toFixed(1);
+    db.ref('live_spin').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data && data.timestamp > Date.now() - 10000) {
+        executeSpinAnimation(data.winners, data.gwTitle);
+      }
+    });
+
+    db.ref('gw_title').on('value', (snapshot) => {
+      if (snapshot.val()) {
+        currentGwTitle = snapshot.val();
+        document.getElementById('publicGwTitle').innerText = currentGwTitle;
+      }
+    });
+
+    // --- SORSOLÁSI LOGIKA ---
+
+    function startLiveSpin() {
+      if (players.length === 0) {
+        alert("Nincs egyetlen játékos sem!");
+        return;
+      }
+
+      const countSelect = document.getElementById('winnerCountSelect');
+      const winnerCount = parseInt(countSelect.value);
+      
+      let selectedWinners = [];
+      let tempPlayers = [...players];
+
+      for (let i = 0; i < winnerCount; i++) {
+        if (tempPlayers.length === 0) break;
+        const randomIndex = Math.floor(Math.random() * tempPlayers.length);
+        selectedWinners.push(tempPlayers[randomIndex]);
+        tempPlayers.splice(randomIndex, 1);
+      }
+
+      db.ref('live_spin').set({
+        winners: selectedWinners,
+        gwTitle: currentGwTitle,
+        timestamp: Date.now()
+      });
     }
 
-    function buildTrack(winnerIndexInList) {
+    function executeSpinAnimation(winnerList, title) {
+      const adminBtn = document.getElementById('adminSpinBtn');
+      if (adminBtn) adminBtn.disabled = true;
+
+      winnerBox.innerText = '';
+      let currentSpin = 0;
+
+      function runSingleSpin() {
+        if (currentSpin >= winnerList.length) {
+          if (adminBtn) adminBtn.disabled = false;
+          return;
+        }
+
+        const currentWinner = winnerList[currentSpin];
+        const winnerCardIndex = buildTrackWithWinner(currentWinner);
+
+        const cardWidth = 150; 
+        const containerWidth = document.querySelector('.roller-container').clientWidth;
+        const randomOffset = Math.floor(Math.random() * 80) - 40; 
+        const targetX = (winnerCardIndex * cardWidth) - (containerWidth / 2) + (cardWidth / 2) + randomOffset;
+
+        rollerTrack.style.transition = 'none';
+        rollerTrack.style.transform = 'translateX(0px)';
+
+        setTimeout(() => {
+          rollerTrack.style.transition = 'transform 6s cubic-bezier(0.15, 0.9, 0.15, 1)';
+          rollerTrack.style.transform = `translateX(-${targetX}px)`;
+        }, 50);
+
+        setTimeout(() => {
+          if (winnerList.length > 1) {
+            winnerBox.innerHTML += `<div>🎉 NYERTES (${currentSpin + 1}): <span style="color:#fff;">${currentWinner}</span> 🎉</div>`;
+          } else {
+            winnerBox.innerHTML = `🎉 NYERTES: <span style="color:#fff;">${currentWinner}</span> 🎉`;
+          }
+
+          winnersHistory.unshift({ name: currentWinner, gw: title });
+          renderWinners();
+
+          currentSpin++;
+          if (currentSpin < winnerList.length) {
+            setTimeout(runSingleSpin, 2000);
+          } else {
+            if (adminBtn) adminBtn.disabled = false;
+          }
+        }, 6100);
+      }
+
+      runSingleSpin();
+    }
+
+    function buildTrackWithWinner(winnerName) {
       rollerTrack.innerHTML = '';
       const CARD_COUNT = 80;
       const WINNER_CARD_INDEX = 65;
       const chance = getPlayerChance();
 
       for (let i = 0; i < CARD_COUNT; i++) {
-        let name;
-        if (i === WINNER_CARD_INDEX) {
-          name = players[winnerIndexInList];
-        } else {
-          name = players[Math.floor(Math.random() * players.length)];
-        }
-
+        let name = (i === WINNER_CARD_INDEX) ? winnerName : players[Math.floor(Math.random() * players.length)];
         const card = document.createElement('div');
         card.className = 'name-card';
         card.innerHTML = `<div>${name}</div><div class="chance-tag">${chance}%</div>`;
@@ -467,50 +556,18 @@
       return WINNER_CARD_INDEX;
     }
 
-    function triggerSpin() {
-      const spinBtn = document.getElementById('adminSpinBtn');
-      if (players.length === 0) {
-        alert("Nincs egyetlen játékos sem a listában!");
-        return;
-      }
-
-      if(spinBtn) spinBtn.disabled = true;
-      winnerBox.innerText = '';
-      
-      const winnerIndex = Math.floor(Math.random() * players.length);
-      const winnerName = players[winnerIndex];
-      const winnerCardIndex = buildTrack(winnerIndex);
-
-      const cardWidth = 150; 
-      const containerWidth = document.querySelector('.roller-container').clientWidth;
-      const randomOffset = Math.floor(Math.random() * 80) - 40; 
-      const targetX = (winnerCardIndex * cardWidth) - (containerWidth / 2) + (cardWidth / 2) + randomOffset;
-
-      rollerTrack.style.transition = 'none';
-      rollerTrack.style.transform = 'translateX(0px)';
-
-      setTimeout(() => {
-        rollerTrack.style.transition = 'transform 6s cubic-bezier(0.15, 0.9, 0.15, 1)';
-        rollerTrack.style.transform = `translateX(-${targetX}px)`;
-      }, 50);
-
-      setTimeout(() => {
-        winnerBox.innerHTML = `🎉 NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
-        if(spinBtn) spinBtn.disabled = false;
-        
-        winnersHistory.unshift({ name: winnerName, gw: currentGwTitle });
-        renderWinners();
-      }, 6100);
+    function getPlayerChance() {
+      return players.length === 0 ? 0 : (100 / players.length).toFixed(1);
     }
 
-    // --- ADMIN KEZELÉS ---
+    // --- ADMIN KEZELŐ FUNKCIÓK ---
 
     function updateGwTitle() {
       const input = document.getElementById('gwTitleInput');
       if (input.value.trim() !== "") {
         currentGwTitle = input.value.trim();
-        document.getElementById('publicGwTitle').innerText = currentGwTitle;
-        alert("Giveaway neve frissítve!");
+        db.ref('gw_title').set(currentGwTitle);
+        alert("Giveaway neve elmentve és frissítve élőben!");
       }
     }
 
@@ -574,17 +631,14 @@
         tbody.appendChild(tr);
       });
 
-      if(players.length > 0) buildTrack(0);
+      if(players.length > 0) buildTrackWithWinner(players[0]);
     }
 
     function addPlayer() {
       const nameInput = document.getElementById('playerNameInput');
       const name = nameInput.value.trim();
 
-      if (!name) {
-        alert("Kérlek adj meg egy nevet!");
-        return;
-      }
+      if (!name) return;
 
       players.push(name);
       nameInput.value = '';
@@ -612,7 +666,7 @@
       renderAdminTable();
     }
 
-    buildTrack(0);
+    buildTrackWithWinner(players[0] || "");
   </script>
 </body>
 </html>
