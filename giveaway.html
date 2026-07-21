@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Al1ve Giveaway - Live Multi-Opener</title>
+  <title>Al1ve GW</title>
   <link rel="icon" type="image/png" href="images/hiena.png">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,7 +35,7 @@
       overflow-x: hidden;
     }
 
-    /* --- HÁTTÉR HIÉNA KÉP (.PNG, HOMÁLYOSÍTVA) --- */
+    /* --- HÁTTÉR HIÉNA KÉP (.PNG) --- */
     .bg-hyena {
       position: fixed;
       top: 50%;
@@ -50,59 +50,67 @@
       z-index: 0;
     }
 
-    /* --- DÉLIBÁB / IZZÓ FURFUS LEVEGŐ EFFEKTUS (MINDENKINEK LÁTHATÓ) --- */
-    .mirage-overlay {
+    /* --- DÉLIBÁB CSÍKOK (1cm széles x 4-5cm magas, FELFELÉ MOZGÓ IZZÓ LEVEGŐ) --- */
+    .mirage-container {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 10; /* A tartalom előtt lebeg finom áttetszőséggel */
-      background: repeating-linear-gradient(
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .heat-stripe {
+      position: absolute;
+      width: 38px; /* kb 1 cm */
+      height: 170px; /* kb 4.5 cm */
+      background: linear-gradient(
         0deg,
-        rgba(168, 85, 247, 0.08) 0px,
-        rgba(255, 0, 85, 0.05) 10px,
-        rgba(255, 255, 255, 0.02) 20px,
-        transparent 30px
+        rgba(168, 85, 247, 0) 0%,
+        rgba(168, 85, 247, 0.25) 30%,
+        rgba(255, 0, 85, 0.3) 70%,
+        rgba(255, 255, 255, 0) 100%
       );
-      background-size: 100% 200%;
-      animation: heatRise 4s linear infinite;
-      mix-blend-mode: screen;
-      opacity: 0.85;
-      filter: url('#heatDistortion') blur(1px);
+      border-radius: 20px;
+      filter: blur(6px);
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+      animation: riseAndWobble 5s infinite ease-in-out;
+      opacity: 0.8;
     }
 
-    /* Második réteg a finomabb izzásért */
-    .mirage-glow {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 9;
-      background: linear-gradient(0deg, rgba(168, 85, 247, 0.12) 0%, transparent 80%);
-      animation: pulseGlow 3s ease-in-out infinite alternate;
-    }
+    /* A 9 DARAB CSÍK EGYEDI POZÍCIÓJA ÉS IDŐZÍTÉSE SZÉTSZÓRVA */
+    .stripe-1 { left: 5%;  animation-duration: 4.2s; animation-delay: 0s; }
+    .stripe-2 { left: 16%; animation-duration: 5.5s; animation-delay: 1.2s; }
+    .stripe-3 { left: 28%; animation-duration: 4.8s; animation-delay: 2.5s; }
+    .stripe-4 { left: 39%; animation-duration: 6.0s; animation-delay: 0.7s; }
+    .stripe-5 { left: 50%; animation-duration: 4.5s; animation-delay: 3.1s; }
+    .stripe-6 { left: 62%; animation-duration: 5.2s; animation-delay: 1.8s; }
+    .stripe-7 { left: 73%; animation-duration: 4.7s; animation-delay: 0.4s; }
+    .stripe-8 { left: 84%; animation-duration: 5.8s; animation-delay: 2.2s; }
+    .stripe-9 { left: 93%; animation-duration: 4.3s; animation-delay: 1.0s; }
 
-    @keyframes heatRise {
+    @keyframes riseAndWobble {
       0% {
-        background-position: 0% 100%;
-        transform: scaleY(1) skewX(0deg);
+        top: 105vh;
+        transform: scaleX(1) skewX(0deg);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.85;
       }
       50% {
-        transform: scaleY(1.02) skewX(0.5deg);
+        transform: scaleX(1.3) skewX(4deg);
+      }
+      85% {
+        opacity: 0.85;
       }
       100% {
-        background-position: 0% 0%;
-        transform: scaleY(1) skewX(0deg);
+        top: -200px;
+        transform: scaleX(0.9) skewX(-3deg);
+        opacity: 0;
       }
-    }
-
-    @keyframes pulseGlow {
-      0% { opacity: 0.4; }
-      100% { opacity: 0.9; }
     }
 
     .main-container {
@@ -110,7 +118,7 @@
       margin: 0 auto;
       padding: 20px;
       position: relative;
-      z-index: 20; /* Felfelé hozva a délibáb fölé */
+      z-index: 20;
     }
 
     .main-nav {
@@ -391,20 +399,21 @@
 
 <body>
 
-  <!-- SVG SZŰRŐ A DÉLIBÁB / LEVEGŐ IZZÁS TORZÍTÁSHOZ -->
-  <svg style="display:none;">
-    <filter id="heatDistortion">
-      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.08" numOctaves="1" result="noise">
-        <animate attributeName="baseFrequency" dur="6s" values="0.02 0.08; 0.02 0.15; 0.02 0.08" repeatCount="indefinite"/>
-      </feTurbulence>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </svg>
-
-  <!-- HÁTTÉR ELEMEK (.PNG ÉS LÁTHATÓ IZZÓ DÉLIBÁB RÉTEGEK) -->
+  <!-- HÁTTÉR HIÉNA KÉP -->
   <img src="images/hiena.png" alt="Hyena Background" class="bg-hyena">
-  <div class="mirage-glow"></div>
-  <div class="mirage-overlay"></div>
+
+  <!-- 9 DARAB IZZÓ FÜGGŐLEGES DÉLIBÁB CSÍK -->
+  <div class="mirage-container">
+    <div class="heat-stripe stripe-1"></div>
+    <div class="heat-stripe stripe-2"></div>
+    <div class="heat-stripe stripe-3"></div>
+    <div class="heat-stripe stripe-4"></div>
+    <div class="heat-stripe stripe-5"></div>
+    <div class="heat-stripe stripe-6"></div>
+    <div class="heat-stripe stripe-7"></div>
+    <div class="heat-stripe stripe-8"></div>
+    <div class="heat-stripe stripe-9"></div>
+  </div>
 
   <nav class="main-nav">
     <ul>
@@ -415,7 +424,7 @@
 
   <div class="main-container">
     <div style="text-align: center; margin-top: 10px;">
-      <h1><i class="fa-solid fa-gift"></i> Live Giveaway Opener</h1>
+      <h1><i class="fa-solid fa-gift"></i> Live Giveaway</h1>
       <div id="publicGwTitle" class="gw-title-header">25$ FTD EgoGames</div>
     </div>
 
