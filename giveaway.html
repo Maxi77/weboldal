@@ -68,7 +68,6 @@
       align-items: center;
       justify-content: center;
       user-select: none;
-      /* Erős izzás eltávolítva, nagyon halvány és lágy lett */
       filter: opacity(0.5);
       animation: flyUpAndWobble 6s infinite ease-in-out;
       opacity: 0;
@@ -144,6 +143,43 @@
     .main-nav {
       position: relative;
       z-index: 20;
+    }
+
+    /* STOPPER ÓRA STÍLUS (VENDÉG & ADMIN) */
+    .timer-card {
+      background: rgba(19, 19, 34, 0.95);
+      border: 2px solid #ff9900;
+      border-radius: 16px;
+      padding: 15px 25px;
+      margin: 20px auto;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 153, 0, 0.3);
+      max-width: 400px;
+      display: none; /* Alapból rejtve, csak ha elindítják */
+      backdrop-filter: blur(8px);
+      animation: pulseGlow 1.5s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 15px rgba(255, 153, 0, 0.3); }
+      to { box-shadow: 0 0 30px rgba(255, 153, 0, 0.7); }
+    }
+
+    .timer-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ff9900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    .timer-display {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: monospace;
+      text-shadow: 0 0 10px #ff9900;
     }
 
     #rollersArea {
@@ -341,6 +377,24 @@
       box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
     }
 
+    .archive-card {
+      background: rgba(10, 10, 20, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    .archive-card-title {
+      font-size: 0.85rem;
+      color: #00ffcc;
+      font-weight: bold;
+      margin-bottom: 8px;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+      padding-bottom: 4px;
+    }
+
     /* ADMIN VEZÉRLŐK */
     .action-btn {
       display: inline-block;
@@ -486,6 +540,12 @@
       <div id="publicGwTitle" class="gw-title-header">25$ FTD EgoGames</div>
     </div>
 
+    <!-- PUBLIKUS VISSZASZÁMLÁLÓ STOPPER DOBOZ -->
+    <div id="publicTimerCard" class="timer-card">
+      <div class="timer-title"><i class="fa-solid fa-stopwatch"></i> Hátralévő Idő</div>
+      <div id="timerDisplay" class="timer-display">00:30</div>
+    </div>
+
     <!-- TÖBBSOROS PÖRGETŐ TERÜLET -->
     <div id="rollersArea"></div>
 
@@ -499,9 +559,13 @@
         <i id="accordionArrow" class="fa-solid fa-chevron-down toggle-icon"></i>
       </div>
       <div id="winnersContent" class="winners-content">
+        <h4 style="margin: 5px 0 10px 0; color: var(--accent);">🏆 Jelenlegi kör nyertesei:</h4>
         <div id="publicWinnersList" class="winners-list">
-          <span style="color: var(--subtext);">Még nincs rögzített nyertes.</span>
+          <span style="color: var(--subtext);">Még nincs rögzített nyertes a jelenlegi körben.</span>
         </div>
+
+        <!-- ELŐZŐ LEZÁRT KÖRÖK ARCHÍVUMA -->
+        <div id="archivedWinnersContainer" style="margin-top: 20px;"></div>
       </div>
     </div>
 
@@ -512,6 +576,15 @@
         <span style="background: #00ffcc; color: #000; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem;">
           <i class="fa-solid fa-desktop"></i> Admin Eszköz
         </span>
+      </div>
+
+      <!-- STOPPER ÓRA INDÍTÁSA ADMINBÓL -->
+      <div style="background: rgba(255, 153, 0, 0.1); border: 1px solid #ff9900; padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
+        <h3 style="margin: 0 0 10px 0; color: #ff9900;"><i class="fa-solid fa-stopwatch"></i> 30 Másodperces Stopper Visszaszámláló</h3>
+        <p style="font-size: 0.85rem; color: var(--subtext); margin-bottom: 12px;">Erre a gombra kattintva a vendégek fülén is megjelenik a 30 másodperces élő visszaszámláló.</p>
+        <button class="action-btn" style="background: linear-gradient(90deg, #ff9900, #ff5500); box-shadow: 0 0 15px rgba(255,153,0,0.4);" onclick="startGlobalTimer()">
+          <i class="fa-solid fa-play"></i> 30s Stopper Indítása Élőben!
+        </button>
       </div>
 
       <!-- SORSOLÁSI VEZÉRLŐ -->
@@ -530,6 +603,13 @@
         </div>
 
         <button id="adminSpinBtn" class="action-btn" onclick="startLiveSpin()"><i class="fa-solid fa-play"></i> ÉLŐ SZIMULTÁN PÖRGETÉS!</button>
+      </div>
+
+      <!-- KÖR LEZÁRÁSA & MENTÉSE GOMB -->
+      <div style="background: rgba(0, 255, 204, 0.05); border: 1px solid #00ffcc; padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
+        <h4 style="margin: 0 0 8px 0; color: #00ffcc;"><i class="fa-solid fa-box-archive"></i> Kör Lezárása & Archívumba Mentése</h4>
+        <p style="font-size: 0.85rem; color: var(--subtext); margin-bottom: 12px;">Átteszi a jelenlegi nyerteseket a mentett előzmények közé, és tiszta lappal indítja a nyertesek listáját a következő giveawayhez.</p>
+        <button class="secondary-btn" style="border-color: #00ffcc; color: #00ffcc; font-weight: bold;" onclick="archiveCurrentRound()"><i class="fa-solid fa-lock"></i> Jelenlegi nyertesek lezárása & Új kör indítása</button>
       </div>
 
       <!-- GIVEAWAY NEVE -->
@@ -568,7 +648,7 @@
 
       <h3><i class="fa-solid fa-trash-can"></i> Nyertes Előzmények Kezelése</h3>
       <div>
-        <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearWinnersHistory()">Nyertes előzmények törlése</button>
+        <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearWinnersHistory()">Minden előzmény törlése teljesen</button>
       </div>
     </div>
   </div>
@@ -588,8 +668,10 @@
 
     let currentGwTitle = "25$ FTD EgoGames";
     let players = ["Krexy", "Kakos", "Valentino", "Dani", "Gamer123", "Slayer99"];
-    let winnersHistory = [];
+    let currentWinners = [];
+    let archivedRounds = [];
     let totalGwCount = 0;
+    let timerInterval = null;
 
     const rollersArea = document.getElementById('rollersArea');
 
@@ -641,17 +723,58 @@
       db.ref('winners_history').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          winnersHistory = data.history || [];
+          currentWinners = data.currentWinners || [];
+          archivedRounds = data.archivedRounds || [];
           totalGwCount = data.totalCount || 0;
         } else {
-          winnersHistory = [];
+          currentWinners = [];
+          archivedRounds = [];
           totalGwCount = 0;
         }
         renderWinners();
       });
+
+      // STOPPER FIGYELÉSE
+      db.ref('global_timer').on('value', (snapshot) => {
+        const startTime = snapshot.val();
+        if (startTime) {
+          runLocalTimer(startTime);
+        }
+      });
     }
 
-    // --- TÖBBSOROS PÖRGETŐ ELEMEK LEKEZELÉSE ---
+    // --- STOPPER KÓD ---
+    function startGlobalTimer() {
+      db.ref('global_timer').set(Date.now());
+    }
+
+    function runLocalTimer(startTime) {
+      if (timerInterval) clearInterval(timerInterval);
+
+      const timerCard = document.getElementById('publicTimerCard');
+      const timerDisplay = document.getElementById('timerDisplay');
+      timerCard.style.display = 'block';
+
+      timerInterval = setInterval(() => {
+        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        const remaining = 30 - elapsedSeconds;
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          timerDisplay.innerText = "00:00";
+          timerDisplay.style.color = "#ff0055";
+          timerDisplay.style.textShadow = "0 0 10px #ff0055";
+          setTimeout(() => {
+            timerCard.style.display = 'none';
+            timerDisplay.style.color = "#fff";
+            timerDisplay.style.textShadow = "0 0 10px #ff9900";
+          }, 4000); // 4mp múlva eltűnik automatikusan
+        } else {
+          const secFormatted = remaining < 10 ? `0${remaining}` : remaining;
+          timerDisplay.innerText = `00:${secFormatted}`;
+        }
+      }, 200);
+    }
 
     function renderRollerLanes(count) {
       rollersArea.innerHTML = '';
@@ -693,8 +816,6 @@
         track.appendChild(card);
       }
     }
-
-    // --- SORSOLÁSI LOGIKA ---
 
     function startLiveSpin() {
       const countSelect = document.getElementById('winnerCountSelect');
@@ -760,13 +881,10 @@
           if (resBox) {
             resBox.innerHTML = `🎉 ${index + 1}. NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
           }
-          winnersHistory.unshift({ name: winnerName });
+          currentWinners.unshift(winnerName);
         });
 
-        db.ref('winners_history').set({
-          history: winnersHistory,
-          totalCount: totalGwCount
-        });
+        saveWinnersToFirebase();
 
         if (adminBtn) adminBtn.disabled = false;
       }, 6200);
@@ -776,7 +894,6 @@
       return players.length === 0 ? 0 : (100 / players.length).toFixed(1);
     }
 
-    // --- ACCORDION FUNKCIÓ ---
     function toggleWinnersAccordion() {
       const content = document.getElementById('winnersContent');
       const arrow = document.getElementById('accordionArrow');
@@ -792,36 +909,86 @@
 
     function renderWinners() {
       const publicList = document.getElementById('publicWinnersList');
+      const archiveContainer = document.getElementById('archivedWinnersContainer');
       const counterBadge = document.getElementById('gwCounterBadge');
 
       if (counterBadge) {
         counterBadge.innerText = `Összesen: ${totalGwCount} giveaway sorsolás`;
       }
 
-      if (winnersHistory.length === 0) {
-        publicList.innerHTML = '<span style="color: var(--subtext);">Még nincs rögzített nyertes.</span>';
+      // Jelenlegi nyertesek
+      if (currentWinners.length === 0) {
+        publicList.innerHTML = '<span style="color: var(--subtext);">Még nincs rögzített nyertes a jelenlegi körben.</span>';
+      } else {
+        publicList.innerHTML = currentWinners.map(w => `
+          <div class="winner-badge">
+            <i class="fa-solid fa-trophy" style="color:#ffd700;"></i> ${w}
+          </div>
+        `).join('');
+      }
+
+      // Archívum (Előző lezárt körök)
+      if (archivedRounds.length > 0) {
+        archiveContainer.innerHTML = `
+          <h4 style="margin: 20px 0 10px 0; color: var(--subtext); border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
+            <i class="fa-solid fa-box-archive"></i> Előző lezárt sorsolások:
+          </h4>
+        ` + archivedRounds.map((round, idx) => `
+          <div class="archive-card">
+            <div class="archive-card-title">${round.title || 'Giveaway'} - (${round.date})</div>
+            <div class="winners-list">
+              ${round.winners.map(w => `
+                <div class="winner-badge" style="background: rgba(255,255,255,0.05); border-color: #555;">
+                  <i class="fa-solid fa-medal" style="color:#aaa;"></i> ${w}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+      } else {
+        archiveContainer.innerHTML = '';
+      }
+    }
+
+    function archiveCurrentRound() {
+      if (currentWinners.length === 0) {
+        alert("A jelenlegi körben még nincsenek nyertesek, amit le lehetne zárni!");
         return;
       }
 
-      publicList.innerHTML = winnersHistory.map(w => `
-        <div class="winner-badge">
-          <i class="fa-solid fa-trophy" style="color:#ffd700;"></i> ${w.name}
-        </div>
-      `).join('');
-    }
+      if (confirm("Biztosan lezárod a jelenlegi kör nyerteseit és átteszed őket az archívumba?")) {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('hu-HU') + ' ' + now.toLocaleTimeString('hu-HU', {hour: '2-digit', minute:'2-digit'});
 
-    function clearWinnersHistory() {
-      if (confirm("Törölni szeretnéd a nyertesek előzményeit?")) {
-        winnersHistory = [];
-        totalGwCount = 0;
-        db.ref('winners_history').set({
-          history: [],
-          totalCount: 0
+        archivedRounds.unshift({
+          title: currentGwTitle,
+          date: dateStr,
+          winners: [...currentWinners]
         });
+
+        currentWinners = []; 
+        saveWinnersToFirebase();
+        alert("A jelenlegi kör sikeresen lezárva és elmentve az archívumba!");
       }
     }
 
-    // --- ADMIN FUNKCIÓK ---
+    function saveWinnersToFirebase() {
+      db.ref('winners_history').set({
+        currentWinners: currentWinners,
+        archivedRounds: archivedRounds,
+        totalCount: totalGwCount
+      });
+    }
+
+    function clearWinnersHistory() {
+      if (confirm("Figyelem! Ez az ÖSSZES nyertes előzményt ÉS az archívumot is törli! Folytatod?")) {
+        currentWinners = [];
+        archivedRounds = [];
+        totalGwCount = 0;
+        saveWinnersToFirebase();
+      }
+    }
+
     function updateGwTitle() {
       const input = document.getElementById('gwTitleInput');
       if (input.value.trim() !== "") {
