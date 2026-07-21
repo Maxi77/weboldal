@@ -35,7 +35,6 @@
       overflow-x: hidden;
     }
 
-    /* --- HÁTTÉR HIÉNA KÉP (.PNG) --- */
     .bg-hyena {
       position: fixed;
       top: 50%;
@@ -50,7 +49,6 @@
       z-index: 0;
     }
 
-    /* --- REPKEDŐ HIÉNA FEJEK KONTÉNER --- */
     .flying-container {
       position: fixed;
       top: 0;
@@ -145,7 +143,6 @@
       z-index: 20;
     }
 
-    /* STOPPER ÓRA STÍLUS - LÁTHATÓ A VENDÉGEKNEK IS */
     .timer-card {
       background: rgba(19, 19, 34, 0.95);
       border: 2px solid #ff9900;
@@ -155,7 +152,7 @@
       text-align: center;
       box-shadow: 0 0 20px rgba(255, 153, 0, 0.3);
       max-width: 400px;
-      display: none; /* Alapból rejtett, ha nincs elindítva */
+      display: none;
       backdrop-filter: blur(8px);
       animation: pulseGlow 1.5s infinite alternate;
     }
@@ -290,7 +287,6 @@
       text-align: center;
     }
 
-    /* KINYITHATÓ PUBLIKUS NYERTESEK DOBOZ */
     .winners-section {
       background: var(--card-bg);
       border: 1px solid rgba(168, 85, 247, 0.3);
@@ -395,7 +391,6 @@
       padding-bottom: 4px;
     }
 
-    /* ADMIN VEZÉRLŐK */
     .action-btn {
       display: inline-block;
       background: linear-gradient(90deg, #7c3aed, #6d28d9);
@@ -500,10 +495,8 @@
 
 <body>
 
-  <!-- HÁTTÉR HIÉNA KÉP -->
   <img src="images/hiena.png" alt="Hyena Background" class="bg-hyena">
 
-  <!-- REPKEDŐ HIÉNA FEJEK KONTÉNER -->
   <div class="flying-container">
     <div class="flying-winged-hyena hyena-1"><img src="images/hiena.png" alt="flying hyena"></div>
     <div class="flying-winged-hyena hyena-2"><img src="images/hiena.png" alt="flying hyena"></div>
@@ -540,16 +533,16 @@
       <div id="publicGwTitle" class="gw-title-header">25$ FTD EgoGames</div>
     </div>
 
-    <!-- ÉLŐ MINTADOBÓ STOPPER A VENDÉGEKNEK IS -->
+    <!-- ÉLŐ STOPPER A VENDÉGEKNEK -->
     <div id="publicTimerCard" class="timer-card">
       <div id="timerTitleText" class="timer-title"><i class="fa-solid fa-stopwatch"></i> Hátralévő Idő</div>
       <div id="timerDisplay" class="timer-display">00:30</div>
     </div>
 
-    <!-- TÖBBSOROS PÖRGETŐ TERÜLET -->
+    <!-- PÖRGETŐ TERÜLET -->
     <div id="rollersArea"></div>
 
-    <!-- EDDIGI NYERTESEK (PUBLIKUS KINYITHATÓ DOBOZ) -->
+    <!-- NYERTESEK SECTION -->
     <div class="winners-section">
       <div class="winners-header" onclick="toggleWinnersAccordion()">
         <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Eddigi Nyertesek</h2>
@@ -563,13 +556,11 @@
         <div id="publicWinnersList" class="winners-list">
           <span style="color: var(--subtext);">Még nincs rögzített nyertes a jelenlegi körben.</span>
         </div>
-
-        <!-- ELŐZŐ LEZÁRT KÖRÖK ARCHÍVUMA -->
         <div id="archivedWinnersContainer" style="margin-top: 20px;"></div>
       </div>
     </div>
 
-    <!-- ADMIN CONTROL PANEL -->
+    <!-- ADMIN PANEL -->
     <div id="adminPanelSection" class="admin-section">
       <div class="admin-header">
         <h2 style="color: #ff0055;"><i class="fa-solid fa-user-shield"></i> ADMIN CONTROL PANEL</h2>
@@ -578,22 +569,21 @@
         </span>
       </div>
 
-      <!-- STOPPER ÓRA VEZÉRLÉS ADMINBÓL -->
+      <!-- STOPPER VEZÉRLÉS -->
       <div style="background: rgba(255, 153, 0, 0.1); border: 1px solid #ff9900; padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
-        <h3 style="margin: 0 0 10px 0; color: #ff9900;"><i class="fa-solid fa-stopwatch"></i> 30 Másodperces Élő Stopper</h3>
-        <p style="font-size: 0.85rem; color: var(--subtext); margin-bottom: 12px;">Minden nézőnél szinkronizálva pörög a stopper élőben!</p>
+        <h3 style="margin: 0 0 10px 0; color: #ff9900;"><i class="fa-solid fa-stopwatch"></i> Stopper Vezérlő</h3>
         
         <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-          <button class="action-btn" style="background: linear-gradient(90deg, #ff9900, #ff5500); box-shadow: 0 0 15px rgba(255,153,0,0.4);" onclick="startGlobalTimer()">
-            <i class="fa-solid fa-play"></i> 30s Indítása
+          <button class="action-btn" style="background: linear-gradient(90deg, #ff9900, #ff5500);" onclick="startGlobalTimer(30)">
+            <i class="fa-solid fa-play"></i> Indítás (30s)
           </button>
           
-          <button class="action-btn" style="background: linear-gradient(90deg, #eab308, #ca8a04); box-shadow: 0 0 15px rgba(234,179,8,0.4);" onclick="pauseGlobalTimer()">
+          <button class="action-btn" style="background: linear-gradient(90deg, #eab308, #ca8a04);" onclick="pauseGlobalTimer()">
             <i class="fa-solid fa-pause"></i> Megállítás
           </button>
           
-          <button class="action-btn" style="background: linear-gradient(90deg, #ef4444, #dc2626); box-shadow: 0 0 15px rgba(239,68,68,0.4);" onclick="resetGlobalTimer()">
-            <i class="fa-solid fa-rotate-left"></i> Nullázás / Törlés
+          <button class="action-btn" style="background: linear-gradient(90deg, #ef4444, #dc2626);" onclick="resetGlobalTimer()">
+            <i class="fa-solid fa-rotate-left"></i> Nullázás / Elrejtés
           </button>
         </div>
       </div>
@@ -616,10 +606,9 @@
         <button id="adminSpinBtn" class="action-btn" onclick="startLiveSpin()"><i class="fa-solid fa-play"></i> ÉLŐ SZIMULTÁN PÖRGETÉS!</button>
       </div>
 
-      <!-- KÖR LEZÁRÁSA & MENTÉSE GOMB -->
+      <!-- KÖR LEZÁRÁSA -->
       <div style="background: rgba(0, 255, 204, 0.05); border: 1px solid #00ffcc; padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
         <h4 style="margin: 0 0 8px 0; color: #00ffcc;"><i class="fa-solid fa-box-archive"></i> Kör Lezárása & Archívumba Mentése</h4>
-        <p style="font-size: 0.85rem; color: var(--subtext); margin-bottom: 12px;">Átteszi a jelenlegi nyerteseket a mentett előzmények közé, és tiszta lappal indítja a nyertesek listáját a következő giveawayhez.</p>
         <button class="secondary-btn" style="border-color: #00ffcc; color: #00ffcc; font-weight: bold;" onclick="archiveCurrentRound()"><i class="fa-solid fa-lock"></i> Jelenlegi nyertesek lezárása & Új kör indítása</button>
       </div>
 
@@ -665,7 +654,6 @@
   </div>
 
   <script>
-    // FIREBASE BEÁLLÍTÁSOK
     const firebaseConfig = {
       databaseURL: "https://giveawy-6e8f6-default-rtdb.europe-west1.firebasedatabase.app/",
       projectId: "giveawy-6e8f6"
@@ -683,18 +671,11 @@
     let archivedRounds = [];
     let totalGwCount = 0;
 
-    // Stopper szinkron változók
     let timerInterval = null;
-    let serverTimeOffset = 0; // Kliens-Szerver óra-eltérés korrekció
 
     const rollersArea = document.getElementById('rollersArea');
 
     window.addEventListener('DOMContentLoaded', () => {
-      // Szerver óra szinkronizálása
-      db.ref('.info/serverTimeOffset').on('value', (snap) => {
-        serverTimeOffset = snap.val() || 0;
-      });
-
       if (localStorage.getItem('al1ve_admin_device') === DEVICE_SECRET_KEY) {
         showAdminPanel();
       }
@@ -728,7 +709,7 @@
       db.ref('live_spin').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data && data.timestamp > Date.now() - 10000) {
-          executeSimultaneousSpin(data.winners, data.gwTitle);
+          executeSimultaneousSpin(data.winners, data.gwTitle, false);
         }
       });
 
@@ -753,19 +734,28 @@
         renderWinners();
       });
 
-      // 🔥 VALÓS IDEJŰ STOPPER SZINKRONIZÁCIÓ MINDENKI KÉPERNYŐJÉN 🔥
+      // STOPPER SZINKRON
       db.ref('global_timer').on('value', (snapshot) => {
         const timerData = snapshot.val();
         handleLiveTimerSync(timerData);
       });
     }
 
-    // --- ÉLŐ SZINKRONIZÁLT STOPPER FUNKCIÓK ---
-    function startGlobalTimer() {
-      db.ref('global_timer').set({
-        state: 'running',
-        startTime: firebase.database.ServerValue.TIMESTAMP,
-        remainingAtPause: 30
+    // --- STOPPER LOGIKA ---
+    function startGlobalTimer(seconds = 30) {
+      db.ref('global_timer').once('value', (snapshot) => {
+        const data = snapshot.val();
+        let duration = seconds;
+
+        if (data && data.state === 'paused' && data.remainingSeconds > 0) {
+          duration = data.remainingSeconds;
+        }
+
+        db.ref('global_timer').set({
+          state: 'running',
+          endTime: Date.now() + (duration * 1000),
+          remainingSeconds: duration
+        });
       });
     }
 
@@ -773,14 +763,13 @@
       db.ref('global_timer').once('value', (snapshot) => {
         const data = snapshot.val();
         if (data && data.state === 'running') {
-          const nowServer = Date.now() + serverTimeOffset;
-          const elapsed = Math.floor((nowServer - data.startTime) / 1000);
-          const rem = Math.max(0, 30 - elapsed);
+          const now = Date.now();
+          const rem = Math.max(0, Math.ceil((data.endTime - now) / 1000));
           
           db.ref('global_timer').set({
             state: 'paused',
-            startTime: null,
-            remainingAtPause: rem
+            endTime: null,
+            remainingSeconds: rem
           });
         }
       });
@@ -789,8 +778,8 @@
     function resetGlobalTimer() {
       db.ref('global_timer').set({
         state: 'reset',
-        startTime: null,
-        remainingAtPause: 30
+        endTime: null,
+        remainingSeconds: 30
       });
     }
 
@@ -806,11 +795,10 @@
         return;
       }
 
-      // Stopper doboz megjelenítése minden vendégnél!
       timerCard.style.display = 'block';
 
       if (timerData.state === 'paused') {
-        const rem = timerData.remainingAtPause !== undefined ? timerData.remainingAtPause : 30;
+        const rem = timerData.remainingSeconds !== undefined ? timerData.remainingSeconds : 30;
         const secFormatted = rem < 10 ? `0${rem}` : rem;
         timerDisplay.innerText = `00:${secFormatted}`;
         timerDisplay.style.color = "#eab308";
@@ -825,9 +813,8 @@
         timerTitleText.innerHTML = '<i class="fa-solid fa-stopwatch"></i> HÁTRALÉVŐ IDŐ';
 
         timerInterval = setInterval(() => {
-          const currentRealTime = Date.now() + serverTimeOffset;
-          const elapsedSeconds = Math.floor((currentRealTime - timerData.startTime) / 1000);
-          const remaining = 30 - elapsedSeconds;
+          const now = Date.now();
+          const remaining = Math.max(0, Math.ceil((timerData.endTime - now) / 1000));
 
           if (remaining <= 0) {
             clearInterval(timerInterval);
@@ -839,7 +826,7 @@
             const secFormatted = remaining < 10 ? `0${remaining}` : remaining;
             timerDisplay.innerText = `00:${secFormatted}`;
           }
-        }, 100);
+        }, 200);
       }
     }
 
@@ -903,6 +890,10 @@
         tempPool.splice(randomIndex, 1);
       }
 
+      // Elindítjuk lokálisan is azonnal az adminnál
+      executeSimultaneousSpin(selectedWinners, currentGwTitle, true);
+
+      // Elküldjük Firebase-be, hogy a nézőknél is lefusson
       db.ref('live_spin').set({
         winners: selectedWinners,
         gwTitle: currentGwTitle,
@@ -910,7 +901,7 @@
       });
     }
 
-    function executeSimultaneousSpin(winnerList, title) {
+    function executeSimultaneousSpin(winnerList, title, isInitiator) {
       const adminBtn = document.getElementById('adminSpinBtn');
       if (adminBtn) adminBtn.disabled = true;
 
@@ -951,7 +942,10 @@
           currentWinners.unshift(winnerName);
         });
 
-        saveWinnersToFirebase();
+        // Csak az indító menti Firebase-be a nyerteseket, hogy ne legyen duplikáció az adatbázisban
+        if (isInitiator) {
+          saveWinnersToFirebase();
+        }
 
         if (adminBtn) adminBtn.disabled = false;
       }, 6200);
