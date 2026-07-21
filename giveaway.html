@@ -28,7 +28,6 @@
       padding: 0;
     }
 
-    /* CS GO / Upgrade style roller container */
     .roller-wrapper {
       max-width: 900px;
       margin: 20px auto;
@@ -144,7 +143,6 @@
       min-height: 40px;
     }
 
-    /* Nyertesek szekció */
     .winners-section {
       max-width: 900px;
       margin: 20px auto;
@@ -183,14 +181,15 @@
       margin-top: 2px;
     }
 
-    /* Admin Panel stílusok */
+    /* REJTETT ADMIN PANEL */
     .admin-section {
       max-width: 900px;
       margin: 40px auto;
       background: var(--card-bg);
-      border: 1px solid #2a2a40;
+      border: 2px solid #ff0055;
       border-radius: 12px;
       padding: 20px;
+      display: none; /* Alapból rejtve van mindenki elől */
     }
 
     .admin-header {
@@ -293,7 +292,7 @@
     <div id="publicGwTitle" class="gw-title-header">25$ FTD EgoGames</div>
   </div>
 
-  <!-- CS GO / UPGRADE STYLE ROLLER -->
+  <!-- ROLLER (Vendégek felülete) -->
   <div class="roller-wrapper" style="text-align: center;">
     <div class="selector-arrow"></div>
     <div class="roller-container">
@@ -301,14 +300,15 @@
       <div id="rollerTrack" class="roller-track"></div>
     </div>
 
-    <div style="margin-top: 25px;">
-      <button id="spinBtn" class="action-btn"><i class="fa-solid fa-play"></i> PÖRGETÉS!</button>
+    <!-- Vendégeknek nincs pörgetés gomb, csak státusz szöveg -->
+    <div id="guestStatusMsg" style="margin-top: 20px; color: var(--subtext); font-style: italic;">
+      <i class="fa-solid fa-clock"></i> Várakozás a sorsolásra...
     </div>
 
     <div id="winnerBox" class="winner-box"></div>
   </div>
 
-  <!-- NYERTESEK SZEKCIÓ (Publikusan ki/be kapcsolható) -->
+  <!-- NYERTESEK SZEKCIÓ -->
   <div id="publicWinnersContainer" class="winners-section" style="display: none;">
     <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Nyertesek</h2>
     <div id="publicWinnersList" class="winners-list">
@@ -316,129 +316,128 @@
     </div>
   </div>
 
-  <!-- ADMIN PANEL SECTION -->
-  <div class="admin-section">
+  <!-- TELJESEN REJTETT ADMIN PANEL (Csak a te gépeden jelenik meg) -->
+  <div id="adminPanelSection" class="admin-section">
     <div class="admin-header">
-      <h2><i class="fa-solid fa-user-gear"></i> Admin Control Panel</h2>
-      <button id="authBtn" class="secondary-btn" onclick="toggleAdminAuth()"><i class="fa-solid fa-lock"></i> Belépés Adminak</button>
+      <h2 style="color: #ff0055;"><i class="fa-solid fa-user-shield"></i> ADMIN CONTROL PANEL</h2>
+      <span style="background: #00ffcc; color: #000; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem;">
+        <i class="fa-solid fa-desktop"></i> Felismert Admin Eszköz
+      </span>
     </div>
 
-    <div id="adminContent" style="display: none;">
-      
-      <!-- LÁTHATÓSÁG KAPCSOLÓ (LOCK) -->
-      <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2a2a40;">
-        <div>
-          <strong>Nyertesek Lista Láthatósága:</strong>
-          <p style="margin: 0; font-size: 0.85rem; color: var(--subtext);">Itt zárhatod/nyithatod, hogy a publikus látogatók lássák-e a Nyertesek dobozt.</p>
-        </div>
-        <button id="lockToggleBtn" class="toggle-lock-btn" onclick="togglePublicWinnersVisibility()">
-          <i class="fa-solid fa-lock"></i> REJTVE a publikum elől
-        </button>
-      </div>
+    <!-- PÖRGETÉS GOMB (Kizárólag az Admin Panelben érhető el) -->
+    <div style="background: #1c1a36; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 25px; border: 1px solid var(--accent);">
+      <h3 style="margin-top: 0;">Sorsolás Indítása</h3>
+      <button id="adminSpinBtn" class="action-btn" onclick="triggerSpin()"><i class="fa-solid fa-play"></i> PÖRGETÉS INDÍTÁSA!</button>
+    </div>
 
-      <!-- GIVEAWAY NEVÉNEK BEÁLLÍTÁSA -->
-      <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2a2a40;">
-        <label style="display: block; font-weight: 600; margin-bottom: 8px;"><i class="fa-solid fa-tag"></i> Giveaway Neve / Nyeremény:</label>
-        <div class="admin-input-group" style="margin-bottom: 0;">
-          <input type="text" id="gwTitleInput" value="25$ FTD EgoGames" placeholder="pl: 25$ FTD EgoGames" style="flex: 1;">
-          <button class="secondary-btn" onclick="updateGwTitle()">Mentés</button>
-        </div>
+    <!-- LÁTHATÓSÁG KAPCSOLÓ -->
+    <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2a2a40;">
+      <div>
+        <strong>Nyertesek Lista Láthatósága:</strong>
+        <p style="margin: 0; font-size: 0.85rem; color: var(--subtext);">Lássák a vendégek a Nyertesek dobozt?</p>
       </div>
+      <button id="lockToggleBtn" class="toggle-lock-btn" onclick="togglePublicWinnersVisibility()">
+        <i class="fa-solid fa-lock"></i> REJTVE a publikum elől
+      </button>
+    </div>
 
-      <h3>Játékosok hozzáadása</h3>
-      <div class="admin-input-group">
-        <input type="text" id="playerNameInput" placeholder="Játékos neve..." style="flex: 1;" onkeypress="if(event.key === 'Enter') addPlayer()">
-        <button class="action-btn" style="padding: 10px 20px;" onclick="addPlayer()">Hozzáadás</button>
+    <!-- GIVEAWAY NEVE -->
+    <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2a2a40;">
+      <label style="display: block; font-weight: 600; margin-bottom: 8px;"><i class="fa-solid fa-tag"></i> Giveaway Neve / Nyeremény:</label>
+      <div class="admin-input-group" style="margin-bottom: 0;">
+        <input type="text" id="gwTitleInput" value="25$ FTD EgoGames" placeholder="pl: 25$ FTD EgoGames" style="flex: 1;">
+        <button class="secondary-btn" onclick="updateGwTitle()">Mentés</button>
       </div>
+    </div>
 
-      <div style="margin-bottom: 15px; display: flex; gap: 10px;">
-        <button class="secondary-btn" onclick="shufflePlayers()"><i class="fa-solid fa-shuffle"></i> Nevek Megkavarása (Shuffle)</button>
-        <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearAllPlayers()">Összes törlése</button>
-      </div>
+    <h3>Játékosok hozzáadása</h3>
+    <div class="admin-input-group">
+      <input type="text" id="playerNameInput" placeholder="Játékos neve..." style="flex: 1;" onkeypress="if(event.key === 'Enter') addPlayer()">
+      <button class="action-btn" style="padding: 10px 20px;" onclick="addPlayer()">Hozzáadás</button>
+    </div>
 
-      <table class="player-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Név</th>
-            <th>Nyerési Esély (%)</th>
-            <th>Művelet</th>
-          </tr>
-        </thead>
-        <tbody id="playerTableBody"></tbody>
-      </table>
+    <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+      <button class="secondary-btn" onclick="shufflePlayers()"><i class="fa-solid fa-shuffle"></i> Nevek Megkavarása (Shuffle)</button>
+      <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearAllPlayers()">Összes törlése</button>
+    </div>
 
-      <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
+    <table class="player-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Név</th>
+          <th>Nyerési Esély (%)</th>
+          <th>Művelet</th>
+        </tr>
+      </thead>
+      <tbody id="playerTableBody"></tbody>
+    </table>
 
-      <h3><i class="fa-solid fa-trophy"></i> Admin Nyertes Történet</h3>
-      <div style="margin-bottom: 10px;">
-        <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearWinnersHistory()">Nyertes előzmények törlése</button>
-      </div>
-      <div id="adminWinnersList" class="winners-list" style="justify-content: flex-start;">
-        <span style="color: var(--subtext);">Még nem volt sorsolás.</span>
-      </div>
+    <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
+
+    <h3><i class="fa-solid fa-trophy"></i> Admin Nyertes Történet</h3>
+    <div style="margin-bottom: 10px;">
+      <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearWinnersHistory()">Nyertes előzmények törlése</button>
+    </div>
+    <div id="adminWinnersList" class="winners-list" style="justify-content: flex-start;">
+      <span style="color: var(--subtext);">Még nem volt sorsolás.</span>
     </div>
   </div>
 
   <script>
     const ADMIN_PASSWORD = "al1ve2026"; 
-    let isAdminLoggedIn = false;
+    const DEVICE_SECRET_KEY = "al1ve_authorized_admin_device_2026"; // Egyedi eszköz azonosító
 
     let currentGwTitle = "25$ FTD EgoGames";
     let isWinnersPublic = false; 
     let players = ["Sanyi", "Peti", "Gábor", "Kitti", "Dani"];
-    let winnersHistory = []; // { name: "", gw: "" } szerkezetű elemek
+    let winnersHistory = [];
 
     const rollerTrack = document.getElementById('rollerTrack');
-    const spinBtn = document.getElementById('spinBtn');
     const winnerBox = document.getElementById('winnerBox');
 
-    // Admin Authentikáció
-    function toggleAdminAuth() {
-      if (!isAdminLoggedIn) {
-        const pass = prompt("Add meg az Admin jelszót:");
-        if (pass === ADMIN_PASSWORD) {
-          isAdminLoggedIn = true;
-          document.getElementById('adminContent').style.display = 'block';
-          document.getElementById('authBtn').innerHTML = '<i class="fa-solid fa-lock-open"></i> Kijelentkezés';
-          renderAdminTable();
-          renderWinners();
-        } else {
-          alert("Helytelen jelszó!");
-        }
-      } else {
-        isAdminLoggedIn = false;
-        document.getElementById('adminContent').style.display = 'none';
-        document.getElementById('authBtn').innerHTML = '<i class="fa-solid fa-lock"></i> Belépés Adminak';
+    // --- ESZKÖZ ALAPÚ AUTOMATIKUS BELÉPÉS & REJTETT BILLENTYŰKOMBINÁCIÓ ---
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Ellenőrizzük, hogy ez a gép el lett-e már mentve Admin számítógépként
+      if (localStorage.getItem('al1ve_admin_device') === DEVICE_SECRET_KEY) {
+        showAdminPanel();
+      }
+
+      // 2. Címben lévő rejtett kód ellenőrzése (pl: giveaway.html?admin=true)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('admin')) {
+        verifyAdminAccess();
+      }
+    });
+
+    // Rejtett Billentyűkombináció: CTRL + SHIFT + A billentyűk lenyomására megnyílik az admin jelszóbekérő!
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+        verifyAdminAccess();
+      }
+    });
+
+    function verifyAdminAccess() {
+      const pass = prompt("Admin Hitelesítés:");
+      if (pass === ADMIN_PASSWORD) {
+        // Elmentjük ezt a számítógépet mint autorizált Admin Eszköz!
+        localStorage.setItem('al1ve_admin_device', DEVICE_SECRET_KEY);
+        showAdminPanel();
+        alert("Ez a számítógép sikeresen párosítva lett mint Admin eszköz!");
+      } else if (pass !== null) {
+        alert("Helytelen jelszó!");
       }
     }
 
-    // Giveaway cím frissítése
-    function updateGwTitle() {
-      const input = document.getElementById('gwTitleInput');
-      if (input.value.trim() !== "") {
-        currentGwTitle = input.value.trim();
-        document.getElementById('publicGwTitle').innerText = currentGwTitle;
-        alert("Giveaway neve frissítve!");
-      }
+    function showAdminPanel() {
+      document.getElementById('adminPanelSection').style.display = 'block';
+      renderAdminTable();
+      renderWinners();
     }
 
-    // Láthatóság zárolása / feloldása
-    function togglePublicWinnersVisibility() {
-      isWinnersPublic = !isWinnersPublic;
-      const btn = document.getElementById('lockToggleBtn');
-      const publicContainer = document.getElementById('publicWinnersContainer');
-
-      if (isWinnersPublic) {
-        btn.className = "toggle-lock-btn unlocked";
-        btn.innerHTML = '<i class="fa-solid fa-lock-open"></i> LÁTHATÓ a publikumnak';
-        publicContainer.style.display = 'block';
-      } else {
-        btn.className = "toggle-lock-btn";
-        btn.innerHTML = '<i class="fa-solid fa-lock"></i> REJTVE a publikum elől';
-        publicContainer.style.display = 'none';
-      }
-    }
+    // --- ROLLER FUNKCIÓK ---
 
     function getPlayerChance() {
       if (players.length === 0) return 0;
@@ -468,13 +467,14 @@
       return WINNER_CARD_INDEX;
     }
 
-    spinBtn.addEventListener('click', () => {
+    function triggerSpin() {
+      const spinBtn = document.getElementById('adminSpinBtn');
       if (players.length === 0) {
         alert("Nincs egyetlen játékos sem a listában!");
         return;
       }
 
-      spinBtn.disabled = true;
+      if(spinBtn) spinBtn.disabled = true;
       winnerBox.innerText = '';
       
       const winnerIndex = Math.floor(Math.random() * players.length);
@@ -496,15 +496,40 @@
 
       setTimeout(() => {
         winnerBox.innerHTML = `🎉 NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
-        spinBtn.disabled = false;
+        if(spinBtn) spinBtn.disabled = false;
         
-        // Nyertes mentése a történetbe a GW nevével együtt
         winnersHistory.unshift({ name: winnerName, gw: currentGwTitle });
         renderWinners();
       }, 6100);
-    });
+    }
 
-    // Nyertesek kirajzolása
+    // --- ADMIN KEZELÉS ---
+
+    function updateGwTitle() {
+      const input = document.getElementById('gwTitleInput');
+      if (input.value.trim() !== "") {
+        currentGwTitle = input.value.trim();
+        document.getElementById('publicGwTitle').innerText = currentGwTitle;
+        alert("Giveaway neve frissítve!");
+      }
+    }
+
+    function togglePublicWinnersVisibility() {
+      isWinnersPublic = !isWinnersPublic;
+      const btn = document.getElementById('lockToggleBtn');
+      const publicContainer = document.getElementById('publicWinnersContainer');
+
+      if (isWinnersPublic) {
+        btn.className = "toggle-lock-btn unlocked";
+        btn.innerHTML = '<i class="fa-solid fa-lock-open"></i> LÁTHATÓ a publikumnak';
+        publicContainer.style.display = 'block';
+      } else {
+        btn.className = "toggle-lock-btn";
+        btn.innerHTML = '<i class="fa-solid fa-lock"></i> REJTVE a publikum elől';
+        publicContainer.style.display = 'none';
+      }
+    }
+
     function renderWinners() {
       const publicList = document.getElementById('publicWinnersList');
       const adminList = document.getElementById('adminWinnersList');
@@ -533,7 +558,6 @@
       }
     }
 
-    // ADMIN TÁBLÁZAT FUNKCIÓK
     function renderAdminTable() {
       const tbody = document.getElementById('playerTableBody');
       tbody.innerHTML = '';
