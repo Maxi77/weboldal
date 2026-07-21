@@ -50,8 +50,8 @@
       z-index: 0;
     }
 
-    /* --- VÉKONY, HULLÁMZO DÉLIBÁB CSÍKOK (0.2cm VASTAG) --- */
-    .mirage-container {
+    /* --- IZZÓ SZÁRNYAS HIÉNA FEJEK KONTÉNER --- */
+    .flying-container {
       position: fixed;
       top: 0;
       left: 0;
@@ -62,71 +62,95 @@
       overflow: hidden;
     }
 
-    .heat-stripe {
+    /* KÜLÖNLEGES SZÁRNYAS HIÉNA DÍSZ (PNG + SZÁRNYAK + IZZÁS) */
+    .flying-winged-hyena {
       position: absolute;
-      width: 0.2cm; /* pontosan 0.2 cm vastag */
-      height: 160px;
-      background: linear-gradient(
-        0deg,
-        rgba(168, 85, 247, 0) 0%,
-        rgba(168, 85, 247, 0.4) 30%,
-        rgba(255, 0, 85, 0.5) 70%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      border-radius: 10px;
-      filter: blur(3px);
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-      animation: riseAndWobble 6s infinite ease-in-out;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      /* Erőteljes izzás mögötte */
+      filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.85)) drop-shadow(0 0 20px rgba(255, 0, 85, 0.5));
+      animation: flyUpAndWobble 6s infinite ease-in-out;
       opacity: 0;
     }
 
-    /* 20 DARAB CSÍK KÜLÖNBÖZŐ HELYEN, VÁLTOZÓ SEBESSÉGGEL ÉS KÉSLELTETÉSSEL */
-    .stripe-1  { left: 3%;  animation-duration: 4.8s; animation-delay: 0.0s; }
-    .stripe-2  { left: 8%;  animation-duration: 6.2s; animation-delay: 1.5s; }
-    .stripe-3  { left: 13%; animation-duration: 5.1s; animation-delay: 3.2s; }
-    .stripe-4  { left: 18%; animation-duration: 7.0s; animation-delay: 0.7s; }
-    .stripe-5  { left: 24%; animation-duration: 4.5s; animation-delay: 2.1s; }
-    .stripe-6  { left: 29%; animation-duration: 5.8s; animation-delay: 4.0s; }
-    .stripe-7  { left: 35%; animation-duration: 6.5s; animation-delay: 1.1s; }
-    .stripe-8  { left: 40%; animation-duration: 4.9s; animation-delay: 2.8s; }
-    .stripe-9  { left: 46%; animation-duration: 5.5s; animation-delay: 0.3s; }
-    .stripe-10 { left: 51%; animation-duration: 6.1s; animation-delay: 3.7s; }
-    .stripe-11 { left: 57%; animation-duration: 4.3s; animation-delay: 1.9s; }
-    .stripe-12 { left: 62%; animation-duration: 5.9s; animation-delay: 0.5s; }
-    .stripe-13 { left: 68%; animation-duration: 6.7s; animation-delay: 2.4s; }
-    .stripe-14 { left: 73%; animation-duration: 5.0s; animation-delay: 4.2s; }
-    .stripe-15 { left: 78%; animation-duration: 6.3s; animation-delay: 1.3s; }
-    .stripe-16 { left: 83%; animation-duration: 4.7s; animation-delay: 3.0s; }
-    .stripe-17 { left: 88%; animation-duration: 5.6s; animation-delay: 0.8s; }
-    .stripe-18 { left: 92%; animation-duration: 6.8s; animation-delay: 2.6s; }
-    .stripe-19 { left: 96%; animation-duration: 5.2s; animation-delay: 1.7s; }
-    .stripe-20 { left: 98%; animation-duration: 4.4s; animation-delay: 3.9s; }
+    .flying-winged-hyena img {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+      z-index: 2;
+    }
 
-    /* S-ALAKÚ HULLÁMZÓ ÉS EMELKEDŐ ANIMÁCIÓ */
-    @keyframes riseAndWobble {
+    /* Angyalszárnyak a fej két oldalán */
+    .flying-winged-hyena::before,
+    .flying-winged-hyena::after {
+      content: '🪽';
+      font-size: 1.8rem;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      filter: drop-shadow(0 0 8px #a855f7);
+    }
+
+    .flying-winged-hyena::before {
+      left: -22px;
+      transform: translateY(-50%) scaleX(-1) rotate(-10deg); /* Bal szárny megfordítva */
+    }
+
+    .flying-winged-hyena::after {
+      right: -22px;
+      transform: translateY(-50%) rotate(-10deg); /* Jobb szárny */
+    }
+
+    /* 20 DARAB SZÁRNYAS HIÉNA KÜLÖNBÖZŐ HELYEN ÉS SEBESSÉGGEL */
+    .hyena-1  { left: 4%;  transform: scale(0.7); animation-duration: 5.2s; animation-delay: 0.0s; }
+    .hyena-2  { left: 9%;  transform: scale(1.1); animation-duration: 6.8s; animation-delay: 1.5s; }
+    .hyena-3  { left: 14%; transform: scale(0.8); animation-duration: 5.5s; animation-delay: 3.2s; }
+    .hyena-4  { left: 19%; transform: scale(1.0); animation-duration: 7.2s; animation-delay: 0.7s; }
+    .hyena-5  { left: 25%; transform: scale(0.9); animation-duration: 4.8s; animation-delay: 2.1s; }
+    .hyena-6  { left: 30%; transform: scale(1.2); animation-duration: 6.1s; animation-delay: 4.0s; }
+    .hyena-7  { left: 36%; transform: scale(0.75); animation-duration: 6.7s; animation-delay: 1.1s; }
+    .hyena-8  { left: 41%; transform: scale(1.05); animation-duration: 5.3s; animation-delay: 2.8s; }
+    .hyena-9  { left: 47%; transform: scale(0.85); animation-duration: 5.8s; animation-delay: 0.3s; }
+    .hyena-10 { left: 52%; transform: scale(1.15); animation-duration: 6.4s; animation-delay: 3.7s; }
+    .hyena-11 { left: 58%; transform: scale(0.7); animation-duration: 4.9s; animation-delay: 1.9s; }
+    .hyena-12 { left: 63%; transform: scale(1.0); animation-duration: 6.2s; animation-delay: 0.5s; }
+    .hyena-13 { left: 69%; transform: scale(0.9); animation-duration: 7.0s; animation-delay: 2.4s; }
+    .hyena-14 { left: 74%; transform: scale(1.1); animation-duration: 5.4s; animation-delay: 4.2s; }
+    .hyena-15 { left: 79%; transform: scale(0.8); animation-duration: 6.6s; animation-delay: 1.3s; }
+    .hyena-16 { left: 84%; transform: scale(1.05); animation-duration: 5.1s; animation-delay: 3.0s; }
+    .hyena-17 { left: 89%; transform: scale(0.85); animation-duration: 5.9s; animation-delay: 0.8s; }
+    .hyena-18 { left: 93%; transform: scale(1.2); animation-duration: 7.1s; animation-delay: 2.6s; }
+    .hyena-19 { left: 96%; transform: scale(0.75); animation-duration: 5.6s; animation-delay: 1.7s; }
+    .hyena-20 { left: 98%; transform: scale(0.95); animation-duration: 4.7s; animation-delay: 3.9s; }
+
+    /* SZÁRNYALÓ ÉS HULLÁMZÓ REPÜLÉSI ANIMÁCIÓ IZZÁSSAL */
+    @keyframes flyUpAndWobble {
       0% {
         top: 105vh;
-        transform: translateX(0px) skewX(0deg) scaleY(1);
+        transform: translateX(0px) rotate(0deg);
         opacity: 0;
       }
       15% {
         opacity: 0.85;
       }
-      25% {
-        transform: translateX(12px) skewX(6deg) scaleY(1.1);
+      30% {
+        transform: translateX(20px) rotate(14deg);
       }
       50% {
-        transform: translateX(-10px) skewX(-6deg) scaleY(0.95);
+        transform: translateX(-18px) rotate(-12deg);
       }
       75% {
-        transform: translateX(8px) skewX(4deg) scaleY(1.05);
+        transform: translateX(12px) rotate(8deg);
       }
       85% {
         opacity: 0.85;
       }
       100% {
-        top: -180px;
-        transform: translateX(-5px) skewX(-2deg) scaleY(1);
+        top: -100px;
+        transform: translateX(-8px) rotate(-6deg);
         opacity: 0;
       }
     }
@@ -420,28 +444,28 @@
   <!-- HÁTTÉR HIÉNA KÉP -->
   <img src="images/hiena.png" alt="Hyena Background" class="bg-hyena">
 
-  <!-- 20 DARAB 0.2 CM VASTAG HULLÁMZÓ DÉLIBÁB CSÍK -->
-  <div class="mirage-container">
-    <div class="heat-stripe stripe-1"></div>
-    <div class="heat-stripe stripe-2"></div>
-    <div class="heat-stripe stripe-3"></div>
-    <div class="heat-stripe stripe-4"></div>
-    <div class="heat-stripe stripe-5"></div>
-    <div class="heat-stripe stripe-6"></div>
-    <div class="heat-stripe stripe-7"></div>
-    <div class="heat-stripe stripe-8"></div>
-    <div class="heat-stripe stripe-9"></div>
-    <div class="heat-stripe stripe-10"></div>
-    <div class="heat-stripe stripe-11"></div>
-    <div class="heat-stripe stripe-12"></div>
-    <div class="heat-stripe stripe-13"></div>
-    <div class="heat-stripe stripe-14"></div>
-    <div class="heat-stripe stripe-15"></div>
-    <div class="heat-stripe stripe-16"></div>
-    <div class="heat-stripe stripe-17"></div>
-    <div class="heat-stripe stripe-18"></div>
-    <div class="heat-stripe stripe-19"></div>
-    <div class="heat-stripe stripe-20"></div>
+  <!-- 20 DARAB SZÁRNYAS, IZZÓ HIÉNA FEJ KÖRÜLBEN LEBEGVE -->
+  <div class="flying-container">
+    <div class="flying-winged-hyena hyena-1"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-2"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-3"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-4"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-5"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-6"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-7"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-8"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-9"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-10"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-11"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-12"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-13"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-14"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-15"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-16"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-17"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-18"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-19"><img src="images/hiena.png" alt="flying hyena"></div>
+    <div class="flying-winged-hyena hyena-20"><img src="images/hiena.png" alt="flying hyena"></div>
   </div>
 
   <nav class="main-nav">
