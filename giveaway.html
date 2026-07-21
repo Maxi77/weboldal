@@ -18,7 +18,7 @@
   <style>
     :root {
       --bg-color: #0b0b14;
-      --card-bg: #131322;
+      --card-bg: rgba(19, 19, 34, 0.88); /* Kicsit áttetsző, hogy átsejtsen a háttér */
       --accent: #a855f7;
       --text: #e0e0e0;
       --subtext: #a0a0a0;
@@ -30,12 +30,71 @@
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* --- HÁTTÉR HIÉNA KÉP (.PNG, HOMÁLYOSÍTVA) --- */
+    .bg-hyena {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      max-width: 90vw;
+      height: auto;
+      opacity: 0.18; /* Finom háttérhatás */
+      filter: blur(8px) grayscale(20%); /* Elhomályosítva */
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* --- SIVATAGI DÉLIBÁB / HŐHULLÁM EFFEKT (FELFELÉ MOZGÓ VONALAK) --- */
+    .mirage-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(168, 85, 247, 0.03) 0px,
+        rgba(168, 85, 247, 0.03) 2px,
+        transparent 2px,
+        transparent 8px
+      );
+      animation: heatHaze 8s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes heatHaze {
+      0% {
+        transform: translateY(0) scaleY(1);
+        filter: hue-rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) scaleY(1.02);
+      }
+      100% {
+        transform: translateY(-40px) scaleY(1);
+        filter: hue-rotate(10deg);
+      }
     }
 
     .main-container {
       max-width: 950px;
       margin: 0 auto;
       padding: 20px;
+      position: relative;
+      z-index: 2; /* A tartalom a háttér és a délibáb felett marad */
+    }
+
+    .main-nav {
+      position: relative;
+      z-index: 2;
     }
 
     /* TÖBBSOROS PÖRGETŐ STÍLUSOK */
@@ -53,6 +112,7 @@
       padding: 15px;
       box-shadow: 0 0 25px rgba(124, 58, 237, 0.15);
       position: relative;
+      backdrop-filter: blur(5px);
     }
 
     .roller-label {
@@ -179,6 +239,7 @@
       padding: 20px;
       text-align: center;
       margin-top: 30px;
+      backdrop-filter: blur(5px);
     }
 
     .winners-list {
@@ -216,6 +277,7 @@
       padding: 20px;
       margin-top: 40px;
       display: none;
+      backdrop-filter: blur(5px);
     }
 
     .admin-header {
@@ -302,6 +364,10 @@
 
 <body>
 
+  <!-- HÁTTÉR ELEMEK (.PNG) -->
+  <img src="images/hiena.png" alt="Hyena Background" class="bg-hyena">
+  <div class="mirage-overlay"></div>
+
   <nav class="main-nav">
     <ul>
       <li><a href="index.html">Mainpage</a></li>
@@ -316,9 +382,7 @@
     </div>
 
     <!-- TÖBBSOROS PÖRGETŐ TERÜLET -->
-    <div id="rollersArea">
-      <!-- A JS ide generálja dinamikusan a sávokat (1, 2, 3 vagy amennyit kiválasztasz) -->
-    </div>
+    <div id="rollersArea"></div>
 
     <!-- NYERTESEK HISTÓRIA (Publikus) -->
     <div id="publicWinnersContainer" class="winners-section" style="display: none;">
@@ -338,7 +402,7 @@
       </div>
 
       <!-- SORSOLÁSI VEZÉRLŐ -->
-      <div style="background: #1c1a36; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 25px; border: 1px solid var(--accent);">
+      <div style="background: rgba(28, 26, 54, 0.9); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 25px; border: 1px solid var(--accent);">
         <h3 style="margin-top: 0;">Sorsolás Indítása Élőben</h3>
         
         <div style="margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px;">
@@ -438,7 +502,6 @@
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('admin')) verifyAdminAccess();
 
-      // Alapértelmezett 1 sáv létrehozása betöltéskor
       renderRollerLanes(1);
     });
 
@@ -481,7 +544,6 @@
 
     function renderRollerLanes(count) {
       rollersArea.innerHTML = '';
-      const chance = getPlayerChance();
 
       for (let i = 0; i < count; i++) {
         const wrapper = document.createElement('div');
@@ -499,7 +561,6 @@
         `;
         rollersArea.appendChild(wrapper);
 
-        // Alapértelmezett kártyák feltöltése
         fillTrackWithCards(`rollerTrack_${i}`, players[0] || "---");
       }
     }
@@ -529,11 +590,10 @@
       const requestedCount = parseInt(countSelect.value);
 
       if (players.length < requestedCount) {
-        alert(`Nincs elég játékos! legalább ${requestedCount} játékos kell ennyi nyerteshez.`);
+        alert(`Nincs elég játékos! Legalább ${requestedCount} játékos kell ennyi nyerteshez.`);
         return;
       }
 
-      // GARANTÁLTAN EGYEDI NYERTESEK KIVÁLASZTÁSA:
       let tempPool = [...players];
       let selectedWinners = [];
 
@@ -541,10 +601,9 @@
         const randomIndex = Math.floor(Math.random() * tempPool.length);
         const winner = tempPool[randomIndex];
         selectedWinners.push(winner);
-        tempPool.splice(randomIndex, 1); // Eltávolítjuk a kiválasztottat, hogy többször ne nyerhessen!
+        tempPool.splice(randomIndex, 1);
       }
 
-      // Üzenet küldése a Firebase-nek (Élő szinkron)
       db.ref('live_spin').set({
         winners: selectedWinners,
         gwTitle: currentGwTitle,
@@ -556,15 +615,12 @@
       const adminBtn = document.getElementById('adminSpinBtn');
       if (adminBtn) adminBtn.disabled = true;
 
-      // 1. Legeneráljuk a pontosan szükséges számú pörgető sávot
       renderRollerLanes(winnerList.length);
 
-      // 2. Minden sávot előkészítünk a saját egyedi nyertesével
       winnerList.forEach((winnerName, index) => {
         fillTrackWithCards(`rollerTrack_${index}`, winnerName);
       });
 
-      // 3. EGYSZERRE (SZIMULTÁN) INDÍTJUK EL AZ ÖSSZES PÖRGETÉST
       setTimeout(() => {
         winnerList.forEach((winnerName, index) => {
           const track = document.getElementById(`rollerTrack_${index}`);
@@ -572,7 +628,6 @@
           const containerWidth = track.parentElement.clientWidth;
           const WINNER_INDEX = 65;
 
-          // Egy kis véletlenszerű eltolás, hogy még élethűbb legyen a stop
           const randomOffset = Math.floor(Math.random() * 60) - 30; 
           const targetX = (WINNER_INDEX * cardWidth) - (containerWidth / 2) + (cardWidth / 2) + randomOffset;
 
@@ -586,7 +641,6 @@
         });
       }, 100);
 
-      // 4. ANIMÁCIÓ VÉGE (6 másodperc múlva kiírjuk az eredményeket pontosan a sávok alatt)
       setTimeout(() => {
         winnerList.forEach((winnerName, index) => {
           const resBox = document.getElementById(`winnerResult_${index}`);
@@ -594,7 +648,6 @@
             resBox.innerHTML = `🎉 ${index + 1}. NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
           }
 
-          // Nyertes hozzáadása a történethez
           winnersHistory.unshift({ name: winnerName, gw: title });
         });
 
