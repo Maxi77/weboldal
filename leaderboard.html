@@ -271,8 +271,8 @@
       const container = document.getElementById('leaderboardContent');
       
       try {
-        // Most már a saját proxy.php-nket hívjuk, ami CORS hiba nélkül letölti az adatot
-        const response = await fetch('https://www.al1vecasi.com/proxy.php');
+        // Itt hívjuk a te saját Cloudflare Worker-edet!
+        const response = await fetch('https://winovo-proxy.kupak2005.workers.dev/');
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -287,7 +287,7 @@
             container.innerHTML = `
               <div class="lb-status">
                 <i class="fa-solid fa-users-slash"></i>
-                <p>No players found on the leaderboard yet. (Connected via PHP Proxy)</p>
+                <p>No players found on the leaderboard yet. (Connected successfully!)</p>
               </div>
             `;
             return;
@@ -348,7 +348,7 @@
         container.innerHTML = `
           <div class="lb-status">
             <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i>
-            <p>Could not load leaderboard data via proxy. Please check your PHP server configuration.</p>
+            <p>Could not load leaderboard data. Please try again later.</p>
           </div>
         `;
       }
