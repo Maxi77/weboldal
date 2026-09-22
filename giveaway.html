@@ -972,12 +972,20 @@
       setTimeout(() => {
         winnerList.forEach((winnerName, index) => {
           const track = document.getElementById(`rollerTrack_${index}`);
-          const cardWidth = 140; 
-          const containerWidth = track.parentElement.clientWidth;
+          const container = track.parentElement;
           const WINNER_INDEX = 65;
+          const winnerCard = track.children[WINNER_INDEX];
 
-          const randomOffset = Math.floor(Math.random() * 60) - 30; 
-          const targetX = (WINNER_INDEX * cardWidth) - (containerWidth / 2) + (cardWidth / 2) + randomOffset;
+          if (!winnerCard) return;
+
+          // A ténylegesen kiválasztott nyertes kártya DOM pozícióját használjuk.
+          // Így nem csúszik el a piros kijelölő vonal a fix pixelszámítás miatt.
+          const containerCenter = container.clientWidth / 2;
+          const winnerCardCenter = winnerCard.offsetLeft + (winnerCard.offsetWidth / 2);
+
+          // Kis természetes eltérés, de mindig a nyertes kártyán belül marad.
+          const safeOffset = Math.floor(Math.random() * 31) - 15;
+          const targetX = winnerCardCenter - containerCenter + safeOffset;
 
           track.style.transition = 'none';
           track.style.transform = 'translateX(0px)';
