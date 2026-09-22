@@ -367,37 +367,5 @@
       } else { init(); }
     })();
   </script>
-
-  <script>
-    const TWITCH_CHANNEL = 'al1vehunter';
-    const TWITCH_CLIENT_ID = 'jbdr5e5x1wx0idyrg77mxy7m6efcln';
-    const TWITCH_ACCESS_TOKEN = 'iwgyh0o4c6az9oo5v2prr0hnj12wge';
-    const statusElement = document.getElementById('twitch-status');
-
-    async function checkTwitchStatus() {
-      if (!TWITCH_CLIENT_ID || !TWITCH_ACCESS_TOKEN || !statusElement ||
-          TWITCH_CLIENT_ID.includes('IDE_MASOLD') || TWITCH_ACCESS_TOKEN.includes('IDE_MASOLD')) {
-        console.error("Twitch adatok hiányoznak! A státusz jelző nem fog működni.");
-        return;
-      }
-      const url = `https://api.twitch.tv/helix/streams?user_login=${TWITCH_CHANNEL}`;
-      try {
-        const response = await fetch(url, {
-          headers: { 'Client-ID': TWITCH_CLIENT_ID, 'Authorization': `Bearer ${TWITCH_ACCESS_TOKEN}` }
-        });
-        const data = await response.json();
-        if (data.data && data.data.length > 0) {
-          statusElement.classList.remove('hidden');
-        } else {
-          statusElement.classList.add('hidden');
-        }
-      } catch (error) {
-        console.error('Hiba a Twitch API közben:', error);
-        statusElement.classList.add('hidden');
-      }
-    }
-    document.addEventListener('DOMContentLoaded', checkTwitchStatus);
-    setInterval(checkTwitchStatus, 180000);
-  </script>
 </body>
 </html>
