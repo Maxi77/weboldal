@@ -132,7 +132,7 @@
       border-bottom: 1px solid var(--card-border);
       padding: 1rem 2rem;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
     }
     .main-nav ul {
@@ -142,6 +142,7 @@
       align-items: center;
       flex-wrap: wrap;
       justify-content: center;
+      flex-grow: 1;
     }
     .main-nav a {
       color: var(--secondary-text);
@@ -155,6 +156,26 @@
     .main-nav a:hover {
       color: #fff;
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    /* Sound Toggle Button */
+    .sound-toggle-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--secondary-text);
+      padding: 0.5rem 0.9rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .sound-toggle-btn:hover {
+      color: #fff;
+      border-color: var(--accent-purple);
     }
 
     /* --- ALERT BANNER (LIVE TICKER) --- */
@@ -277,7 +298,6 @@
       box-shadow: 0 4px 15px rgba(168, 85, 247, 0.35);
     }
 
-    /* ÚJ STÍLUSÚ NÉZETVÁLTÓ GOMB */
     .view-toggle {
       display: flex;
       background: rgba(255, 255, 255, 0.05);
@@ -396,7 +416,7 @@
       gap: 2rem;
     }
 
-    /* TELJESEN ÁTDOLGOZOTT PROFI LISTÁS NÉZET */
+    /* COMPACT LIST VIEW STYLES */
     .casino-grid.list-view {
       display: flex;
       flex-direction: column;
@@ -537,7 +557,33 @@
     }
     .promo-copy-box i { font-size: 0.75rem; }
 
-    /* GLOW EFFECTS */
+    /* GLOW & SHINE EFFECTS */
+    .glow-shuffle {
+      position: relative;
+      overflow: hidden;
+    }
+    .glow-shuffle::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 45%,
+        rgba(250, 204, 21, 0.15) 50%,
+        transparent 55%
+      );
+      transform: rotate(30deg);
+      animation: shineSweep 4s infinite;
+      pointer-events: none;
+    }
+    @keyframes shineSweep {
+      0% { transform: translateX(-100%) rotate(30deg); }
+      20%, 100% { transform: translateX(100%) rotate(30deg); }
+    }
+
     .glow-shuffle:hover { border-color: rgba(168, 85, 247, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(168, 85, 247, 0.35); }
     .glow-1xbit:hover { border-color: rgba(249, 115, 22, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(249, 115, 22, 0.35); }
     .glow-winspirit:hover { border-color: rgba(34, 197, 94, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(34, 197, 94, 0.35); }
@@ -549,6 +595,24 @@
     .glow-duel:hover { border-color: rgba(30, 64, 175, 0.8); box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 30px rgba(30, 64, 175, 0.5); }
     .glow-wazamba:hover { border-color: rgba(34, 197, 94, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), -10px 0 25px rgba(239, 68, 68, 0.3), 10px 0 25px rgba(34, 197, 94, 0.3); }
     .glow-sgcasino:hover { border-color: rgba(250, 204, 21, 0.7); box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 25px rgba(56, 189, 248, 0.3), 0 0 35px rgba(250, 204, 21, 0.25); }
+
+    /* COMMUNITY TEASER CARDS STYLES */
+    .promo-teaser-card {
+      background: linear-gradient(135deg, rgba(88, 101, 242, 0.15), rgba(19, 19, 34, 0.85));
+      border: 1px solid rgba(88, 101, 242, 0.4) !important;
+    }
+    .promo-teaser-card:hover {
+      border-color: rgba(88, 101, 242, 0.8) !important;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(88, 101, 242, 0.35) !important;
+    }
+    .leaderboard-teaser-card {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(19, 19, 34, 0.85));
+      border: 1px solid rgba(168, 85, 247, 0.4) !important;
+    }
+    .leaderboard-teaser-card:hover {
+      border-color: rgba(168, 85, 247, 0.8) !important;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(168, 85, 247, 0.35) !important;
+    }
 
     /* LOGO & HEADINGS */
     .card-logo-container {
@@ -565,6 +629,12 @@
       max-height: 100%;
       object-fit: contain;
       filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+    }
+
+    .card-header-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .casino-card h3 {
@@ -767,6 +837,7 @@
 
     /* Responsive */
     @media (max-width: 768px) {
+      .main-nav { flex-direction: column; gap: 1rem; }
       .main-nav ul { gap: 1rem; }
       header h1 { font-size: 2.4rem; }
       .section-title { font-size: 1.6rem; }
@@ -813,6 +884,11 @@
         <li><a href="leaderboard.html">Winovo leaderboard</a></li>
         <li><a href="#socials">Contact details</a></li>
       </ul>
+
+      <!-- SOUND FX TOGGLE -->
+      <button id="soundToggle" class="sound-toggle-btn" title="Toggle Sound FX">
+        <i class="fa-solid fa-volume-high"></i> Sound: ON
+      </button>
     </nav>
 
     <!-- LIVE ALERT TICKER (COCOBET PROMO) -->
@@ -843,7 +919,7 @@
             <button class="filter-btn" data-filter="crypto"><i class="fa-brands fa-bitcoin"></i> Crypto</button>
           </div>
 
-          <!-- ÚJ TÍPUSÚ GRID / LIST VIEW TOGGLE -->
+          <!-- GRID / LIST VIEW TOGGLE -->
           <div class="view-toggle">
             <button class="view-btn active" id="viewGrid"><i class="fa-solid fa-grip"></i> Grid</button>
             <button class="view-btn" id="viewList"><i class="fa-solid fa-bars"></i> Compact</button>
@@ -975,7 +1051,7 @@
               <li><i class="fa-solid fa-circle-check check-icon"></i> Welcome Bonus: 250% + 150 FS</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Fast Crypto + Card deposit/cashout</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Sports betting</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> VIP system / Lucky Spin and Lucky Box</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> VIP system / Lucky Spin és Lucky Box</li>
               <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
             </ul>
             <a href="https://appsn1network.com/HfBXGm" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
@@ -1041,13 +1117,50 @@
                 <span class="text-accent">Promocode</span>&nbsp;
                 <span class="promo-copy-box" onclick="copyCode(this, 'PICKLIVE')">PICKLIVE <i class="fa-regular fa-copy"></i></span>
               </li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 200$ WAGERFREE FREEBET</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> From 200$ DEPOSIT 200 wanted FS (0.4 GBP)</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 100% bbonus up to 500€</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 200$ WAGERMENTES FREEBET</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 200$ depóval 200 wanted FS (0.4 GBP)</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 100% bónusz up to 500€</li>
               <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
             </ul>
             <a href="https://pwpartners.cxclick.com/visit/?bta=35688&brand=pickwin" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
+
+          <!-- WINOVO LEADERBOARD TEASER CARD -->
+          <div class="casino-card leaderboard-teaser-card" data-tags="all" data-name="winovo leaderboard">
+            <div class="card-logo-container">
+              <i class="fa-solid fa-trophy" style="font-size: 2.5rem; color: var(--accent-gold);"></i>
+            </div>
+            <div class="card-header-info">
+              <div class="card-rank-badge badge-gold">EVENT</div>
+              <h3>Winovo Leaderboard</h3>
+              <h4 class="sub-brand">Community Competition</h4>
+            </div>
+            <p style="text-align: center; color: var(--secondary-text); font-size: 0.88rem; margin: 1rem 0; flex-grow: 1;">
+              Check out the latest Winovo Leaderboard standings!
+            </p>
+            <a href="leaderboard.html" class="play-button" style="background: linear-gradient(135deg, #facc15, #ca8a04); color: #000;">
+              VIEW LEADERBOARD <i class="fa-solid fa-chevron-right"></i>
+            </a>
+          </div>
+
+          <!-- ACTIVE GIVEAWAYS TEASER CARD -->
+          <div class="casino-card promo-teaser-card" data-tags="all" data-name="giveaways discord">
+            <div class="card-logo-container">
+              <i class="fa-solid fa-gift" style="font-size: 2.5rem; color: #5865F2;"></i>
+            </div>
+            <div class="card-header-info">
+              <div class="card-rank-badge badge-new">GIVEAWAY</div>
+              <h3>Active Giveaways</h3>
+              <h4 class="sub-brand">Exclusive Rewards</h4>
+            </div>
+            <p style="text-align: center; color: var(--secondary-text); font-size: 0.88rem; margin: 1rem 0; flex-grow: 1;">
+              Active Giveaways: Join our Discord and win!
+            </p>
+            <a href="https://discord.gg/gMGMVKE9jz" target="_blank" class="play-button" style="background: linear-gradient(135deg, #5865F2, #404EED);">
+              JOIN DISCORD <i class="fa-solid fa-chevron-right"></i>
+            </a>
+          </div>
+
         </div>
       </section>
 
@@ -1181,8 +1294,29 @@
   </div>
 
   <script>
-    /* PROMOCODE COPY FUNCTION */
+    /* WEB AUDIO API SOUND SYSTEM */
+    let soundEnabled = true;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playTone(freq, type, duration) {
+      if (!soundEnabled) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e){}
+    }
+
+    /* PROMOCODE COPY FUNCTION WITH SOUND */
     function copyCode(element, text) {
+      playTone(800, 'triangle', 0.15);
       navigator.clipboard.writeText(text).then(() => {
         const originalText = element.innerHTML;
         element.innerHTML = 'Copied! <i class="fa-solid fa-check"></i>';
@@ -1203,8 +1337,24 @@
       const cards = document.querySelectorAll('.casino-card');
       const btnGrid = document.getElementById('viewGrid');
       const btnList = document.getElementById('viewList');
+      const soundBtn = document.getElementById('soundToggle');
 
       let currentFilter = 'all';
+
+      /* Sound Toggle Logic */
+      if(soundBtn) {
+        soundBtn.addEventListener('click', () => {
+          soundEnabled = !soundEnabled;
+          soundBtn.innerHTML = soundEnabled ? '<i class="fa-solid fa-volume-high"></i> Sound: ON' : '<i class="fa-solid fa-volume-xmark"></i> Sound: OFF';
+        });
+      }
+
+      /* Hover sound on cards */
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          playTone(400, 'sine', 0.05);
+        });
+      });
 
       /* View Toggle Logic */
       btnGrid.addEventListener('click', () => {
