@@ -122,7 +122,7 @@
 
     .app-hidden { display: none !important; }
 
-    /* --- NAVIGATION & LANGUAGE SWITCHER --- */
+    /* --- NAVIGATION --- */
     .main-nav {
       position: sticky;
       top: 0;
@@ -130,26 +130,24 @@
       background: rgba(10, 10, 18, 0.85);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--card-border);
-      padding: 0.8rem 2rem;
+      padding: 1rem 2rem;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      gap: 1rem;
     }
     .main-nav ul {
       display: flex;
       list-style: none;
-      gap: 1.5rem;
+      gap: 1.8rem;
       align-items: center;
       flex-wrap: wrap;
       justify-content: center;
-      flex-grow: 1;
     }
     .main-nav a {
       color: var(--secondary-text);
       text-decoration: none;
       font-weight: 500;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       transition: color 0.2s ease;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -157,34 +155,6 @@
     .main-nav a:hover {
       color: #fff;
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    }
-
-    /* Language Switcher */
-    .lang-switcher {
-      display: flex;
-      gap: 4px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      padding: 3px;
-      border-radius: 12px;
-      flex-shrink: 0;
-    }
-    .lang-btn {
-      background: transparent;
-      border: none;
-      color: var(--secondary-text);
-      padding: 0.3rem 0.6rem;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .lang-btn:hover { color: #fff; }
-    .lang-btn.active {
-      background: var(--accent-purple);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
     }
 
     /* --- ALERT BANNER (LIVE TICKER) --- */
@@ -228,7 +198,7 @@
       letter-spacing: -1px;
     }
 
-    /* --- SEARCH, FILTER & VIEW SWITCHER --- */
+    /* --- SEARCH, FILTERS & VIEW TOGGLE --- */
     .controls-wrapper {
       display: flex;
       flex-direction: column;
@@ -271,7 +241,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 1rem;
+      gap: 1.2rem;
       flex-wrap: wrap;
     }
 
@@ -307,7 +277,7 @@
       box-shadow: 0 4px 15px rgba(168, 85, 247, 0.35);
     }
 
-    /* View Switcher Toggle */
+    /* ÚJ STÍLUSÚ NÉZETVÁLTÓ GOMB */
     .view-toggle {
       display: flex;
       background: rgba(255, 255, 255, 0.05);
@@ -319,15 +289,19 @@
       background: transparent;
       border: none;
       color: var(--secondary-text);
-      padding: 0.4rem 0.8rem;
+      padding: 0.4rem 0.9rem;
       border-radius: 20px;
       cursor: pointer;
       font-size: 0.85rem;
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
     .view-btn.active {
-      background: rgba(255, 255, 255, 0.15);
+      background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
       color: #fff;
+      box-shadow: 0 2px 10px rgba(168, 85, 247, 0.4);
     }
 
     .section-title {
@@ -420,43 +394,67 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 360px));
       justify-content: center;
       gap: 2rem;
-      transition: all 0.3s ease;
     }
 
-    /* LIST VIEW STYLES */
+    /* TELJESEN ÁTDOLGOZOTT PROFI LISTÁS NÉZET */
     .casino-grid.list-view {
       display: flex;
       flex-direction: column;
+      gap: 1rem;
       align-items: center;
     }
     .casino-grid.list-view .casino-card {
-      max-width: 900px;
-      flex-direction: row;
-      justify-content: space-between;
-      padding: 1.2rem 2rem;
+      max-width: 950px;
+      display: grid;
+      grid-template-columns: 80px 180px 1fr 180px;
+      align-items: center;
+      padding: 1rem 1.5rem;
       gap: 1.5rem;
+      border-radius: 16px;
     }
     .casino-grid.list-view .card-logo-container {
       margin: 0;
       width: 80px;
-      height: 60px;
+      height: 50px;
+    }
+    .casino-grid.list-view .card-header-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .casino-grid.list-view .sub-brand {
+      margin-bottom: 0;
     }
     .casino-grid.list-view .card-features {
       margin-bottom: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0.4rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.2rem;
+    }
+    .casino-grid.list-view .card-features li {
+      font-size: 0.8rem;
+      margin-bottom: 0;
+    }
+    .casino-grid.list-view .card-rank-badge {
+      position: static;
+      display: inline-block;
+      margin-bottom: 4px;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
     }
     .casino-grid.list-view .play-button {
-      width: auto;
-      min-width: 140px;
-      padding: 0.7rem 1.2rem;
+      padding: 0.65rem 1rem;
+      font-size: 0.82rem;
     }
 
-    @media (max-width: 850px) {
+    @media (max-width: 900px) {
       .casino-grid.list-view .casino-card {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        justify-items: center;
         text-align: center;
+      }
+      .casino-grid.list-view .card-header-info {
+        align-items: center;
       }
     }
 
@@ -769,8 +767,7 @@
 
     /* Responsive */
     @media (max-width: 768px) {
-      .main-nav { flex-direction: column; }
-      .main-nav ul { gap: 0.8rem; }
+      .main-nav ul { gap: 1rem; }
       header h1 { font-size: 2.4rem; }
       .section-title { font-size: 1.6rem; }
       .faq-section { padding: 1.5rem; }
@@ -808,21 +805,14 @@
   <div id="app-root" class="app-hidden">
     <nav class="main-nav">
       <ul>
-        <li><a href="#" data-i18n="nav-mainpage">Mainpage</a></li>
-        <li><a href="#best-offers" data-i18n="nav-bestoffers">Best Offers</a></li>
-        <li><a href="#more-top-g" data-i18n="nav-moretopg">MORE TOP G</a></li>
-        <li><a href="#crab-casinos" data-i18n="nav-crabcasinos">Crab Casinos</a></li>
-        <li><a href="giveaway.html" data-i18n="nav-giveaways">Giveaways</a></li>
-        <li><a href="leaderboard.html" data-i18n="nav-leaderboard">Winovo leaderboard</a></li>
-        <li><a href="#socials" data-i18n="nav-contact">Contact details</a></li>
+        <li><a href="#">Mainpage</a></li>
+        <li><a href="#best-offers">Best Offers</a></li>
+        <li><a href="#more-top-g">MORE TOP G</a></li>
+        <li><a href="#crab-casinos">Crab Casinos</a></li>
+        <li><a href="giveaway.html">Giveaways</a></li>
+        <li><a href="leaderboard.html">Winovo leaderboard</a></li>
+        <li><a href="#socials">Contact details</a></li>
       </ul>
-
-      <!-- LANGUAGE SWITCHER -->
-      <div class="lang-switcher">
-        <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-        <button class="lang-btn" onclick="setLanguage('hu')">HU</button>
-        <button class="lang-btn" onclick="setLanguage('de')">DE</button>
-      </div>
     </nav>
 
     <!-- LIVE ALERT TICKER (COCOBET PROMO) -->
@@ -842,21 +832,21 @@
       <div class="controls-wrapper">
         <div class="search-box">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="casinoSearch" placeholder="Search casino by name..." data-i18n-ph="search-ph">
+          <input type="text" id="casinoSearch" placeholder="Search casino by name...">
         </div>
         
         <div class="filter-and-view">
           <div class="filter-container">
-            <button class="filter-btn active" data-filter="all"><i class="fa-solid fa-border-all"></i> <span data-i18n="filter-all">All</span></button>
+            <button class="filter-btn active" data-filter="all"><i class="fa-solid fa-border-all"></i> All</button>
             <button class="filter-btn" data-filter="nokyc"><i class="fa-solid fa-user-shield"></i> NO KYC</button>
-            <button class="filter-btn" data-filter="sports"><i class="fa-solid fa-football"></i> <span data-i18n="filter-sports">Sports Betting</span></button>
+            <button class="filter-btn" data-filter="sports"><i class="fa-solid fa-football"></i> Sports Betting</button>
             <button class="filter-btn" data-filter="crypto"><i class="fa-brands fa-bitcoin"></i> Crypto</button>
           </div>
 
-          <!-- GRID / LIST VIEW TOGGLE -->
+          <!-- ÚJ TÍPUSÚ GRID / LIST VIEW TOGGLE -->
           <div class="view-toggle">
-            <button class="view-btn active" id="viewGrid" title="Grid View"><i class="fa-solid fa-grip"></i></button>
-            <button class="view-btn" id="viewList" title="List View"><i class="fa-solid fa-list"></i></button>
+            <button class="view-btn active" id="viewGrid"><i class="fa-solid fa-grip"></i> Grid</button>
+            <button class="view-btn" id="viewList"><i class="fa-solid fa-bars"></i> Compact</button>
           </div>
         </div>
       </div>
@@ -864,7 +854,7 @@
       <!-- FEATURED HERO DEAL -->
       <div class="featured-hero-container">
         <div class="featured-card">
-          <div class="featured-badge" data-i18n="featured-badge"><i class="fa-solid fa-crown"></i> Featured Deal</div>
+          <div class="featured-badge"><i class="fa-solid fa-crown"></i> Featured Deal</div>
           <div class="card-logo-container" style="width: 120px; height: 100px;">
             <img src="images/shuffle.png" alt="Shuffle">
           </div>
@@ -873,23 +863,25 @@
             <p style="color: var(--secondary-text); font-size: 0.95rem; margin-bottom: 0.8rem;">
               100% Welcome bonus first deposit up to 1k$ • Instant Cashout • Instant No KYC
             </p>
-            <a href="https://shuffle.com?r=Al1ve" target="_blank" class="play-button" style="max-width: 220px;" data-i18n="btn-claim">CLAIM DEAL <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://shuffle.com?r=Al1ve" target="_blank" class="play-button" style="max-width: 220px;">CLAIM DEAL <i class="fa-solid fa-chevron-right"></i></a>
           </div>
         </div>
       </div>
 
       <section id="best-offers">
-        <h2 class="section-title" data-i18n="title-bestoffers">Best Offers</h2>
-        <div class="casino-grid" id="mainCasinoGrid">
+        <h2 class="section-title">Best Offers</h2>
+        <div class="casino-grid">
 
           <!-- SHUFFLE -->
           <div class="casino-card glow-shuffle" data-tags="nokyc crypto" data-name="shuffle">
-            <div class="card-rank-badge badge-gold">#1 TOP</div>
             <div class="card-logo-container">
               <img src="images/shuffle.png" alt="Shuffle">
             </div>
-            <h3>SHUFFLE</h3>
-            <h4 class="sub-brand">Shuffle</h4>
+            <div class="card-header-info">
+              <div class="card-rank-badge badge-gold">#1 TOP</div>
+              <h3>SHUFFLE</h3>
+              <h4 class="sub-brand">Shuffle</h4>
+            </div>
             <ul class="card-features">
               <li><i class="fa-solid fa-circle-check check-icon"></i> 100% welcome bonus first deposit up to 1k$</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto Deposits & Withdrawals</li>
@@ -897,17 +889,19 @@
               <li><i class="fa-solid fa-circle-check check-icon"></i> Instant Cashout</li>
               <li class="green-highlight"><i class="fa-solid fa-circle-check check-icon"></i> NO KYC</li>
             </ul>
-            <a href="https://shuffle.com?r=Al1ve" target="_blank" class="play-button" data-i18n="btn-play">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://shuffle.com?r=Al1ve" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
           <!-- 1XBIT -->
           <div class="casino-card glow-1xbit" data-tags="nokyc sports crypto" data-name="1xbit">
-            <div class="card-rank-badge">#2</div>
             <div class="card-logo-container">
               <img src="images/1xbitr.png" alt="1xBit">
             </div>
-            <h3>1XBIT</h3>
-            <h4 class="sub-brand">1xBit</h4>
+            <div class="card-header-info">
+              <div class="card-rank-badge">#2</div>
+              <h3>1XBIT</h3>
+              <h4 class="sub-brand">1xBit</h4>
+            </div>
             <ul class="card-features">
               <li>
                 <i class="fa-solid fa-circle-check check-icon"></i> 
@@ -920,17 +914,19 @@
               <li><i class="fa-solid fa-circle-check check-icon"></i> Instant Cashout</li>
               <li class="green-highlight"><i class="fa-solid fa-circle-check check-icon"></i> NO KYC</li>
             </ul>
-            <a href="https://refpa04636.pro/L?tag=d_4427689m_129584c_AL1VE1X&site=4427689&ad=129584&r=registration" target="_blank" class="play-button" data-i18n="btn-play">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://refpa04636.pro/L?tag=d_4427689m_129584c_AL1VE1X&site=4427689&ad=129584&r=registration" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
           <!-- WINSPIRIT -->
           <div class="casino-card glow-winspirit" data-tags="sports crypto" data-name="winspirit">
-            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/winspirit.png" alt="Winspirit">
             </div>
-            <h3>WinSpirit</h3>
-            <h4 class="sub-brand">WinSpirit</h4>
+            <div class="card-header-info">
+              <div class="card-rank-badge badge-new">NEW</div>
+              <h3>WinSpirit</h3>
+              <h4 class="sub-brand">WinSpirit</h4>
+            </div>
             <ul class="card-features">
               <li><i class="fa-solid fa-circle-check check-icon"></i> 100% Deposit Bonus + 100FS Sweet Bonanza</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Fast Crypto + Card deposit/cashout</li>
@@ -938,17 +934,19 @@
               <li><i class="fa-solid fa-circle-check check-icon"></i> Cashback: Up To 15%</li>
               <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
             </ul>
-            <a href="https://bit.ly/4fbE5mr" target="_blank" class="play-button" data-i18n="btn-play">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://bit.ly/4fbE5mr" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
           <!-- SPINBETTER -->
           <div class="casino-card glow-spinbetter" data-tags="sports crypto" data-name="spinbetter">
-            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/spinbetter.png" alt="Spinbetter">
             </div>
-            <h3>SpinBetter</h3>
-            <h4 class="sub-brand">SpinBetter</h4>
+            <div class="card-header-info">
+              <div class="card-rank-badge badge-new">NEW</div>
+              <h3>SpinBetter</h3>
+              <h4 class="sub-brand">SpinBetter</h4>
+            </div>
             <ul class="card-features">
               <li>
                 <i class="fa-solid fa-circle-check check-icon"></i> 
@@ -960,35 +958,39 @@
               <li><i class="fa-solid fa-circle-check check-icon"></i> Fast Crypto + Card deposit/cashout</li>
               <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
             </ul>
-            <a href="https://redirspinner.com/3eai?p=%2Fregistration%2F" target="_blank" class="play-button" data-i18n="btn-play">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://redirspinner.com/3eai?p=%2Fregistration%2F" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div> 
 
           <!-- SPINSY -->
           <div class="casino-card glow-spinsy" data-tags="sports crypto" data-name="spinsy">
-            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/spinsy.png" alt="Spinsy">
             </div>
-            <h3>Spinsy</h3>
-            <h4 class="sub-brand">Spinsy</h4>
+            <div class="card-header-info">
+              <div class="card-rank-badge badge-new">NEW</div>
+              <h3>Spinsy</h3>
+              <h4 class="sub-brand">Spinsy</h4>
+            </div>
             <ul class="card-features">
               <li><i class="fa-solid fa-circle-check check-icon"></i> Welcome Bonus: 250% + 150 FS</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Fast Crypto + Card deposit/cashout</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Sports betting</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> VIP system / Lucky Spin és Lucky Box</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> VIP system / Lucky Spin and Lucky Box</li>
               <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
             </ul>
-            <a href="https://appsn1network.com/HfBXGm" target="_blank" class="play-button" data-i18n="btn-play">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://appsn1network.com/HfBXGm" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div> 
 
           <!-- COCOBET -->
           <div class="casino-card glow-cocobet" data-tags="sports crypto nokyc" data-name="cocobet">
-            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/nemtom1.png" alt="CocoBet">
             </div>
-            <h3>CocoBet</h3>
-            <h4 class="sub-brand">CocoBet</h4>
+            <div class="card-header-info">
+              <div class="card-rank-badge badge-new">NEW</div>
+              <h3>CocoBet</h3>
+              <h4 class="sub-brand">CocoBet</h4>
+            </div>
             <ul class="card-features">
               <li><i class="fa-solid fa-circle-check check-icon"></i> Welcome Bonus: 500 FS from 100$ Deposit</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Fast Crypto + Card deposit/cashout</li>
@@ -996,17 +998,19 @@
               <li><i class="fa-solid fa-circle-check check-icon"></i> 50% Weekly Cashback (NonWager) + 50% First Sports Bet Cashbet </li>
               <li class="green-highlight"><i class="fa-solid fa-circle-check check-icon"></i> In most cases, it isn't necessary</li>
             </ul>
-            <a href="https://go.cocoaff.com/visit/?bta=3170635&nci=5696" target="_blank" class="play-button" data-i18n="btn-play">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://go.cocoaff.com/visit/?bta=3170635&nci=5696" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
           <!-- PARIPESA -->
           <div class="casino-card glow-paripesa" data-tags="crypto" data-name="paripesa">
-            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/paripesa.png" alt="PariPesa">
             </div>
-            <h3>PariPesa</h3>
-            <h4 class="sub-brand">PariPesa</h4>
+            <div class="card-header-info">
+              <div class="card-rank-badge badge-new">NEW</div>
+              <h3>PariPesa</h3>
+              <h4 class="sub-brand">PariPesa</h4>
+            </div>
             <ul class="card-features">
               <li>
                 <i class="fa-solid fa-circle-check check-icon"></i> 
@@ -1018,29 +1022,31 @@
               <li><i class="fa-solid fa-circle-check check-icon"></i> Cashout Max 1 Day</li>
               <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
             </ul>
-            <a href="https://shorturl.at/5Rpj8" target="_blank" class="play-button" data-i18n="btn-play">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://shorturl.at/5Rpj8" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
           <!-- PICKWIN -->
           <div class="casino-card glow-pickwin" data-tags="crypto" data-name="pickwin">
-            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/pickwin.png" alt="pickwin">
             </div>
-            <h3>PickWin</h3>
-            <h4 class="sub-brand">PickWin</h4>
+            <div class="card-header-info">
+              <div class="card-rank-badge badge-new">NEW</div>
+              <h3>PickWin</h3>
+              <h4 class="sub-brand">PickWin</h4>
+            </div>
             <ul class="card-features">
               <li>
                 <i class="fa-solid fa-circle-check check-icon"></i> 
                 <span class="text-accent">Promocode</span>&nbsp;
                 <span class="promo-copy-box" onclick="copyCode(this, 'PICKLIVE')">PICKLIVE <i class="fa-regular fa-copy"></i></span>
               </li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 200$ WAGERMENTES FREEBET</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 200$ depóval 200 wanted FS (0.4 GBP)</li>
-              <li><i class="fa-solid fa-circle-check check-icon"></i> 100% bónusz up to 500€</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 200$ WAGERFREE FREEBET</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> From 200$ DEPOSIT 200 wanted FS (0.4 GBP)</li>
+              <li><i class="fa-solid fa-circle-check check-icon"></i> 100% bbonus up to 500€</li>
               <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
             </ul>
-            <a href="https://pwpartners.cxclick.com/visit/?bta=35688&brand=pickwin" target="_blank" class="play-button" data-i18n="btn-play">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://pwpartners.cxclick.com/visit/?bta=35688&brand=pickwin" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
         </div>
       </section>
@@ -1048,23 +1054,25 @@
       <hr class="section-divider">
 
       <section id="more-top-g">
-        <h2 class="section-title" data-i18n="title-moretopg">MORE TOP G</h2>
+        <h2 class="section-title">MORE TOP G</h2>
         <div class="casino-grid">
           <!-- DUEL -->
           <div class="casino-card glow-duel" data-tags="nokyc sports crypto" data-name="duel">
-            <div class="card-rank-badge">TOP</div>
             <div class="card-logo-container">
               <img src="images/top2.png" alt="Duel Logo">
             </div>
-            <h3>Duel</h3>
-            <h4 class="sub-brand">Duel</h4>
+            <div class="card-header-info">
+              <div class="card-rank-badge">TOP</div>
+              <h3>Duel</h3>
+              <h4 class="sub-brand">Duel</h4>
+            </div>
             <ul class="card-features">
               <li><i class="fa-solid fa-circle-check check-icon"></i> Only Crypto deposit or you can buy with card (crypto) </li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Instant Cashout</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Sportsbet + 100% RTP in originals </li>
               <li class="green-highlight"><i class="fa-solid fa-circle-check check-icon"></i> NO KYC</li>
             </ul>
-            <a href="https://duel.com/r/Al1ve" target="_blank" class="play-button" data-i18n="btn-play">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://duel.com/r/Al1ve" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
         </div>
       </section>
@@ -1072,15 +1080,17 @@
       <hr class="section-divider">
 
       <section id="crab-casinos">
-        <h2 class="section-title" data-i18n="title-crabcasinos">Crab Casinos</h2>
+        <h2 class="section-title">Crab Casinos</h2>
         <div class="casino-grid">
           <!-- WAZAMBA -->
           <div class="casino-card glow-wazamba" data-tags="crypto" data-name="wazamba">
             <div class="card-logo-container">
               <img src="images/wazamba.png" alt="Wazamba Logó">
             </div>
-            <h3>WAZAMBA</h3>
-            <h4 class="sub-brand">Wazamba</h4>
+            <div class="card-header-info">
+              <h3>WAZAMBA</h3>
+              <h4 class="sub-brand">Wazamba</h4>
+            </div>
             <ul class="card-features">
               <li><i class="fa-solid fa-circle-check check-icon"></i> 100% Deposit Bonus-500</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Bonus crab game</li>
@@ -1088,7 +1098,7 @@
               <li><i class="fa-solid fa-circle-check check-icon"></i> 2-3 day cashout</li>
               <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
             </ul>
-            <a href="https://wzbw.xarvilo.com/?mid=240180_1424294" target="_blank" class="play-button" data-i18n="btn-play">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://wzbw.xarvilo.com/?mid=240180_1424294" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
           <!-- SG CASINO -->
@@ -1096,8 +1106,10 @@
             <div class="card-logo-container">
               <img src="images/sg.png" alt="Sg Logó">
             </div>
-            <h3>SG CASINO</h3>
-            <h4 class="sub-brand">Sg Casino</h4>
+            <div class="card-header-info">
+              <h3>SG CASINO</h3>
+              <h4 class="sub-brand">Sg Casino</h4>
+            </div>
             <ul class="card-features">
               <li><i class="fa-solid fa-circle-check check-icon"></i> 100% Deposit Bonus-500</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Bonus crab game</li>
@@ -1105,39 +1117,39 @@
               <li><i class="fa-solid fa-circle-check check-icon"></i> 2-3 day cashout</li>
               <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
             </ul>
-            <a href="https://sgc.xarvilo.com/?mid=240180_1424296" target="_blank" class="play-button" data-i18n="btn-play">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
+            <a href="https://sgc.xarvilo.com/?mid=240180_1424296" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
         </div>
       </section>
 
       <!-- FAQ ACCORDION SECTION -->
       <section class="faq-section">
-        <h2 class="section-title" data-i18n="title-faq">Frequently Asked Questions</h2>
+        <h2 class="section-title">Frequently Asked Questions</h2>
         <div class="faq-container">
           <div class="faq-item">
             <button class="faq-question">
-              <span data-i18n="faq-q1">What are NO KYC casinos?</span>
+              <span>What are NO KYC casinos?</span>
               <i class="fa-solid fa-chevron-down"></i>
             </button>
-            <div class="faq-answer" data-i18n="faq-a1">
+            <div class="faq-answer">
               NO KYC (Know Your Customer) casinos allow you to deposit, play, and withdraw without having to upload identity documents or proof of address, providing maximum privacy and fast cashouts.
             </div>
           </div>
           <div class="faq-item">
             <button class="faq-question">
-              <span data-i18n="faq-q2">How do I use promo codes?</span>
+              <span>How do I use promo codes?</span>
               <i class="fa-solid fa-chevron-down"></i>
             </button>
-            <div class="faq-answer" data-i18n="faq-a2">
+            <div class="faq-answer">
               Click on any promo code on our cards to automatically copy it to your clipboard. Then, paste it in the promo code field during registration at the respective casino to claim your exclusive bonus!
             </div>
           </div>
           <div class="faq-item">
             <button class="faq-question">
-              <span data-i18n="faq-q3">How fast are crypto withdrawals?</span>
+              <span>How fast are crypto withdrawals?</span>
               <i class="fa-solid fa-chevron-down"></i>
             </button>
-            <div class="faq-answer" data-i18n="faq-a3">
+            <div class="faq-answer">
               Crypto withdrawals are typically processed instantly or within a few minutes depending on the blockchain network load.
             </div>
           </div>
@@ -1145,7 +1157,7 @@
       </section>
 
       <section class="socials" id="socials">
-        <h2 data-i18n="nav-contact">Contact details</h2>
+        <h2>Contact details</h2>
         <div class="social-links">
           <a href="https://www.twitch.tv/al1vehunter" target="_blank" class="social-link twitch">
             <i class="fab fa-twitch"></i> Twitch
@@ -1169,105 +1181,6 @@
   </div>
 
   <script>
-    /* DICTIONARY FOR MULTI-LANGUAGE SYSTEM */
-    const translations = {
-      en: {
-        'nav-mainpage': 'Mainpage',
-        'nav-bestoffers': 'Best Offers',
-        'nav-moretopg': 'MORE TOP G',
-        'nav-crabcasinos': 'Crab Casinos',
-        'nav-giveaways': 'Giveaways',
-        'nav-leaderboard': 'Winovo Leaderboard',
-        'nav-contact': 'Contact Details',
-        'search-ph': 'Search casino by name...',
-        'filter-all': 'All',
-        'filter-sports': 'Sports Betting',
-        'featured-badge': '<i class="fa-solid fa-crown"></i> Featured Deal',
-        'btn-claim': 'CLAIM DEAL <i class="fa-solid fa-chevron-right"></i>',
-        'title-bestoffers': 'Best Offers',
-        'title-moretopg': 'MORE TOP G',
-        'title-crabcasinos': 'Crab Casinos',
-        'btn-play': 'PLAY NOW <i class="fa-solid fa-chevron-right"></i>',
-        'title-faq': 'Frequently Asked Questions',
-        'faq-q1': 'What are NO KYC casinos?',
-        'faq-a1': 'NO KYC (Know Your Customer) casinos allow you to deposit, play, and withdraw without having to upload identity documents or proof of address, providing maximum privacy and fast cashouts.',
-        'faq-q2': 'How do I use promo codes?',
-        'faq-a2': 'Click on any promo code on our cards to automatically copy it to your clipboard. Then, paste it in the promo code field during registration at the respective casino to claim your exclusive bonus!',
-        'faq-q3': 'How fast are crypto withdrawals?',
-        'faq-a3': 'Crypto withdrawals are typically processed instantly or within a few minutes depending on the blockchain network load.'
-      },
-      hu: {
-        'nav-mainpage': 'Főoldal',
-        'nav-bestoffers': 'Legjobb Ajánlatok',
-        'nav-moretopg': 'TOVÁBBI TOP G',
-        'nav-crabcasinos': 'Crab Kaszinók',
-        'nav-giveaways': 'Nyereményjátékok',
-        'nav-leaderboard': 'Winovo Ranglista',
-        'nav-contact': 'Kapcsolat',
-        'search-ph': 'Kaszinó keresése név alapján...',
-        'filter-all': 'Összes',
-        'filter-sports': 'Sportfogadás',
-        'featured-badge': '<i class="fa-solid fa-crown"></i> Kiemelt Ajánlat',
-        'btn-claim': 'AJÁNLAT BEVÁLTÁSA <i class="fa-solid fa-chevron-right"></i>',
-        'title-bestoffers': 'Legjobb Ajánlatok',
-        'title-moretopg': 'TOVÁBBI TOP G',
-        'title-crabcasinos': 'Crab Kaszinók',
-        'btn-play': 'JÁTÉK MOST <i class="fa-solid fa-chevron-right"></i>',
-        'title-faq': 'Gyakran Ismételt Kérdések',
-        'faq-q1': 'Mik azok a NO KYC kaszinók?',
-        'faq-a1': 'A NO KYC (személyazonosítás mentes) kaszinók lehetővé teszik a befizetést, játékot és kifizetést anélkül, hogy igazolványt vagy lakcímkártyát kellene feltöltened, így maximális diszkréciót és gyors kifizetést biztosítanak.',
-        'faq-q2': 'Hogyan használhatom a promókódokat?',
-        'faq-a2': 'Kattints bármelyik promókódra a kártyákon az automatikus másoláshoz! Ezután a regisztráció során illeszd be a promókód mezőbe az exkluzív bónuszod érvényesítéséhez.',
-        'faq-q3': 'Milyen gyorsak a kriptovalutás kifizetések?',
-        'faq-a3': 'A kriptovalutás kifizetéseket általában azonnal vagy pár percen belül feldolgozzák a blokklánc hálózat terheltségétől függően.'
-      },
-      de: {
-        'nav-mainpage': 'Startseite',
-        'nav-bestoffers': 'Beste Angebote',
-        'nav-moretopg': 'MEHR TOP G',
-        'nav-crabcasinos': 'Crab Casinos',
-        'nav-giveaways': 'Gewinnspiele',
-        'nav-leaderboard': 'Winovo Bestenliste',
-        'nav-contact': 'Kontakt',
-        'search-ph': 'Casino nach Namen suchen...',
-        'filter-all': 'Alle',
-        'filter-sports': 'Sportwetten',
-        'featured-badge': '<i class="fa-solid fa-crown"></i> Top Angebot',
-        'btn-claim': 'ANGEBOT SICHERN <i class="fa-solid fa-chevron-right"></i>',
-        'title-bestoffers': 'Beste Angebote',
-        'title-moretopg': 'MEHR TOP G',
-        'title-crabcasinos': 'Crab Casinos',
-        'btn-play': 'JETZT SPIELEN <i class="fa-solid fa-chevron-right"></i>',
-        'title-faq': 'Häufig gestellte Fragen',
-        'faq-q1': 'Was sind NO KYC Casinos?',
-        'faq-a1': 'NO KYC Casinos ermöglichen Einzahlungen, Spielen und Auszahlungen ohne Ausweisdokumente hochzuladen. Sie bieten maximale Privatsphäre und schnelle Auszahlungen.',
-        'faq-q2': 'Wie verwende ich Promocodes?',
-        'faq-a2': 'Klicke auf einen Promocode, um ihn in die Zwischenablage zu kopieren. Füge ihn dann bei der Registrierung im Casino ein, um deinen exklusiven Bonus zu erhalten!',
-        'faq-q3': 'Wie schnell sind Krypto-Auszahlungen?',
-        'faq-a3': 'Krypto-Auszahlungen werden in der Regel sofort oder innerhalb weniger Minuten bearbeitet, je nach Auslastung des Netzwerks.'
-      }
-    };
-
-    function setLanguage(lang) {
-      document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
-      });
-
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang] && translations[lang][key]) {
-          el.innerHTML = translations[lang][key];
-        }
-      });
-
-      document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-        const key = el.getAttribute('data-i18n-ph');
-        if (translations[lang] && translations[lang][key]) {
-          el.setAttribute('placeholder', translations[lang][key]);
-        }
-      });
-    }
-
     /* PROMOCODE COPY FUNCTION */
     function copyCode(element, text) {
       navigator.clipboard.writeText(text).then(() => {
@@ -1288,7 +1201,6 @@
       const searchInput = document.getElementById('casinoSearch');
       const filterBtns = document.querySelectorAll('.filter-btn');
       const cards = document.querySelectorAll('.casino-card');
-      const grid = id = document.getElementById('mainCasinoGrid');
       const btnGrid = document.getElementById('viewGrid');
       const btnList = document.getElementById('viewList');
 
