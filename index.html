@@ -130,32 +130,10 @@
       background: rgba(10, 10, 18, 0.85);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--card-border);
-      padding: 1rem 2rem;
+      padding: 0.8rem 2rem;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-    }
-    .main-nav ul {
-      display: flex;
-      list-style: none;
-      gap: 1.8rem;
-      align-items: center;
-      flex-wrap: wrap;
-      justify-content: center;
-      flex-grow: 1;
-    }
-    .main-nav a {
-      color: var(--secondary-text);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: color 0.2s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .main-nav a:hover {
-      color: #fff;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
 
     /* Sound Toggle Button */
@@ -171,7 +149,6 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      flex-shrink: 0;
     }
     .sound-toggle-btn:hover {
       color: #fff;
@@ -219,7 +196,7 @@
       letter-spacing: -1px;
     }
 
-    /* --- SEARCH, FILTERS & VIEW TOGGLE --- */
+    /* --- SEARCH, FILTERS & NAVIGATION BUTTONS --- */
     .controls-wrapper {
       display: flex;
       flex-direction: column;
@@ -272,7 +249,7 @@
       flex-wrap: wrap;
       justify-content: center;
     }
-    .filter-btn {
+    .filter-btn, .nav-link-btn {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--card-border);
       color: var(--secondary-text);
@@ -285,8 +262,9 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      text-decoration: none;
     }
-    .filter-btn:hover {
+    .filter-btn:hover, .nav-link-btn:hover {
       color: #fff;
       border-color: rgba(168, 85, 247, 0.4);
       background: rgba(168, 85, 247, 0.1);
@@ -596,24 +574,6 @@
     .glow-wazamba:hover { border-color: rgba(34, 197, 94, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), -10px 0 25px rgba(239, 68, 68, 0.3), 10px 0 25px rgba(34, 197, 94, 0.3); }
     .glow-sgcasino:hover { border-color: rgba(250, 204, 21, 0.7); box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 25px rgba(56, 189, 248, 0.3), 0 0 35px rgba(250, 204, 21, 0.25); }
 
-    /* COMMUNITY TEASER CARDS STYLES */
-    .promo-teaser-card {
-      background: linear-gradient(135deg, rgba(88, 101, 242, 0.15), rgba(19, 19, 34, 0.85));
-      border: 1px solid rgba(88, 101, 242, 0.4) !important;
-    }
-    .promo-teaser-card:hover {
-      border-color: rgba(88, 101, 242, 0.8) !important;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(88, 101, 242, 0.35) !important;
-    }
-    .leaderboard-teaser-card {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(19, 19, 34, 0.85));
-      border: 1px solid rgba(168, 85, 247, 0.4) !important;
-    }
-    .leaderboard-teaser-card:hover {
-      border-color: rgba(168, 85, 247, 0.8) !important;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(168, 85, 247, 0.35) !important;
-    }
-
     /* LOGO & HEADINGS */
     .card-logo-container {
       width: 100px;
@@ -837,8 +797,7 @@
 
     /* Responsive */
     @media (max-width: 768px) {
-      .main-nav { flex-direction: column; gap: 1rem; }
-      .main-nav ul { gap: 1rem; }
+      .main-nav { padding: 0.8rem 1rem; }
       header h1 { font-size: 2.4rem; }
       .section-title { font-size: 1.6rem; }
       .faq-section { padding: 1.5rem; }
@@ -875,16 +834,6 @@
   <!-- MAIN APP CONTENT -->
   <div id="app-root" class="app-hidden">
     <nav class="main-nav">
-      <ul>
-        <li><a href="#">Mainpage</a></li>
-        <li><a href="#best-offers">Best Offers</a></li>
-        <li><a href="#more-top-g">MORE TOP G</a></li>
-        <li><a href="#crab-casinos">Crab Casinos</a></li>
-        <li><a href="giveaway.html">Giveaways</a></li>
-        <li><a href="leaderboard.html">Winovo leaderboard</a></li>
-        <li><a href="#socials">Contact details</a></li>
-      </ul>
-
       <!-- SOUND FX TOGGLE -->
       <button id="soundToggle" class="sound-toggle-btn" title="Toggle Sound FX">
         <i class="fa-solid fa-volume-high"></i> Sound: ON
@@ -917,6 +866,10 @@
             <button class="filter-btn" data-filter="nokyc"><i class="fa-solid fa-user-shield"></i> NO KYC</button>
             <button class="filter-btn" data-filter="sports"><i class="fa-solid fa-football"></i> Sports Betting</button>
             <button class="filter-btn" data-filter="crypto"><i class="fa-brands fa-bitcoin"></i> Crypto</button>
+            
+            <!-- EXTRÁK: GIVEAWAYS ÉS LEADERBOARD GOMBOK -->
+            <a href="https://www.al1vecasi.com/giveaway.html" class="nav-link-btn"><i class="fa-solid fa-gift" style="color: #5865F2;"></i> Active Giveaways</a>
+            <a href="leaderboard.html" class="nav-link-btn"><i class="fa-solid fa-trophy" style="color: var(--accent-gold);"></i> Winovo Leaderboard</a>
           </div>
 
           <!-- GRID / LIST VIEW TOGGLE -->
@@ -1123,42 +1076,6 @@
               <li class="red-highlight"><i class="fa-solid fa-circle-check check-icon"></i> Request KYC</li>
             </ul>
             <a href="https://pwpartners.cxclick.com/visit/?bta=35688&brand=pickwin" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
-          </div>
-
-          <!-- WINOVO LEADERBOARD TEASER CARD -->
-          <div class="casino-card leaderboard-teaser-card" data-tags="all" data-name="winovo leaderboard">
-            <div class="card-logo-container">
-              <i class="fa-solid fa-trophy" style="font-size: 2.5rem; color: var(--accent-gold);"></i>
-            </div>
-            <div class="card-header-info">
-              <div class="card-rank-badge badge-gold">EVENT</div>
-              <h3>Winovo Leaderboard</h3>
-              <h4 class="sub-brand">Community Competition</h4>
-            </div>
-            <p style="text-align: center; color: var(--secondary-text); font-size: 0.88rem; margin: 1rem 0; flex-grow: 1;">
-              Check out the latest Winovo Leaderboard standings!
-            </p>
-            <a href="leaderboard.html" class="play-button" style="background: linear-gradient(135deg, #facc15, #ca8a04); color: #000;">
-              VIEW LEADERBOARD <i class="fa-solid fa-chevron-right"></i>
-            </a>
-          </div>
-
-          <!-- ACTIVE GIVEAWAYS TEASER CARD -->
-          <div class="casino-card promo-teaser-card" data-tags="all" data-name="giveaways discord">
-            <div class="card-logo-container">
-              <i class="fa-solid fa-gift" style="font-size: 2.5rem; color: #5865F2;"></i>
-            </div>
-            <div class="card-header-info">
-              <div class="card-rank-badge badge-new">GIVEAWAY</div>
-              <h3>Active Giveaways</h3>
-              <h4 class="sub-brand">Exclusive Rewards</h4>
-            </div>
-            <p style="text-align: center; color: var(--secondary-text); font-size: 0.88rem; margin: 1rem 0; flex-grow: 1;">
-              Active Giveaways: Join our Discord and win!
-            </p>
-            <a href="https://discord.gg/gMGMVKE9jz" target="_blank" class="play-button" style="background: linear-gradient(135deg, #5865F2, #404EED);">
-              JOIN DISCORD <i class="fa-solid fa-chevron-right"></i>
-            </a>
           </div>
 
         </div>
