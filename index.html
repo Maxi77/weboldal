@@ -21,6 +21,7 @@
       --accent-green: #22c55e;
       --accent-red: #ef4444;
       --accent-cyan: #06b6d4;
+      --accent-gold: #facc15;
     }
 
     * {
@@ -177,6 +178,40 @@
       letter-spacing: -1px;
     }
 
+    /* --- FILTER SYSTEM --- */
+    .filter-container {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 1.5rem 0 2.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--secondary-text);
+      padding: 0.6rem 1.4rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filter-btn:hover {
+      color: #fff;
+      border-color: rgba(168, 85, 247, 0.4);
+      background: rgba(168, 85, 247, 0.1);
+    }
+    .filter-btn.active {
+      background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.35);
+    }
+
     .section-title {
       text-align: center;
       font-size: 2rem;
@@ -209,6 +244,58 @@
       margin: 4rem 0;
     }
 
+    /* --- FEATURED HERO CARD --- */
+    .featured-hero-container {
+      margin-bottom: 3.5rem;
+      display: flex;
+      justify-content: center;
+    }
+    .featured-card {
+      width: 100%;
+      max-width: 900px;
+      background: linear-gradient(135deg, rgba(25, 18, 45, 0.85), rgba(15, 15, 28, 0.85));
+      border: 1px solid rgba(250, 204, 21, 0.4);
+      border-radius: 28px;
+      padding: 2rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 35px rgba(250, 204, 21, 0.15);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+    .featured-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: linear-gradient(135deg, #facc15, #eab308);
+      color: #000;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 0.4rem 1.2rem;
+      border-bottom-left-radius: 16px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      box-shadow: 0 2px 10px rgba(234, 179, 8, 0.4);
+    }
+    .featured-content {
+      flex: 1;
+    }
+    .featured-content h3 {
+      font-size: 1.8rem;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .featured-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 2.5rem 1.5rem 1.5rem;
+      }
+    }
+
     /* --- GRID & CARDS --- */
     main {
       max-width: 1280px;
@@ -234,72 +321,25 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.3s ease;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    .casino-card.hide {
+      display: none !important;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .casino-card:hover {
       transform: translateY(-8px);
     }
 
-    /* --- EGYEDI KÁRTYA NEON FÉNYEK (GLOW EFFECT) --- */
-    /* 1. Shuffle (Lila) */
-    .glow-shuffle:hover {
-      border-color: rgba(168, 85, 247, 0.6);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(168, 85, 247, 0.35);
-    }
-    /* 2. 1xBit (Narancssárga) */
-    .glow-1xbit:hover {
-      border-color: rgba(249, 115, 22, 0.6);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(249, 115, 22, 0.35);
-    }
-    /* 3. Winspirit (Zöld) */
-    .glow-winspirit:hover {
-      border-color: rgba(34, 197, 94, 0.6);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(34, 197, 94, 0.35);
-    }
-    /* 4. Spinbetter (Sötétzöld + Sárga) */
-    .glow-spinbetter:hover {
-      border-color: rgba(234, 179, 8, 0.6);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 25px rgba(21, 128, 61, 0.4), 0 0 40px rgba(234, 179, 8, 0.25);
-    }
-    /* 5. Spinsy (Feketés-sárga / Mély arany) */
-    .glow-spinsy:hover {
-      border-color: rgba(202, 138, 4, 0.6);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 30px rgba(202, 138, 4, 0.3);
-    }
-    /* 6. CocoBet (Világossárga) */
-    .glow-cocobet:hover {
-      border-color: rgba(254, 240, 138, 0.7);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(254, 240, 138, 0.35);
-    }
-    /* 7. PariPesa (Türkizkék) */
-    .glow-paripesa:hover {
-      border-color: rgba(6, 182, 212, 0.6);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(6, 182, 212, 0.35);
-    }
-    /* 8. PickWin (Világos neonkék) */
-    .glow-pickwin:hover {
-      border-color: rgba(56, 189, 248, 0.6);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(56, 189, 248, 0.35);
-    }
-    /* 9. Duel (Sötétkék) */
-    .glow-duel:hover {
-      border-color: rgba(30, 64, 175, 0.8);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 30px rgba(30, 64, 175, 0.5);
-    }
-    /* 10. Wazamba (Pirosas-zöldes) */
-    .glow-wazamba:hover {
-      border-color: rgba(34, 197, 94, 0.6);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), -10px 0 25px rgba(239, 68, 68, 0.3), 10px 0 25px rgba(34, 197, 94, 0.3);
-    }
-    /* 11. SG Casino (Pingvin: Kékes-fehéres sárgás árnyalat) */
-    .glow-sgcasino:hover {
-      border-color: rgba(250, 204, 21, 0.7);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 25px rgba(56, 189, 248, 0.3), 0 0 35px rgba(250, 204, 21, 0.25);
-    }
-
-    /* Badges */
+    /* --- ANIMATED BADGES --- */
     .card-rank-badge {
       position: absolute;
       top: 15px;
@@ -311,22 +351,60 @@
       padding: 0.3rem 0.8rem;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+      animation: badgePulse 2.5s infinite;
     }
 
-    .star-rating {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: rgba(234, 179, 8, 0.15);
-      border: 1px solid rgba(234, 179, 8, 0.3);
-      padding: 0.3rem 0.7rem;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+    .card-rank-badge.badge-gold {
+      background: linear-gradient(135deg, #facc15, #ca8a04);
+      color: #000;
+      box-shadow: 0 4px 12px rgba(250, 204, 21, 0.4);
     }
-    .star-icon { color: #eab308; font-size: 0.85rem; }
-    .star-text { color: #eab308; font-weight: 700; font-size: 0.85rem; }
+
+    .card-rank-badge.badge-new {
+      background: linear-gradient(135deg, #ec4899, #ef4444);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+    }
+
+    @keyframes badgePulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* --- PROMO CODE COPY BUTTON --- */
+    .promo-copy-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px dashed var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 0.15rem 0.6rem;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .promo-copy-box:hover {
+      background: rgba(6, 182, 212, 0.25);
+      transform: scale(1.03);
+    }
+    .promo-copy-box i { font-size: 0.75rem; }
+
+    /* --- EGYEDI KÁRTYA NEON FÉNYEK --- */
+    .glow-shuffle:hover { border-color: rgba(168, 85, 247, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(168, 85, 247, 0.35); }
+    .glow-1xbit:hover { border-color: rgba(249, 115, 22, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(249, 115, 22, 0.35); }
+    .glow-winspirit:hover { border-color: rgba(34, 197, 94, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(34, 197, 94, 0.35); }
+    .glow-spinbetter:hover { border-color: rgba(234, 179, 8, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 25px rgba(21, 128, 61, 0.4), 0 0 40px rgba(234, 179, 8, 0.25); }
+    .glow-spinsy:hover { border-color: rgba(202, 138, 4, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 30px rgba(202, 138, 4, 0.3); }
+    .glow-cocobet:hover { border-color: rgba(254, 240, 138, 0.7); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(254, 240, 138, 0.35); }
+    .glow-paripesa:hover { border-color: rgba(6, 182, 212, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(6, 182, 212, 0.35); }
+    .glow-pickwin:hover { border-color: rgba(56, 189, 248, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(56, 189, 248, 0.35); }
+    .glow-duel:hover { border-color: rgba(30, 64, 175, 0.8); box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 30px rgba(30, 64, 175, 0.5); }
+    .glow-wazamba:hover { border-color: rgba(34, 197, 94, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.5), -10px 0 25px rgba(239, 68, 68, 0.3), 10px 0 25px rgba(34, 197, 94, 0.3); }
+    .glow-sgcasino:hover { border-color: rgba(250, 204, 21, 0.7); box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 25px rgba(56, 189, 248, 0.3), 0 0 35px rgba(250, 204, 21, 0.25); }
 
     /* Logo & Headings */
     .card-logo-container {
@@ -384,7 +462,6 @@
     .red-highlight .check-icon, .red-highlight { color: var(--accent-red) !important; }
 
     .text-accent { color: var(--accent-purple); font-weight: 600; }
-    .text-cyan { color: var(--accent-cyan); font-weight: 700; }
 
     /* Play Button */
     .play-button {
@@ -406,17 +483,13 @@
       font-size: 0.9rem;
       letter-spacing: 0.5px;
     }
-    .play-button i {
-      transition: transform 0.2s ease;
-    }
+    .play-button i { transition: transform 0.2s ease; }
     .play-button:hover {
       background: linear-gradient(135deg, #c084fc, var(--accent-purple));
       box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
       transform: translateY(-2px);
     }
-    .play-button:hover i {
-      transform: translateX(4px);
-    }
+    .play-button:hover i { transform: translateX(4px); }
 
     /* --- SOCIALS & FOOTER --- */
     .socials {
@@ -428,16 +501,8 @@
       border-radius: 24px;
       backdrop-filter: blur(12px);
     }
-    .socials h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-    .social-links {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
+    .socials h2 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+    .social-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
     .social-link {
       padding: 0.8rem 1.8rem;
       border-radius: 12px;
@@ -517,17 +582,38 @@
     </header>
 
     <main>
+      <!-- CATEGORY FILTER BUTTONS -->
+      <div class="filter-container">
+        <button class="filter-btn active" data-filter="all"><i class="fa-solid fa-border-all"></i> All</button>
+        <button class="filter-btn" data-filter="nokyc"><i class="fa-solid fa-user-shield"></i> NO KYC</button>
+        <button class="filter-btn" data-filter="sports"><i class="fa-solid fa-football"></i> Sports Betting</button>
+        <button class="filter-btn" data-filter="crypto"><i class="fa-brands fa-bitcoin"></i> Crypto</button>
+      </div>
+
+      <!-- FEATURED HERO DEAL -->
+      <div class="featured-hero-container">
+        <div class="featured-card">
+          <div class="featured-badge"><i class="fa-solid fa-crown"></i> Featured Deal</div>
+          <div class="card-logo-container" style="width: 120px; height: 100px;">
+            <img src="images/shuffle.png" alt="Shuffle">
+          </div>
+          <div class="featured-content">
+            <h3>SHUFFLE CASINO</h3>
+            <p style="color: var(--secondary-text); font-size: 0.95rem; margin-bottom: 0.8rem;">
+              100% Welcome bonus first deposit up to 1k$ • Instant Cashout • Instant No KYC
+            </p>
+            <a href="https://shuffle.com?r=Al1ve" target="_blank" class="play-button" style="max-width: 220px;">CLAIM DEAL <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+        </div>
+      </div>
+
       <section id="best-offers">
         <h2 class="section-title">Best Offers</h2>
         <div class="casino-grid">
 
           <!-- SHUFFLE -->
-          <div class="casino-card glow-shuffle">
-            <div class="card-rank-badge">#1</div>
-            <div class="star-rating">
-              <i class="fa-solid fa-star star-icon"></i>
-              <span class="star-text">9.8</span>
-            </div>
+          <div class="casino-card glow-shuffle" data-tags="nokyc crypto">
+            <div class="card-rank-badge badge-gold">#1 TOP</div>
             <div class="card-logo-container">
               <img src="images/shuffle.png" alt="Shuffle">
             </div>
@@ -544,7 +630,7 @@
           </div>
 
           <!-- 1XBIT -->
-          <div class="casino-card glow-1xbit">
+          <div class="casino-card glow-1xbit" data-tags="nokyc sports crypto">
             <div class="card-rank-badge">#2</div>
             <div class="card-logo-container">
               <img src="images/1xbitr.png" alt="1xBit">
@@ -552,7 +638,11 @@
             <h3>1XBIT</h3>
             <h4 class="sub-brand">1xBit</h4>
             <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> <span class="text-accent">Promocode</span>&nbsp;<span class="text-cyan">AL1VE1X</span></li>
+              <li>
+                <i class="fa-solid fa-circle-check check-icon"></i> 
+                <span class="text-accent">Promocode</span>&nbsp;
+                <span class="promo-copy-box" onclick="copyCode(this, 'AL1VE1X')">AL1VE1X <i class="fa-regular fa-copy"></i></span>
+              </li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> 125% First Deposit bonus + 100FS with 30x wager</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Crypto deposit/cashout</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Sports betting</li>
@@ -563,8 +653,8 @@
           </div>
 
           <!-- WINSPIRIT -->
-          <div class="casino-card glow-winspirit">
-            <div class="card-rank-badge">NEW</div>
+          <div class="casino-card glow-winspirit" data-tags="sports crypto">
+            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/winspirit.png" alt="Winspirit">
             </div>
@@ -581,15 +671,19 @@
           </div>
 
           <!-- SPINBETTER -->
-          <div class="casino-card glow-spinbetter">
-            <div class="card-rank-badge">NEW</div>
+          <div class="casino-card glow-spinbetter" data-tags="sports crypto">
+            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/spinbetter.png" alt="Spinbetter">
             </div>
             <h3>SpinBetter</h3>
             <h4 class="sub-brand">SpinBetter</h4>
             <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> <span class="text-accent">Promocode</span>&nbsp;<span class="text-cyan">AL1VE</span></li>
+              <li>
+                <i class="fa-solid fa-circle-check check-icon"></i> 
+                <span class="text-accent">Promocode</span>&nbsp;
+                <span class="promo-copy-box" onclick="copyCode(this, 'AL1VE')">AL1VE <i class="fa-regular fa-copy"></i></span>
+              </li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Welcome Bonus: 100% + 300 FS</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Sports betting</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Fast Crypto + Card deposit/cashout</li>
@@ -599,8 +693,8 @@
           </div> 
 
           <!-- SPINSY -->
-          <div class="casino-card glow-spinsy">
-            <div class="card-rank-badge">NEW</div>
+          <div class="casino-card glow-spinsy" data-tags="sports crypto">
+            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/spinsy.png" alt="Spinsy">
             </div>
@@ -617,8 +711,8 @@
           </div> 
 
           <!-- COCOBET -->
-          <div class="casino-card glow-cocobet">
-            <div class="card-rank-badge">NEW</div>
+          <div class="casino-card glow-cocobet" data-tags="sports crypto nokyc">
+            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/nemtom1.png" alt="CocoBet">
             </div>
@@ -635,15 +729,19 @@
           </div>
 
           <!-- PARIPESA -->
-          <div class="casino-card glow-paripesa">
-            <div class="card-rank-badge">NEW</div>
+          <div class="casino-card glow-paripesa" data-tags="crypto">
+            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/paripesa.png" alt="PariPesa">
             </div>
             <h3>PariPesa</h3>
             <h4 class="sub-brand">PariPesa</h4>
             <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> <span class="text-accent">Promocode</span>&nbsp;<span class="text-cyan">al1ve</span></li>
+              <li>
+                <i class="fa-solid fa-circle-check check-icon"></i> 
+                <span class="text-accent">Promocode</span>&nbsp;
+                <span class="promo-copy-box" onclick="copyCode(this, 'al1ve')">al1ve <i class="fa-regular fa-copy"></i></span>
+              </li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> 1st deposit - 1500 EUR + 150 fs</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Card (Revolut accepted) / Crypto</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Cashout Max 1 Day</li>
@@ -653,15 +751,19 @@
           </div>
 
           <!-- PICKWIN -->
-          <div class="casino-card glow-pickwin">
-            <div class="card-rank-badge">NEW</div>
+          <div class="casino-card glow-pickwin" data-tags="crypto">
+            <div class="card-rank-badge badge-new">NEW</div>
             <div class="card-logo-container">
               <img src="images/pickwin.png" alt="pickwin">
             </div>
             <h3>PickWin</h3>
             <h4 class="sub-brand">PickWin</h4>
             <ul class="card-features">
-              <li><i class="fa-solid fa-circle-check check-icon"></i> <span class="text-accent">Promocode</span>&nbsp;<span class="text-cyan">PICKLIVE</span></li>
+              <li>
+                <i class="fa-solid fa-circle-check check-icon"></i> 
+                <span class="text-accent">Promocode</span>&nbsp;
+                <span class="promo-copy-box" onclick="copyCode(this, 'PICKLIVE')">PICKLIVE <i class="fa-regular fa-copy"></i></span>
+              </li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> 200$ WAGERMENTES FREEBET</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> 200$ depóval 200 wanted FS (0.4 GBP)</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> 100% bónusz up to 500€</li>
@@ -678,7 +780,7 @@
         <h2 class="section-title">MORE TOP G</h2>
         <div class="casino-grid">
           <!-- DUEL -->
-          <div class="casino-card glow-duel">
+          <div class="casino-card glow-duel" data-tags="nokyc sports crypto">
             <div class="card-rank-badge">TOP</div>
             <div class="card-logo-container">
               <img src="images/top2.png" alt="Duel Logo">
@@ -702,7 +804,7 @@
         <h2 class="section-title">Crab Casinos</h2>
         <div class="casino-grid">
           <!-- WAZAMBA -->
-          <div class="casino-card glow-wazamba">
+          <div class="casino-card glow-wazamba" data-tags="crypto">
             <div class="card-logo-container">
               <img src="images/wazamba.png" alt="Wazamba Logó">
             </div>
@@ -719,7 +821,7 @@
           </div>
 
           <!-- SG CASINO -->
-          <div class="casino-card glow-sgcasino">
+          <div class="casino-card glow-sgcasino" data-tags="crypto">
             <div class="card-logo-container">
               <img src="images/sg.png" alt="Sg Logó">
             </div>
@@ -757,6 +859,50 @@
   </div>
 
   <script>
+    /* PROMOCODE COPY FUNCTION */
+    function copyCode(element, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = element.innerHTML;
+        element.innerHTML = 'Copied! <i class="fa-solid fa-check"></i>';
+        element.style.color = '#22c55e';
+        element.style.borderColor = '#22c55e';
+        setTimeout(() => {
+          element.innerHTML = originalText;
+          element.style.color = '';
+          element.style.borderColor = '';
+        }, 2000);
+      });
+    }
+
+    /* CATEGORY FILTER SYSTEM */
+    document.addEventListener('DOMContentLoaded', () => {
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const cards = document.querySelectorAll('.casino-card');
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const filter = btn.getAttribute('data-filter');
+
+          cards.forEach(card => {
+            if (filter === 'all') {
+              card.classList.remove('hide');
+            } else {
+              const tags = card.getAttribute('data-tags') || '';
+              if (tags.includes(filter)) {
+                card.classList.remove('hide');
+              } else {
+                card.classList.add('hide');
+              }
+            }
+          });
+        });
+      });
+    });
+
+    /* GATE OVERLAY SYSTEM */
     (function () {
       const OVR = document.getElementById('gateOverlay');
       const APP = document.getElementById('app-root');
