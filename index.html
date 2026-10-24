@@ -18,11 +18,9 @@
       --primary-text: #ffffff;
       --secondary-text: #a0a0b8;
       --accent-purple: #a855f7;
-      --accent-pink: #ec4899;
-      --accent-cyan: #06b6d4;
       --accent-green: #22c55e;
       --accent-red: #ef4444;
-      --glow-color: rgba(168, 85, 247, 0.25);
+      --accent-cyan: #06b6d4;
     }
 
     * {
@@ -35,8 +33,8 @@
       font-family: 'Poppins', sans-serif;
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(circle at 15% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 85% 60%, rgba(236, 72, 153, 0.12) 0%, transparent 40%);
+        radial-gradient(circle at 15% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(236, 72, 153, 0.1) 0%, transparent 40%);
       background-attachment: fixed;
       color: var(--primary-text);
       line-height: 1.6;
@@ -140,7 +138,7 @@
       border-bottom: 1px solid var(--card-border);
       padding: 1rem 2rem;
       display: flex;
-      justify-content: center; /* Középre igazítva, ha nincs Twitch ikon */
+      justify-content: center;
       align-items: center;
     }
     .main-nav ul {
@@ -211,14 +209,13 @@
       margin: 4rem 0;
     }
 
-    /* --- GRID & CARDS (FIXED SIZING) --- */
+    /* --- GRID & CARDS --- */
     main {
       max-width: 1280px;
       margin: 0 auto;
       padding: 0 1.5rem 4rem;
     }
 
-    /* A grid beállítása, hogy 1 elem esetén se húzza szét a kártyát */
     .casino-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 360px));
@@ -243,8 +240,63 @@
 
     .casino-card:hover {
       transform: translateY(-8px);
-      border-color: rgba(168, 85, 247, 0.5);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px var(--glow-color);
+    }
+
+    /* --- EGYEDI KÁRTYA NEON FÉNYEK (GLOW EFFECT) --- */
+    /* 1. Shuffle (Lila) */
+    .glow-shuffle:hover {
+      border-color: rgba(168, 85, 247, 0.6);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(168, 85, 247, 0.35);
+    }
+    /* 2. 1xBit (Narancssárga) */
+    .glow-1xbit:hover {
+      border-color: rgba(249, 115, 22, 0.6);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(249, 115, 22, 0.35);
+    }
+    /* 3. Winspirit (Zöld) */
+    .glow-winspirit:hover {
+      border-color: rgba(34, 197, 94, 0.6);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(34, 197, 94, 0.35);
+    }
+    /* 4. Spinbetter (Sötétzöld + Sárga) */
+    .glow-spinbetter:hover {
+      border-color: rgba(234, 179, 8, 0.6);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 25px rgba(21, 128, 61, 0.4), 0 0 40px rgba(234, 179, 8, 0.25);
+    }
+    /* 5. Spinsy (Feketés-sárga / Mély arany) */
+    .glow-spinsy:hover {
+      border-color: rgba(202, 138, 4, 0.6);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 30px rgba(202, 138, 4, 0.3);
+    }
+    /* 6. CocoBet (Világossárga) */
+    .glow-cocobet:hover {
+      border-color: rgba(254, 240, 138, 0.7);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(254, 240, 138, 0.35);
+    }
+    /* 7. PariPesa (Türkizkék) */
+    .glow-paripesa:hover {
+      border-color: rgba(6, 182, 212, 0.6);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(6, 182, 212, 0.35);
+    }
+    /* 8. PickWin (Világos neonkék) */
+    .glow-pickwin:hover {
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 30px rgba(56, 189, 248, 0.35);
+    }
+    /* 9. Duel (Sötétkék) */
+    .glow-duel:hover {
+      border-color: rgba(30, 64, 175, 0.8);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 30px rgba(30, 64, 175, 0.5);
+    }
+    /* 10. Wazamba (Pirosas-zöldes) */
+    .glow-wazamba:hover {
+      border-color: rgba(34, 197, 94, 0.6);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), -10px 0 25px rgba(239, 68, 68, 0.3), 10px 0 25px rgba(34, 197, 94, 0.3);
+    }
+    /* 11. SG Casino (Pingvin: Kékes-fehéres sárgás árnyalat) */
+    .glow-sgcasino:hover {
+      border-color: rgba(250, 204, 21, 0.7);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 25px rgba(56, 189, 248, 0.3), 0 0 35px rgba(250, 204, 21, 0.25);
     }
 
     /* Badges */
@@ -469,7 +521,8 @@
         <h2 class="section-title">Best Offers</h2>
         <div class="casino-grid">
 
-          <div class="casino-card">
+          <!-- SHUFFLE -->
+          <div class="casino-card glow-shuffle">
             <div class="card-rank-badge">#1</div>
             <div class="star-rating">
               <i class="fa-solid fa-star star-icon"></i>
@@ -490,7 +543,8 @@
             <a href="https://shuffle.com?r=Al1ve" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
-          <div class="casino-card">
+          <!-- 1XBIT -->
+          <div class="casino-card glow-1xbit">
             <div class="card-rank-badge">#2</div>
             <div class="card-logo-container">
               <img src="images/1xbitr.png" alt="1xBit">
@@ -508,7 +562,8 @@
             <a href="https://refpa04636.pro/L?tag=d_4427689m_129584c_AL1VE1X&site=4427689&ad=129584&r=registration" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
-          <div class="casino-card">
+          <!-- WINSPIRIT -->
+          <div class="casino-card glow-winspirit">
             <div class="card-rank-badge">NEW</div>
             <div class="card-logo-container">
               <img src="images/winspirit.png" alt="Winspirit">
@@ -525,7 +580,8 @@
             <a href="https://bit.ly/4fbE5mr" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
-          <div class="casino-card">
+          <!-- SPINBETTER -->
+          <div class="casino-card glow-spinbetter">
             <div class="card-rank-badge">NEW</div>
             <div class="card-logo-container">
               <img src="images/spinbetter.png" alt="Spinbetter">
@@ -542,7 +598,8 @@
             <a href="https://redirspinner.com/3eai?p=%2Fregistration%2F" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div> 
 
-          <div class="casino-card">
+          <!-- SPINSY -->
+          <div class="casino-card glow-spinsy">
             <div class="card-rank-badge">NEW</div>
             <div class="card-logo-container">
               <img src="images/spinsy.png" alt="Spinsy">
@@ -559,7 +616,8 @@
             <a href="https://appsn1network.com/HfBXGm" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div> 
 
-          <div class="casino-card">
+          <!-- COCOBET -->
+          <div class="casino-card glow-cocobet">
             <div class="card-rank-badge">NEW</div>
             <div class="card-logo-container">
               <img src="images/nemtom1.png" alt="CocoBet">
@@ -576,7 +634,8 @@
             <a href="https://go.cocoaff.com/visit/?bta=3170635&nci=5696" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
-          <div class="casino-card">
+          <!-- PARIPESA -->
+          <div class="casino-card glow-paripesa">
             <div class="card-rank-badge">NEW</div>
             <div class="card-logo-container">
               <img src="images/paripesa.png" alt="PariPesa">
@@ -593,7 +652,8 @@
             <a href="https://shorturl.at/5Rpj8" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
-          <div class="casino-card">
+          <!-- PICKWIN -->
+          <div class="casino-card glow-pickwin">
             <div class="card-rank-badge">NEW</div>
             <div class="card-logo-container">
               <img src="images/pickwin.png" alt="pickwin">
@@ -617,7 +677,8 @@
       <section id="more-top-g">
         <h2 class="section-title">MORE TOP G</h2>
         <div class="casino-grid">
-          <div class="casino-card">
+          <!-- DUEL -->
+          <div class="casino-card glow-duel">
             <div class="card-rank-badge">TOP</div>
             <div class="card-logo-container">
               <img src="images/top2.png" alt="Duel Logo">
@@ -640,7 +701,8 @@
       <section id="crab-casinos">
         <h2 class="section-title">Crab Casinos</h2>
         <div class="casino-grid">
-          <div class="casino-card">
+          <!-- WAZAMBA -->
+          <div class="casino-card glow-wazamba">
             <div class="card-logo-container">
               <img src="images/wazamba.png" alt="Wazamba Logó">
             </div>
@@ -656,7 +718,8 @@
             <a href="https://wzbw.xarvilo.com/?mid=240180_1424294" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div>
 
-          <div class="casino-card">
+          <!-- SG CASINO -->
+          <div class="casino-card glow-sgcasino">
             <div class="card-logo-container">
               <img src="images/sg.png" alt="Sg Logó">
             </div>
