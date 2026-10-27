@@ -12,13 +12,11 @@
   
   <style>
     :root {
-      --background-color: #05050a;
       --card-background: rgba(13, 13, 24, 0.85);
       --border-color: rgba(147, 51, 234, 0.25);
       --primary-text-color: #ffffff;
       --secondary-text-color: #a0a0b5;
       --accent-color: #7c3aed;
-      --accent-glow: rgba(147, 51, 234, 0.4);
     }
 
     html {
@@ -27,21 +25,15 @@
       height: 100%;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Poppins', sans-serif;
       color: var(--primary-text-color);
       line-height: 1.5;
-      background-color: var(--background-color);
-      background-image: 
-        radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.25) 0%, transparent 60%),
-        radial-gradient(circle at top, #0f0c20 0%, #05050a 70%);
-      background-attachment: fixed;
+      /* ITT VAN BEÁLLÍTVA A TELJES LÁTVÁNYTERV HÁTTÉRKÉNT */
+      background: #05050a url('images/leaderboard-background.jpg') no-repeat center top fixed;
+      background-size: cover;
       min-height: 100%;
       display: flex;
       flex-direction: column;
@@ -49,7 +41,7 @@
       overflow-x: hidden;
     }
 
-    /* ANIMÁLT OLDALSÓ DEKORÁCIÓS KÉPEK */
+    /* RÖGZÍTETT ÉS ANIMÁLT OLDALSÓ GRAFIKÁK */
     .bg-side-graphic {
       position: fixed;
       bottom: 0;
@@ -58,7 +50,6 @@
       max-height: 80vh;
       object-fit: contain;
       filter: drop-shadow(0 0 25px rgba(124, 58, 237, 0.35));
-      transition: filter 0.5s ease;
     }
 
     .bg-side-graphic.left-cases {
@@ -77,12 +68,12 @@
 
     @keyframes floatLeft {
       0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-12px) rotate(-1deg); }
+      50% { transform: translateY(-10px) rotate(-1deg); }
     }
 
     @keyframes floatRight {
       0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-15px) rotate(1deg); }
+      50% { transform: translateY(-12px) rotate(1deg); }
     }
 
     main { 
@@ -93,12 +84,6 @@
       flex: 1;
       position: relative;
       z-index: 10;
-      animation: pageFadeIn 1s ease-out;
-    }
-
-    @keyframes pageFadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .main-nav {
@@ -116,492 +101,142 @@
     .main-nav ul { display: flex; list-style: none; margin: 0; padding: 0; gap: 25px; }
 
     .main-nav a {
-      color: #b3b3c6;
-      text-decoration: none;
+      color: #b3b3c6; text-decoration: none;
       font-weight: 600; font-size: 0.95rem; text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: color .3s ease, text-shadow .3s ease;
+      transition: color .3s ease;
     }
-    .main-nav a:hover, .main-nav a.active { 
-      color: #a855f7; 
-      text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
-    }
+    .main-nav a:hover, .main-nav a.active { color: #a855f7; }
 
-    header { 
-      text-align: center; 
-      padding: 130px 1rem 1.5rem 1rem; 
-    }
+    header { text-align: center; padding: 130px 1rem 1.5rem 1rem; }
     
     .header-logo-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 85px;
-      height: 85px;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 85px; height: 85px;
       background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 75%);
-      border-radius: 50%;
-      margin-bottom: 15px;
-      position: relative;
-      animation: badgePulse 3s infinite ease-in-out;
-    }
-
-    @keyframes badgePulse {
-      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.3)); }
-      50% { transform: scale(1.08); filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.7)); }
+      border-radius: 50%; margin-bottom: 15px; position: relative;
     }
 
     .header-logo-badge img {
-      width: 65px;
-      height: 65px;
-      object-fit: contain;
+      width: 65px; height: 65px; object-fit: contain;
       filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.7));
     }
 
     .header-crown {
-      position: absolute;
-      top: -4px;
-      right: 12px;
-      color: #facc15;
-      font-size: 1.3rem;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+      position: absolute; top: -4px; right: 12px;
+      color: #facc15; font-size: 1.3rem;
       animation: crownBounce 2s infinite ease-in-out;
     }
 
     @keyframes crownBounce {
       0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-7px) rotate(8deg); }
+      50% { transform: translateY(-6px) rotate(6deg); }
     }
 
     header h1 { 
-      font-size: 3.2rem; 
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: 1px;
+      font-size: 3.2rem; font-weight: 800; color: #fff; 
       text-shadow: 0 0 25px rgba(147, 51, 234, 0.5);
-      animation: titleNeon 2.5s infinite alternate ease-in-out;
     }
+    header p { color: var(--secondary-text-color); margin-top: 8px; font-size: 1.05rem; }
 
-    @keyframes titleNeon {
-      from { text-shadow: 0 0 20px rgba(147, 51, 234, 0.4), 0 0 40px rgba(124, 58, 237, 0.2); }
-      to { text-shadow: 0 0 30px rgba(168, 85, 247, 0.8), 0 0 50px rgba(250, 204, 21, 0.4); }
-    }
-
-    header p {
-      color: var(--secondary-text-color);
-      margin-top: 8px;
-      font-size: 1.05rem;
-    }
-
-    /* STATISZTIKAI KÁRTYÁK ANIMÁCIÓVAL */
-    .stats-overview {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-bottom: 2rem;
-    }
-
+    .stats-overview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 2rem; }
     .stat-card {
-      background: var(--card-background);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 18px;
-      text-align: center;
+      background: var(--card-background); backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; text-align: center;
       box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, border-color 0.3s ease;
     }
+    .stat-card:hover { transform: translateY(-4px); border-color: rgba(168, 85, 247, 0.6); }
+    .stat-card .stat-title { font-size: 0.8rem; text-transform: uppercase; color: var(--secondary-text-color); font-weight: 600; margin-bottom: 5px; }
+    .stat-card .stat-value { font-size: 1.35rem; font-weight: 800; color: #facc15; }
+    .stat-card.timer-card .stat-value { color: #a855f7; font-size: 1.15rem; }
 
-    .stat-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(168, 85, 247, 0.6);
-      box-shadow: 0 12px 30px rgba(147, 51, 234, 0.25);
-    }
-
-    .stat-card .stat-title {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      color: var(--secondary-text-color);
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-
-    .stat-card .stat-value {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: #facc15;
-    }
-
-    .stat-card.timer-card .stat-value {
-      color: #a855f7;
-      font-size: 1.15rem;
-    }
-
-    /* KERESŐ ÉS SZABÁLYZAT DOBOZ */
-    .controls-wrapper {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 2.5rem;
-      flex-wrap: wrap;
-    }
-
+    .controls-wrapper { display: flex; gap: 15px; margin-bottom: 2.5rem; flex-wrap: wrap; }
     .winovo-rules-box {
-      flex: 2;
-      background: var(--card-background);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(250, 204, 21, 0.35);
-      border-radius: 16px;
-      padding: 18px 22px;
-      font-size: 0.9rem;
-      color: var(--secondary-text-color);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-      transition: border-color 0.3s ease;
+      flex: 2; background: var(--card-background); backdrop-filter: blur(10px);
+      border: 1px solid rgba(250, 204, 21, 0.35); border-radius: 16px; padding: 18px 22px; font-size: 0.9rem; color: var(--secondary-text-color);
     }
-
-    .winovo-rules-box:hover {
-      border-color: rgba(250, 204, 21, 0.7);
-    }
-
-    .winovo-rules-box h4 {
-      color: #facc15;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.95rem;
-    }
-
-    .winovo-rules-box ul {
-      padding-left: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+    .winovo-rules-box h4 { color: #facc15; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .winovo-rules-box ul { padding-left: 20px; display: flex; flex-direction: column; gap: 5px; }
 
     .search-box-container {
-      flex: 1;
-      min-width: 240px;
-      background: var(--card-background);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 18px 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      flex: 1; min-width: 240px; background: var(--card-background); backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color); border-radius: 16px; padding: 18px 22px; display: flex; flex-direction: column; justify-content: center;
     }
-
-    .search-box-container label {
-      font-size: 0.85rem;
-      color: var(--secondary-text-color);
-      margin-bottom: 8px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
+    .search-box-container label { font-size: 0.85rem; color: var(--secondary-text-color); margin-bottom: 8px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
     .search-input {
-      width: 100%;
-      background: rgba(5, 5, 10, 0.8);
-      border: 1px solid rgba(147, 51, 234, 0.3);
-      border-radius: 10px;
-      padding: 10px 15px;
-      color: #fff;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      width: 100%; background: rgba(5, 5, 10, 0.8); border: 1px solid rgba(147, 51, 234, 0.3);
+      border-radius: 10px; padding: 10px 15px; color: #fff; font-family: 'Poppins', sans-serif; outline: none;
     }
+    .search-input:focus { border-color: #a855f7; }
 
-    .search-input:focus {
-      border-color: #a855f7;
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
-    }
-
-    /* DOBOGÓ (PODIUM) ANIMÁCIÓKAL */
-    .podium-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 20px;
-      margin-bottom: 3rem;
-      padding-top: 1rem;
-    }
-
+    .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 20px; margin-bottom: 3rem; padding-top: 1rem; }
     .podium-card {
-      background: var(--card-background);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 25px 15px;
-      text-align: center;
-      position: relative;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 31%;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      background: var(--card-background); backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color); border-radius: 20px; padding: 25px 15px; text-align: center;
+      position: relative; display: flex; flex-direction: column; align-items: center; width: 31%;
+      transition: transform 0.3s ease;
     }
-
-    .podium-card.second-place {
-      order: 1;
-      transform: translateY(15px);
-      border-color: rgba(148, 163, 184, 0.4);
-    }
-    .podium-card.second-place:hover {
-      transform: translateY(5px) scale(1.02);
-      box-shadow: 0 12px 35px rgba(148, 163, 184, 0.3);
-    }
-
+    .podium-card:hover { transform: translateY(-5px); }
+    .podium-card.second-place { order: 1; transform: translateY(15px); }
     .podium-card.first-place {
-      order: 2;
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(13, 13, 24, 0.95));
-      border: 2px solid #f59e0b;
-      box-shadow: 0 15px 45px rgba(0,0,0,0.7), 0 0 30px rgba(245, 158, 11, 0.35);
-      transform: translateY(-15px) scale(1.05);
-      z-index: 3;
-      animation: goldGlow 3s infinite alternate ease-in-out;
+      order: 2; background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(13, 13, 24, 0.95));
+      border: 2px solid #f59e0b; transform: translateY(-15px) scale(1.05); z-index: 3;
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.3);
     }
-
-    @keyframes goldGlow {
-      from { box-shadow: 0 15px 45px rgba(0,0,0,0.7), 0 0 20px rgba(245, 158, 11, 0.25); }
-      to { box-shadow: 0 15px 45px rgba(0,0,0,0.7), 0 0 40px rgba(245, 158, 11, 0.55); }
-    }
-
-    .podium-card.first-place:hover {
-      transform: translateY(-22px) scale(1.08);
-    }
-
-    .podium-card.third-place {
-      order: 3;
-      transform: translateY(25px);
-      border-color: rgba(180, 83, 9, 0.4);
-    }
-    .podium-card.third-place:hover {
-      transform: translateY(15px) scale(1.02);
-      box-shadow: 0 12px 35px rgba(180, 83, 9, 0.3);
-    }
+    .podium-card.third-place { order: 3; transform: translateY(25px); }
 
     .podium-rank {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 0.9rem;
+      position: absolute; top: 15px; left: 15px; width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem;
     }
-
-    .podium-card.first-place .podium-rank { background: #f59e0b; color: #000; box-shadow: 0 0 12px #f59e0b; }
+    .podium-card.first-place .podium-rank { background: #f59e0b; color: #000; }
     .podium-card.second-place .podium-rank { background: #94a3b8; color: #000; }
     .podium-card.third-place .podium-rank { background: #b45309; color: #fff; }
 
-    .podium-avatar-wrapper {
-      position: relative;
-      margin-bottom: 12px;
-    }
+    .podium-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-color); margin-bottom: 12px; }
+    .podium-card.first-place .podium-avatar { width: 86px; height: 86px; border-color: #f59e0b; }
+    .podium-name { font-weight: 700; font-size: 1.1rem; color: #fff; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+    .podium-prize { font-size: 1.35rem; font-weight: 800; color: #facc15; margin-bottom: 6px; }
+    .podium-wager { font-size: 0.9rem; color: #22c55e; font-weight: 600; }
 
-    .podium-avatar {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--accent-color);
-      background: #1a1a2e;
-      transition: transform 0.3s ease;
-    }
-
-    .podium-card:hover .podium-avatar {
-      transform: scale(1.08);
-    }
-
-    .podium-card.first-place .podium-avatar { 
-      width: 86px; 
-      height: 86px; 
-      border-color: #f59e0b; 
-    }
-
-    .podium-name {
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #fff;
-      margin-bottom: 5px;
-      width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .podium-prize {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: #facc15;
-      margin-bottom: 6px;
-      text-shadow: 0 0 12px rgba(250, 204, 21, 0.4);
-    }
-
-    .podium-wager {
-      font-size: 0.9rem;
-      color: #22c55e;
-      font-weight: 600;
-    }
-
-    /* TÁBLÁZAT ANIMÁLT SOROKKAL */
     .leaderboard-container {
-      background: var(--card-background);
-      backdrop-filter: blur(10px);
-      border: 2px solid var(--border-color);
-      border-radius: 28px;
-      padding: 25px 30px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      background: var(--card-background); backdrop-filter: blur(10px);
+      border: 2px solid var(--border-color); border-radius: 28px; padding: 25px 30px;
     }
+    .leaderboard-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .leaderboard-table th { color: var(--secondary-text-color); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; padding: 15px 20px; border-bottom: 1px solid rgba(147, 51, 234, 0.15); }
+    .leaderboard-table td { padding: 16px 20px; color: #e0e0e6; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+    .leaderboard-table tbody tr:hover { background-color: rgba(147, 51, 234, 0.12); }
+    
+    .player-info { display: flex; align-items: center; gap: 15px; }
+    .player-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-color); }
+    .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-weight: 700; background: #1a1a2e; color: var(--secondary-text-color); border: 1px solid var(--border-color); }
+    .wagered-amount { font-weight: 700; color: #22c55e; }
 
-    .leaderboard-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    .leaderboard-table th {
-      color: var(--secondary-text-color);
-      font-weight: 600;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      padding: 15px 20px;
-      border-bottom: 1px solid rgba(147, 51, 234, 0.15);
-    }
-
-    .leaderboard-table tbody tr {
-      transition: background-color 0.25s ease, transform 0.2s ease;
-    }
-
-    .leaderboard-table td {
-      padding: 16px 20px;
-      color: #e0e0e6;
-      font-size: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    }
-
-    .leaderboard-table tbody tr:hover {
-      background-color: rgba(147, 51, 234, 0.15);
-      transform: scale(1.008);
-    }
-
-    .player-info {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .player-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--accent-color);
-      background-color: #1a1a2e;
-    }
-
-    .player-name {
-      font-weight: 600;
-      color: #fff;
-    }
-
-    .rank-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      font-weight: 700;
-      font-size: 0.85rem;
-      background: #1a1a2e;
-      color: var(--secondary-text-color);
-      border: 1px solid var(--border-color);
-    }
-
-    .wagered-amount {
-      font-weight: 700;
-      color: #22c55e;
-    }
-
-    .lb-status {
-      text-align: center;
-      padding: 40px;
-      color: var(--secondary-text-color);
-      font-size: 1.1rem;
-    }
-
-    .lb-status i {
-      font-size: 2rem;
-      color: var(--accent-color);
-      margin-bottom: 15px;
-    }
+    .lb-status { text-align: center; padding: 40px; color: var(--secondary-text-color); font-size: 1.1rem; }
+    .lb-status i { font-size: 2rem; color: var(--accent-color); margin-bottom: 15px; }
 
     #twitch-status {
-      display: flex; align-items: center; background-color: #1e1e2f;
-      padding: .5rem 1rem; border-radius: 20px; text-decoration: none;
-      color: #fff; font-weight: bold; font-size: 0.9rem;
-      border: 1px solid rgba(147, 51, 234, 0.2); transition: all .3s ease;
+      display: flex; align-items: center; background-color: #1e1e2f; padding: .5rem 1rem; border-radius: 20px; text-decoration: none; color: #fff; font-weight: bold; font-size: 0.9rem; border: 1px solid rgba(147, 51, 234, 0.2);
     }
-    #twitch-status:hover { background-color: #6441a5; box-shadow: 0 0 15px rgba(100, 65, 165, 0.5); }
-    #twitch-status .live-dot {
-      width: 10px; height: 10px; background-color: #e91916; border-radius: 50%;
-      margin-right: .5rem; animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(233,25,22,0.7); }
-      70% { box-shadow: 0 0 0 8px rgba(233,25,22,0); }
-      100% { box-shadow: 0 0 0 0 rgba(233,25,22,0); }
-    }
+    #twitch-status .live-dot { width: 10px; height: 10px; background-color: #e91916; border-radius: 50%; margin-right: .5rem; }
 
-    footer { 
-      background-color: #0d0d18; 
-      padding: 40px 20px; 
-      text-align: center; 
-      border-top: 1px solid rgba(147, 51, 234, 0.15); 
-      color: #6b6b7c; 
-      font-size: .85rem; 
-      width: 100%;
-      flex-shrink: 0;
-      position: relative;
-      z-index: 10;
-    }
-    footer p { max-width: 800px; margin: 0 auto 10px auto; line-height: 1.6; }
+    footer { background-color: #0d0d18; padding: 40px 20px; text-align: center; border-top: 1px solid rgba(147, 51, 234, 0.15); color: #6b6b7c; font-size: .85rem; width: 100%; position: relative; z-index: 10; }
+    footer p { max-width: 800px; margin: 0 auto 10px auto; }
     .hidden { display: none !important; }
 
-    @media (max-width: 1350px) {
-      .bg-side-graphic { opacity: 0.4; }
-    }
-
-    @media (max-width: 1024px) {
-      .bg-side-graphic { display: none; }
-    }
-
+    @media (max-width: 1024px) { .bg-side-graphic { display: none; } }
     @media (max-width: 768px) {
       .podium-container { flex-direction: column; align-items: center; gap: 15px; }
       .podium-card { width: 100%; transform: none !important; }
       .stats-overview { grid-template-columns: 1fr; }
       .controls-wrapper { flex-direction: column; }
-      header { padding-top: 120px; }
-      header h1 { font-size: 2.2rem; }
-      .main-nav { flex-direction: column; height: auto; padding: 15px; gap: 15px; position: static; }
-      .main-nav ul { flex-wrap: wrap; justify-content: center; gap: 15px; }
-      .main-nav a { font-size: .85rem; }
-      #twitch-status { position: static; margin: 0 auto; }
     }
   </style>
 </head>
 
 <body>
-  <!-- RÖGZÍTETT HÁTTÉR KÉPEK A KÉT SZÉLEN (ANIMÁLVA) -->
+  <!-- HÁTTERET KIEGÉSZÍTő OLDALSÓ GRAFIKÁK -->
   <img src="images/cases-stack.png" alt="Halloween Cases Stack" class="bg-side-graphic left-cases">
   <img src="images/hyena-trophy.png" alt="Hyena with Trophy" class="bg-side-graphic right-hyena">
 
@@ -628,7 +263,6 @@
   </header>
 
   <main>
-    <!-- STATISZTIKÁK ÉS VISSZASZÁMLÁLÓ -->
     <div class="stats-overview">
       <div class="stat-card">
         <div class="stat-title"><i class="fa-solid fa-trophy" style="color: #facc15;"></i> Total Prize Pool</div>
@@ -644,7 +278,6 @@
       </div>
     </div>
 
-    <!-- KERESŐ ÉS SZABÁLYZAT KONTÉNER -->
     <div class="controls-wrapper">
       <div class="winovo-rules-box">
         <h4><i class="fa-solid fa-triangle-exclamation"></i> Important Leaderboard Rules</h4>
@@ -680,52 +313,37 @@
 
     function startCountdown() {
       const timerEl = document.getElementById('countdown-timer');
-      
       function updateTimer() {
         const now = new Date();
         const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0);
         const diff = nextMonth - now;
-
-        if (diff <= 0) {
-          timerEl.innerHTML = "Competition Ended";
-          return;
-        }
-
+        if (diff <= 0) { timerEl.innerHTML = "Competition Ended"; return; }
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((diff / 1000 / 60) % 60);
-
         timerEl.innerHTML = `${days}d ${hours}h ${minutes}m`;
       }
-
       updateTimer();
       setInterval(updateTimer, 60000);
     }
 
-async function fetchLeaderboard() {
+    async function fetchLeaderboard() {
       const container = document.getElementById('leaderboardContent');
-      
       try {
         const response = await fetch('https://proxy2.haizermaximilian.workers.dev/');
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const result = await response.json();
-
+        
         if (result.status === 'ok') {
           let rawData = Array.isArray(result.data) ? result.data : Object.values(result.data || {});
           
-          // Október 25-i bázis / kezdeti értékek rögzítése localStorage-ba, 
-          // hogy tőle kezdve csak a növekményt (az azóta wagerelt összeget) számolja:
+          // Október 25-i kiinduló alapértékek rögzítése/kezelése
           let baseValues = JSON.parse(localStorage.getItem('al1ve_wager_base') || '{}');
           const isInitialized = Object.keys(baseValues).length > 0;
 
           rawData.forEach(player => {
             const currentWager = Number(player.wagered || 0);
             if (!isInitialized) {
-              // Első futáskor elmentjük a jelenlegi értéket alapként (ehhez képest mérünk)
               baseValues[player.name] = currentWager;
             }
           });
@@ -734,12 +352,12 @@ async function fetchLeaderboard() {
             localStorage.setItem('al1ve_wager_base', JSON.stringify(baseValues));
           }
 
-          // Kiszámoljuk a különbséget (aktuális - 25-ei bázis)
+          // Különbség számítása (október 25. óta gyűjtött wager)
           globalPlayersData = rawData.map(player => {
             const currentWager = Number(player.wagered || 0);
             const baseWager = baseValues[player.name] !== undefined ? baseValues[player.name] : currentWager;
             let diff = currentWager - baseWager;
-            if (diff < 0) diff = 0; // Ha esetleg csökkenne, ne legyen negatív
+            if (diff < 0) diff = 0;
 
             return {
               ...player,
@@ -747,24 +365,22 @@ async function fetchLeaderboard() {
             };
           });
 
-          // Sorrendbe rendezzük a frissített wager alapján (csökkenő sorrend)
           globalPlayersData.sort((a, b) => Number(b.wagered) - Number(a.wagered));
-
           document.getElementById('stat-players-count').innerText = globalPlayersData.length;
-
           renderLeaderboard(globalPlayersData);
 
         } else {
           throw new Error('Invalid API response structure');
         }
-
       } catch (error) {
         console.error('Leaderboard fetch error:', error);
         container.innerHTML = `<div class="leaderboard-container"><div class="lb-status"><p>Could not load leaderboard data.</p></div></div>`;
       }
     }
 
-      // 1. KLASSZIKUS DOBOGÓ GENERÁLÁSA
+    function renderLeaderboard(players) {
+      const container = document.getElementById('leaderboardContent');
+      let html = '';
       const podiumOrder = [1, 0, 2]; 
       const placeClasses = ['second-place', 'first-place', 'third-place'];
       const actualRanks = [2, 1, 3];
@@ -783,9 +399,7 @@ async function fetchLeaderboard() {
         html += `
           <div class="podium-card ${placeClass}">
             <div class="podium-rank">${rank}</div>
-            <div class="podium-avatar-wrapper">
-              <img src="${avatar}" alt="${name}" class="podium-avatar" onerror="this.src='images/hiena.png'">
-            </div>
+            <img src="${avatar}" alt="${name}" class="podium-avatar" onerror="this.src='images/hiena.png'">
             <div class="podium-name">${name}</div>
             <div class="podium-prize">${prizes[playerIndex] || '-'}</div>
             <div class="podium-wager">$${formattedWager}</div>
@@ -794,7 +408,6 @@ async function fetchLeaderboard() {
       }
       html += `</div>`;
 
-      // 2. TÁBLÁZAT A 4. HELYTŐL
       html += `
         <div class="leaderboard-container">
           <table class="leaderboard-table">
@@ -812,15 +425,11 @@ async function fetchLeaderboard() {
       for (let i = 3; i < Math.max(players.length, 10); i++) {
         const rank = i + 1;
         const player = players[i];
-        const prizeTag = prizes[i] 
-          ? `<span style="color: #a855f7; font-weight: 700;">${prizes[i]}</span>` 
-          : '<span style="color: #6b6b7c;">-</span>';
-
+        const prizeTag = prizes[i] ? `<span style="color: #a855f7; font-weight: 700;">${prizes[i]}</span>` : '<span style="color: #6b6b7c;">-</span>';
         if (player) {
           const avatar = player.pic || 'images/hiena.png';
           const wageredVal = Number(player.wagered || 0);
           const formattedWager = wageredVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
           html += `
             <tr>
               <td><div class="rank-badge">${rank}</div></td>
@@ -836,46 +445,20 @@ async function fetchLeaderboard() {
           `;
         }
       }
-
-      html += `
-            </tbody>
-          </table>
-        </div>
-      `;
-
+      html += `</tbody></table></div>`;
       container.innerHTML = html;
     }
 
     function filterLeaderboard() {
       const query = document.getElementById('playerSearch').value.toLowerCase();
-      if (!query) {
-        renderLeaderboard(globalPlayersData);
-        return;
-      }
-
-      const filtered = globalPlayersData.filter(p => p.name && p.name.toLowerCase().includes(query));
+      if (!query) { renderLeaderboard(globalPlayersData); return; }
+      const filtered = globalPlayersData.path(p => p.name && p.name.toLowerCase().includes(query)) || globalPlayersData.filter(p => p.name && p.name.toLowerCase().includes(query));
       const container = document.getElementById('leaderboardContent');
-
       if (filtered.length === 0) {
         container.innerHTML = `<div class="leaderboard-container"><div class="lb-status"><p>No player found matching "${query}"</p></div></div>`;
         return;
       }
-
-      let html = `
-        <div class="leaderboard-container">
-          <h3 style="margin-bottom: 15px; color: #a855f7; font-size: 1rem;">Search Results</h3>
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th style="width: 80px;">Rank</th>
-                <th>Player</th>
-                <th style="text-align: center;">Prize</th>
-                <th style="text-align: right;">Wagered</th>
-              </tr>
-            </thead>
-            <tbody>
-      `;
-
+      let html = `<div class="leaderboard-container"><h3 style="margin-bottom: 15px; color: #a855f7; font-size: 1rem;">Search Results</h3><table class="leaderboard-table"><thead><tr><th style="width: 80px;">Rank</th><th>Player</th><th style="text-align: center;">Prize</th><th style="text-align: right;">Wagered</th></tr></thead><tbody>`;
       filtered.forEach(player => {
         const originalIndex = globalPlayersData.indexOf(player);
         const rank = originalIndex + 1;
@@ -883,22 +466,8 @@ async function fetchLeaderboard() {
         const avatar = player.pic || 'images/hiena.png';
         const wageredVal = Number(player.wagered || 0);
         const formattedWager = wageredVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-        html += `
-          <tr>
-            <td><div class="rank-badge">${rank}</div></td>
-            <td>
-              <div class="player-info">
-                <img src="${avatar}" alt="${player.name || 'Player'}" class="player-avatar" onerror="this.src='images/hiena.png'">
-                <span class="player-name">${player.name || 'Unknown'}</span>
-              </div>
-            </td>
-            <td style="text-align: center;">${prizeTag}</td>
-            <td style="text-align: right;" class="wagered-amount">$${formattedWager}</td>
-          </tr>
-        `;
+        html += `<tr><td><div class="rank-badge">${rank}</div></td><td><div class="player-info"><img src="${avatar}" alt="${player.name || 'Player'}" class="player-avatar" onerror="this.src='images/hiena.png'"><span class="player-name">${player.name || 'Unknown'}</span></div></td><td style="text-align: center;">${prizeTag}</td><td style="text-align: right;" class="wagered-amount">$${formattedWager}</td></tr>`;
       });
-
       html += `</tbody></table></div>`;
       container.innerHTML = html;
     }
