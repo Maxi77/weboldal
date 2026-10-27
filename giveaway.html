@@ -1,1109 +1,510 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Al1ve GW</title>
+  <title>Al1ve casinos - Leaderboard</title>
   <link rel="icon" type="image/png" href="images/hiena.png">
-  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-  <!-- Firebase SDK-k -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
+  
   <style>
     :root {
-      --bg-color: #0b0b14;
-      --card-bg: rgba(19, 19, 34, 0.88);
-      --accent: #a855f7;
-      --text: #e0e0e0;
-      --subtext: #a0a0a0;
+      --background-color: #05050a;
+      --card-background: #0d0d18;
+      --border-color: rgba(147, 51, 234, 0.2);
+      --primary-text-color: #ffffff;
+      --secondary-text-color: #a0a0b5;
+      --accent-color: #7c3aed;
+      --accent-glow: rgba(147, 51, 234, 0.3);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+      height: 100%;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
     }
 
     body {
-      background-color: var(--bg-color);
-      color: var(--text);
       font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      position: relative;
-      min-height: 100vh;
-      overflow-x: hidden;
+      color: var(--primary-text-color);
+      line-height: 1.5;
+      background-color: var(--background-color);
+      background-image: radial-gradient(circle at top, #0f0c20 0%, #05050a 60%);
+      background-attachment: fixed;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
-    .bg-hyena {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 700px;
-      max-width: 90vw;
-      height: auto;
-      opacity: 0.22;
-      filter: blur(6px) grayscale(20%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .flying-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 10;
-      overflow: hidden;
-    }
-
-    .flying-winged-hyena {
-      position: absolute;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      user-select: none;
-      filter: opacity(0.5);
-      animation: flyUpAndWobble 6s infinite ease-in-out;
-      opacity: 0;
-    }
-
-    .flying-winged-hyena img {
-      width: 45px;
-      height: 45px;
-      object-fit: contain;
-      z-index: 2;
-    }
-
-    .flying-winged-hyena::before,
-    .flying-winged-hyena::after {
-      content: '🪽';
-      font-size: 1.8rem;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 1;
-      opacity: 0.6;
-    }
-
-    .flying-winged-hyena::before {
-      left: -22px;
-      transform: translateY(-50%) scaleX(-1) rotate(-10deg);
-    }
-
-    .flying-winged-hyena::after {
-      right: -22px;
-      transform: translateY(-50%) rotate(-10deg);
-    }
-
-    .hyena-1  { left: 4%;  transform: scale(0.7); animation-duration: 5.2s; animation-delay: 0.0s; }
-    .hyena-2  { left: 9%;  transform: scale(1.1); animation-duration: 6.8s; animation-delay: 1.5s; }
-    .hyena-3  { left: 14%; transform: scale(0.8); animation-duration: 5.5s; animation-delay: 3.2s; }
-    .hyena-4  { left: 19%; transform: scale(1.0); animation-duration: 7.2s; animation-delay: 0.7s; }
-    .hyena-5  { left: 25%; transform: scale(0.9); animation-duration: 4.8s; animation-delay: 2.1s; }
-    .hyena-6  { left: 30%; transform: scale(1.2); animation-duration: 6.1s; animation-delay: 4.0s; }
-    .hyena-7  { left: 36%; transform: scale(0.75); animation-duration: 6.7s; animation-delay: 1.1s; }
-    .hyena-8  { left: 41%; transform: scale(1.05); animation-duration: 5.3s; animation-delay: 2.8s; }
-    .hyena-9  { left: 47%; transform: scale(0.85); animation-duration: 5.8s; animation-delay: 0.3s; }
-    .hyena-10 { left: 52%; transform: scale(1.15); animation-duration: 6.4s; animation-delay: 3.7s; }
-    .hyena-11 { left: 58%; transform: scale(0.7); animation-duration: 4.9s; animation-delay: 1.9s; }
-    .hyena-12 { left: 63%; transform: scale(1.0); animation-duration: 6.2s; animation-delay: 0.5s; }
-    .hyena-13 { left: 69%; transform: scale(0.9); animation-duration: 7.0s; animation-delay: 2.4s; }
-    .hyena-14 { left: 74%; transform: scale(1.1); animation-duration: 5.4s; animation-delay: 4.2s; }
-    .hyena-15 { left: 79%; transform: scale(0.8); animation-duration: 6.6s; animation-delay: 1.3s; }
-    .hyena-16 { left: 84%; transform: scale(1.05); animation-duration: 5.1s; animation-delay: 3.0s; }
-    .hyena-17 { left: 89%; transform: scale(0.85); animation-duration: 5.9s; animation-delay: 0.8s; }
-    .hyena-18 { left: 93%; transform: scale(1.2); animation-duration: 7.1s; animation-delay: 2.6s; }
-    .hyena-19 { left: 96%; transform: scale(0.75); animation-duration: 5.6s; animation-delay: 1.7s; }
-    .hyena-20 { left: 98%; transform: scale(0.95); animation-duration: 4.7s; animation-delay: 3.9s; }
-
-    @keyframes flyUpAndWobble {
-      0% { top: 105vh; transform: translateX(0px) rotate(0deg); opacity: 0; }
-      15% { opacity: 0.45; }
-      30% { transform: translateX(20px) rotate(14deg); }
-      50% { transform: translateX(-18px) rotate(-12deg); }
-      75% { transform: translateX(12px) rotate(8deg); }
-      85% { opacity: 0.45; }
-      100% { top: -100px; transform: translateX(-8px) rotate(-6deg); opacity: 0; }
-    }
-
-    .main-container {
-      max-width: 950px;
-      margin: 0 auto;
-      padding: 20px;
-      position: relative;
-      z-index: 20;
+    main { 
+      max-width: 1000px; 
+      width: 100%;
+      margin: 0 auto; 
+      padding: 0 1.5rem 4rem 1.5rem;
+      flex: 1;
     }
 
     .main-nav {
-      position: relative;
-      z-index: 20;
+      background-color: rgba(13, 13, 24, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(147, 51, 234, 0.15);
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      z-index: 1000;
+      height: 75px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 40px;
     }
 
-    .timer-card {
-      background: rgba(19, 19, 34, 0.95);
-      border: 2px solid #ff9900;
-      border-radius: 16px;
-      padding: 15px 25px;
-      margin: 20px auto;
-      text-align: center;
-      box-shadow: 0 0 20px rgba(255, 153, 0, 0.3);
-      max-width: 400px;
-      display: none;
-      backdrop-filter: blur(8px);
-      animation: pulseGlow 1.5s infinite alternate;
-    }
+    .main-nav ul { display: flex; list-style: none; margin: 0; padding: 0; gap: 25px; }
 
-    @keyframes pulseGlow {
-      from { box-shadow: 0 0 15px rgba(255, 153, 0, 0.3); }
-      to { box-shadow: 0 0 30px rgba(255, 153, 0, 0.7); }
+    .main-nav a {
+      color: #b3b3c6;
+      text-decoration: none;
+      font-weight: 600; font-size: 0.95rem; text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: color .3s ease;
     }
+    .main-nav a:hover, .main-nav a.active { color: #a855f7; }
 
-    .timer-title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #ff9900;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 5px;
+    /* FEJLÉC HIÉNA KABALÁVAL */
+    header { 
+      text-align: center; 
+      padding: 130px 1rem 1.5rem 1rem; 
     }
-
-    .timer-display {
-      font-size: 3rem;
-      font-weight: 800;
-      color: #fff;
-      font-family: monospace;
-      text-shadow: 0 0 10px #ff9900;
-    }
-
-    #rollersArea {
-      display: flex;
-      flex-direction: column;
-      gap: 25px;
-      margin-top: 20px;
-    }
-
-    .roller-wrapper {
-      background: var(--card-bg);
-      border: 2px solid rgba(168, 85, 247, 0.4);
-      border-radius: 16px;
-      padding: 15px;
-      box-shadow: 0 0 25px rgba(124, 58, 237, 0.15);
-      position: relative;
-      backdrop-filter: blur(5px);
-    }
-
-    .roller-label {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .roller-container {
-      width: 100%;
-      height: 100px;
-      overflow: hidden;
-      position: relative;
-      background: #090910;
-      border-radius: 10px;
-      border: 1px solid #2a2a40;
-    }
-
-    .selector-line {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      width: 4px;
-      background: #ff0055;
-      box-shadow: 0 0 15px #ff0055, 0 0 5px #fff;
-      z-index: 10;
-      transform: translateX(-50%);
-    }
-
-    .selector-arrow {
-      position: absolute;
-      top: -8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0; 
-      height: 0; 
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
-      border-top: 10px solid #ff0055;
-      z-index: 11;
-    }
-
-    .roller-track {
-      display: flex;
+    
+    .header-logo-badge {
+      display: inline-flex;
       align-items: center;
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      will-change: transform;
-    }
-
-    .name-card {
-      min-width: 130px;
+      justify-content: center;
+      width: 80px;
       height: 80px;
-      margin: 0 5px;
-      background: linear-gradient(145deg, #1a1a2e, #161626);
-      border: 1px solid #333355;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-weight: 700;
-      font-size: 1rem;
-      color: #fff;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-      user-select: none;
-    }
-
-    .name-card .chance-tag {
-      font-size: 0.7rem;
-      color: var(--accent);
-      font-weight: 600;
-      margin-top: 3px;
-    }
-
-    .single-winner-result {
-      margin-top: 10px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #00ffcc;
-      text-shadow: 0 0 8px #00ffcc;
-      min-height: 28px;
-      text-align: center;
-    }
-
-    .winners-section {
-      background: var(--card-bg);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      border-radius: 16px;
-      margin-top: 30px;
-      backdrop-filter: blur(5px);
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .winners-header {
-      padding: 18px 25px;
-      text-align: center;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+      margin-bottom: 15px;
       position: relative;
     }
 
-    .winners-header:hover {
-      background: rgba(168, 85, 247, 0.08);
+    .header-logo-badge img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.6));
     }
 
-    .winners-header h2 {
-      margin: 0 0 8px 0;
-      font-size: 1.35rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .gw-counter-badge {
-      display: inline-block;
-      background: rgba(0, 255, 204, 0.1);
-      border: 1px solid #00ffcc;
-      color: #00ffcc;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .toggle-icon {
+    .header-crown {
       position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
+      top: -2px;
+      right: 12px;
+      color: #facc15;
       font-size: 1.2rem;
-      color: var(--accent);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+      animation: crownBounce 2s infinite ease-in-out;
+    }
+
+    @keyframes crownBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(5deg); }
+    }
+
+    header h1 { 
+      font-size: 3rem; 
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+      text-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+    }
+    header p {
+      color: var(--secondary-text-color);
+      margin-top: 10px;
+      font-size: 1.05rem;
+    }
+
+    /* DOBOGÓS (PODIUM) KIEMELT KÁRTYÁK A TOP 3-NAK */
+    .podium-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 2.5rem;
+    }
+
+    .podium-card {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 25px 15px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       transition: transform 0.3s ease;
     }
 
-    .winners-content {
-      padding: 0 20px 20px 20px;
-      text-align: center;
-      display: none;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      margin-top: 5px;
-      padding-top: 15px;
+    .podium-card:hover {
+      transform: translateY(-5px);
     }
 
-    .winners-list {
+    .podium-card.first-place {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(13, 13, 24, 0.9));
+      border: 2px solid #f59e0b;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 25px rgba(245, 158, 11, 0.25);
+      transform: scale(1.05);
+      z-index: 2;
+    }
+
+    .podium-rank {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+      align-items: center;
       justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
     }
 
-    .winner-badge {
-      background: rgba(168, 85, 247, 0.15);
-      border: 1px solid var(--accent);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+    .podium-card.first-place .podium-rank { background: #f59e0b; color: #000; }
+    .podium-card.second-place .podium-rank { background: #94a3b8; color: #000; }
+    .podium-card.third-place .podium-rank { background: #b45309; color: #fff; }
+
+    .podium-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-color);
+      background: #1a1a2e;
+      margin-bottom: 12px;
     }
 
-    .archive-card {
-      background: rgba(10, 10, 20, 0.6);
-      border: 1px solid rgba(0, 255, 204, 0.3);
-      border-radius: 10px;
-      padding: 14px;
-      margin-top: 15px;
-      text-align: left;
-      box-shadow: 0 0 10px rgba(0,255,204,0.05);
-    }
+    .podium-card.first-place .podium-avatar { border-color: #f59e0b; }
 
-    .archive-card-title {
-      font-size: 0.95rem;
-      color: #00ffcc;
-      font-weight: bold;
-      margin-bottom: 10px;
-      border-bottom: 1px dashed rgba(255,255,255,0.1);
-      padding-bottom: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .action-btn {
-      display: inline-block;
-      background: linear-gradient(90deg, #7c3aed, #6d28d9);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      font-size: 1rem;
+    .podium-name {
       font-weight: 700;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
-    }
-
-    .action-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 25px rgba(124, 58, 237, 0.7);
-    }
-
-    .action-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .admin-section {
-      background: var(--card-bg);
-      border: 2px solid #ff0055;
-      border-radius: 12px;
-      padding: 20px;
-      margin-top: 40px;
-      display: none;
-      backdrop-filter: blur(5px);
-    }
-
-    .admin-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #333;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-
-    .admin-input-group {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .admin-input-group input, .admin-input-group select {
-      background: #090910;
-      border: 1px solid #333355;
+      font-size: 1.05rem;
       color: #fff;
-      padding: 10px 15px;
-      border-radius: 6px;
-      font-family: inherit;
+      margin-bottom: 5px;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .player-table {
+    .podium-prize {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #facc15;
+      margin-bottom: 8px;
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
+    }
+
+    .podium-wager {
+      font-size: 0.85rem;
+      color: #22c55e;
+      font-weight: 600;
+    }
+
+    /* HAGYOMÁNYOS TÁBLÁZAT A 4. HELYTŐL */
+    .leaderboard-container {
+      background: var(--card-background);
+      border: 2px solid var(--border-color);
+      border-radius: 28px;
+      padding: 25px 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    .leaderboard-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    .player-table th, .player-table td {
-      border: 1px solid #2a2a40;
-      padding: 10px;
       text-align: left;
     }
 
-    .player-table th {
-      background: #090910;
+    .leaderboard-table th {
+      color: var(--secondary-text-color);
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(147, 51, 234, 0.15);
     }
 
-    .delete-btn {
-      background: #ff0055;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
+    .leaderboard-table td {
+      padding: 16px 20px;
+      color: #e0e0e6;
+      font-size: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     }
 
-    .secondary-btn {
-      background: #262638;
+    .leaderboard-table tbody tr:hover {
+      background-color: rgba(147, 51, 234, 0.05);
+    }
+
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .player-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent-color);
+      background-color: #1a1a2e;
+    }
+
+    .player-name {
+      font-weight: 600;
       color: #fff;
-      border: 1px solid #444466;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
     }
 
-    .gw-title-header {
-      color: #00ffcc;
-      font-size: 1.5rem;
-      margin-top: 5px;
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
       font-weight: 700;
+      font-size: 0.85rem;
+      background: #1a1a2e;
+      color: var(--secondary-text-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .wagered-amount {
+      font-weight: 700;
+      color: #22c55e;
+    }
+
+    .lb-status {
+      text-align: center;
+      padding: 40px;
+      color: var(--secondary-text-color);
+      font-size: 1.1rem;
+    }
+
+    .lb-status i {
+      font-size: 2rem;
+      color: var(--accent-color);
+      margin-bottom: 15px;
+    }
+
+    #twitch-status {
+      display: flex; align-items: center; background-color: #1e1e2f;
+      padding: .5rem 1rem; border-radius: 20px; text-decoration: none;
+      color: #fff; font-weight: bold; font-size: 0.9rem;
+      border: 1px solid rgba(147, 51, 234, 0.2); transition: all .3s ease;
+    }
+    #twitch-status:hover { background-color: #6441a5; box-shadow: 0 0 15px rgba(100, 65, 165, 0.5); }
+    #twitch-status .live-dot {
+      width: 10px; height: 10px; background-color: #e91916; border-radius: 50%;
+      margin-right: .5rem; animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(233,25,22,0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(233,25,22,0); }
+      100% { box-shadow: 0 0 0 0 rgba(233,25,22,0); }
+    }
+
+    footer { 
+      background-color: #0d0d18; 
+      padding: 40px 20px; 
+      text-align: center; 
+      border-top: 1px solid rgba(147, 51, 234, 0.15); 
+      color: #6b6b7c; 
+      font-size: .85rem; 
+      width: 100%;
+      flex-shrink: 0;
+    }
+    footer p { max-width: 800px; margin: 0 auto 10px auto; line-height: 1.6; }
+    .hidden { display: none !important; }
+
+    @media (max-width: 768px) {
+      .podium-container { grid-template-columns: 1fr; }
+      .podium-card.first-place { transform: none; }
+      header { padding-top: 120px; }
+      header h1 { font-size: 2.2rem; }
+      .main-nav { flex-direction: column; height: auto; padding: 15px; gap: 15px; position: static; }
+      .main-nav ul { flex-wrap: wrap; justify-content: center; gap: 15px; }
+      .main-nav a { font-size: .85rem; }
+      #twitch-status { position: static; margin: 0 auto; }
     }
   </style>
 </head>
 
 <body>
-
-  <img src="images/hiena.png" alt="Hyena Background" class="bg-hyena">
-
-  <div class="flying-container">
-    <div class="flying-winged-hyena hyena-1"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-2"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-3"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-4"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-5"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-6"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-7"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-8"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-9"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-10"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-11"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-12"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-13"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-14"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-15"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-16"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-17"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-18"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-19"><img src="images/hiena.png" alt="flying hyena"></div>
-    <div class="flying-winged-hyena hyena-20"><img src="images/hiena.png" alt="flying hyena"></div>
-  </div>
-
   <nav class="main-nav">
     <ul>
       <li><a href="index.html">Mainpage</a></li>
+      <li><a href="giveaway.html">Giveaways</a></li>
       <li><a href="leaderboard.html" class="active">Winovo leaderboard</a></li>
-      <li><a href="giveaway.html" class="active">Giveaways</a></li>
     </ul>
+    <a id="twitch-status" href="https://www.twitch.tv/al1vehunter" target="_blank" class="hidden">
+      <div class="live-dot"></div>
+      <i class="fab fa-twitch"></i>
+      <span>LIVE</span>
+    </a>
   </nav>
 
-  <div class="main-container">
-    <div style="text-align: center; margin-top: 10px;">
-      <h1><i class="fa-solid fa-gift"></i> Live Giveaway</h1>
-      <div id="publicGwTitle" class="gw-title-header">25$ FTD EgoGames</div>
+  <header>
+    <div class="header-logo-badge">
+      <i class="fa-solid fa-crown header-crown"></i>
+      <img src="images/hiena.png" alt="King Hyena">
     </div>
+    <h1>500$ Winovo Leaderboard</h1>
+    <p>Referred players ranked by wager amount</p>
+  </header>
 
-    <!-- ÉLŐ STOPPER A VENDÉGEKNEK -->
-    <div id="publicTimerCard" class="timer-card">
-      <div id="timerTitleText" class="timer-title"><i class="fa-solid fa-stopwatch"></i> Hátralévő Idő</div>
-      <div id="timerDisplay" class="timer-display">00:30</div>
-    </div>
-
-    <!-- PÖRGETŐ TERÜLET -->
-    <div id="rollersArea"></div>
-
-    <!-- NYERTESEK SECTION -->
-    <div class="winners-section">
-      <div class="winners-header" onclick="toggleWinnersAccordion()">
-        <h2><i class="fa-solid fa-trophy" style="color: #ffd700;"></i> Eddigi Nyertesek</h2>
-        <div id="gwCounterBadge" class="gw-counter-badge">
-          Összesen: 0 lezárt giveaway sorsolás
+  <main>
+    <div id="leaderboardContent">
+      <div class="leaderboard-container">
+        <div class="lb-status">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <p>Loading leaderboard data...</p>
         </div>
-        <i id="accordionArrow" class="fa-solid fa-chevron-down toggle-icon"></i>
-      </div>
-      <div id="winnersContent" class="winners-content">
-        <div id="archivedWinnersContainer"></div>
       </div>
     </div>
+  </main>
 
-    <!-- ADMIN PANEL -->
-    <div id="adminPanelSection" class="admin-section">
-      <div class="admin-header">
-        <h2 style="color: #ff0055;"><i class="fa-solid fa-user-shield"></i> ADMIN CONTROL PANEL</h2>
-        <span style="background: #00ffcc; color: #000; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem;">
-          <i class="fa-solid fa-desktop"></i> Admin Eszköz
-        </span>
-      </div>
+  <footer>
+    <p>Excessive gambling can lead to addiction. Please <a href="https://www.gambleaware.org/" target="_blank" style="color: #a855f7; text-decoration: underline; font-weight: 600;">gamble responsibly</a> and only play with money you can afford to lose.</p>
+    <p>&copy; <span id="current-year">2026</span> al1ve. All rights reserved.</p>
+  </footer>
 
-      <!-- STOPPER VEZÉRLÉS -->
-      <div style="background: rgba(255, 153, 0, 0.1); border: 1px solid #ff9900; padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
-        <h3 style="margin: 0 0 10px 0; color: #ff9900;"><i class="fa-solid fa-stopwatch"></i> Stopper Vezérlő</h3>
-        
-        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-          <button class="action-btn" style="background: linear-gradient(90deg, #ff9900, #ff5500);" onclick="adminTriggerTimer(30)">
-            <i class="fa-solid fa-play"></i> Indítás (30s)
-          </button>
+<script>
+    async function fetchLeaderboard() {
+      const container = document.getElementById('leaderboardContent');
+      const prizes = ['$225', '$125', '$75', '$50', '$25'];
+      
+      try {
+        const response = await fetch('https://winovo-proxy.kupak2005.workers.dev/');
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.status === 'ok') {
+          const players = Array.isArray(result.data) ? result.data : Object.values(result.data || {});
           
-          <button class="action-btn" style="background: linear-gradient(90deg, #eab308, #ca8a04);" onclick="adminTriggerTimer('pause')">
-            <i class="fa-solid fa-pause"></i> Megállítás
-          </button>
-          
-          <button class="action-btn" style="background: linear-gradient(90deg, #ef4444, #dc2626);" onclick="adminTriggerTimer('reset')">
-            <i class="fa-solid fa-rotate-left"></i> Nullázás / Elrejtés
-          </button>
-        </div>
-      </div>
+          let html = '';
 
-      <!-- SORSOLÁSI VEZÉRLŐ -->
-      <div style="background: rgba(28, 26, 54, 0.9); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 25px; border: 1px solid var(--accent);">
-        <h3 style="margin-top: 0;">Sorsolás Indítása Élőben</h3>
-        
-        <div style="margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px;">
-          <label><strong>Nyertesek száma (pörgető sávok):</strong></label>
-          <select id="winnerCountSelect" style="padding: 8px 12px; background: #090910; color: #fff; border: 1px solid #333355; border-radius: 6px;">
-            <option value="1">1 Nyertes (1 Sáv)</option>
-            <option value="2">2 Nyertes (2 Sáv Szimultán)</option>
-            <option value="3">3 Nyertes (3 Sáv Szimultán)</option>
-            <option value="4">4 Nyertes (4 Sáv Szimultán)</option>
-            <option value="5">5 Nyertes (5 Sáv Szimultán)</option>
-          </select>
-        </div>
+          // 1. TOP 3 DOBOGÓS KÁRTYÁK GENERÁLÁSA
+          html += `<div class="podium-container">`;
+          for (let i = 0; i < 3; i++) {
+            const player = players[i];
+            const rank = i + 1;
+            const placeClass = rank === 1 ? 'first-place' : (rank === 2 ? 'second-place' : 'third-place');
+            const avatar = player && player.pic ? player.pic : 'images/hiena.png';
+            const name = player && player.name ? player.name : '---';
+            const wageredVal = player && player.wagered ? Number(player.wagered) : 0;
+            const formattedWager = wageredVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-        <button id="adminSpinBtn" class="action-btn" onclick="startLiveSpin()"><i class="fa-solid fa-play"></i> ÉLŐ SZIMULTÁN PÖRGETÉS!</button>
-      </div>
-
-      <!-- GIVEAWAY NEVE -->
-      <div style="background: #090910; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2a2a40;">
-        <label style="display: block; font-weight: 600; margin-bottom: 8px;"><i class="fa-solid fa-tag"></i> Giveaway Neve / Nyeremény:</label>
-        <div class="admin-input-group" style="margin-bottom: 0;">
-          <input type="text" id="gwTitleInput" value="25$ FTD EgoGames" placeholder="pl: 25$ FTD EgoGames" style="flex: 1;">
-          <button class="secondary-btn" onclick="updateGwTitle()">Mentés</button>
-        </div>
-      </div>
-
-      <h3>Játékosok hozzáadása</h3>
-      <div class="admin-input-group">
-        <input type="text" id="playerNameInput" placeholder="Játékos neve..." style="flex: 1;" onkeypress="if(event.key === 'Enter') addPlayer()">
-        <button class="action-btn" style="padding: 10px 20px;" onclick="addPlayer()">Hozzáadás</button>
-      </div>
-
-      <div style="margin-bottom: 15px; display: flex; gap: 10px;">
-        <button class="secondary-btn" onclick="shufflePlayers()"><i class="fa-solid fa-shuffle"></i> Nevek Megkavarása</button>
-        <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearAllPlayers()">Összes törlése</button>
-      </div>
-
-      <table class="player-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Név</th>
-            <th>Nyerési Esély (%)</th>
-            <th>Művelet</th>
-          </tr>
-        </thead>
-        <tbody id="playerTableBody"></tbody>
-      </table>
-
-      <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
-
-      <h3><i class="fa-solid fa-trash-can"></i> Nyertes Előzmények Kezelése</h3>
-      <div>
-        <button class="secondary-btn" style="border-color: #ff0055; color: #ff0055;" onclick="clearWinnersHistory()">Minden előzmény törlése teljesen</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const firebaseConfig = {
-      databaseURL: "https://giveawy-6e8f6-default-rtdb.europe-west1.firebasedatabase.app/",
-      projectId: "giveawy-6e8f6"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    const ADMIN_PASSWORD = "al1ve2026"; 
-    const DEVICE_SECRET_KEY = "al1ve_authorized_admin_device_2026";
-
-    let currentGwTitle = "25$ FTD EgoGames";
-    let players = [];
-    let archivedRounds = [];
-    let totalGwCount = 0;
-
-    let activeTimer = null;
-    let currentSecondsLeft = 30;
-    let serverTimeOffset = 0;
-
-    const rollersArea = document.getElementById('rollersArea');
-
-    window.addEventListener('DOMContentLoaded', () => {
-      db.ref('.info/serverTimeOffset').on('value', (snap) => {
-        serverTimeOffset = snap.val() || 0;
-      });
-
-      if (localStorage.getItem('al1ve_admin_device') === DEVICE_SECRET_KEY) {
-        showAdminPanel();
-      }
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('admin')) verifyAdminAccess();
-
-      renderRollerLanes(1);
-      listenToFirebase();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') verifyAdminAccess();
-    });
-
-    function verifyAdminAccess() {
-      const pass = prompt("Admin Hitelesítés:");
-      if (pass === ADMIN_PASSWORD) {
-        localStorage.setItem('al1ve_admin_device', DEVICE_SECRET_KEY);
-        showAdminPanel();
-        alert("Sikeres belépés!");
-      }
-    }
-
-    function showAdminPanel() {
-      document.getElementById('adminPanelSection').style.display = 'block';
-      renderAdminTableUI();
-    }
-
-    // --- FIREBASE LISTENERS ---
-    function listenToFirebase() {
-      // JÁTÉKOSOK ÉLŐ SZINKRONIZÁLÁSA
-      db.ref('players').on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data && Array.isArray(data)) {
-          players = data;
-        } else {
-          players = [];
-        }
-        renderAdminTableUI();
-        renderRollerLanes(1);
-      });
-
-      db.ref('live_spin').on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data && data.timestamp > Date.now() - 10000) {
-          executeSimultaneousSpin(data.winners, data.gwTitle, false);
-        }
-      });
-
-      db.ref('gw_title').on('value', (snapshot) => {
-        if (snapshot.val()) {
-          currentGwTitle = snapshot.val();
-          document.getElementById('publicGwTitle').innerText = currentGwTitle;
-        }
-      });
-
-      db.ref('winners_history').on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          archivedRounds = data.archivedRounds || [];
-          totalGwCount = data.totalCount || archivedRounds.length;
-        } else {
-          archivedRounds = [];
-          totalGwCount = 0;
-        }
-        renderWinners();
-      });
-
-      db.ref('timer_sync').on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          applyTimerCommand(data);
-        }
-      });
-    }
-
-    // --- JÁTÉKOSOK MENTÉSE FIREBASE-BE ---
-    function savePlayersToFirebase() {
-      db.ref('players').set(players);
-    }
-
-    function addPlayer() {
-      const nameInput = document.getElementById('playerNameInput');
-      const name = nameInput.value.trim();
-
-      if (!name) return;
-
-      players.push(name);
-      nameInput.value = '';
-      nameInput.focus();
-      savePlayersToFirebase();
-    }
-
-    function deletePlayer(index) {
-      players.splice(index, 1);
-      savePlayersToFirebase();
-    }
-
-    function clearAllPlayers() {
-      if (confirm("Biztosan törölni szeretnéd az összes játékost?")) {
-        players = [];
-        savePlayersToFirebase();
-      }
-    }
-
-    function shufflePlayers() {
-      for (let i = players.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [players[i], players[j]] = [players[j], players[i]];
-      }
-      savePlayersToFirebase();
-    }
-
-    function renderAdminTableUI() {
-      const tbody = document.getElementById('playerTableBody');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-      const chance = getPlayerChance();
-
-      players.forEach((p, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${index + 1}.</td>
-          <td><strong>${p}</strong></td>
-          <td><span style="color: var(--accent); font-weight: bold;">${chance}%</span></td>
-          <td><button class="delete-btn" onclick="deletePlayer(${index})"><i class="fa-solid fa-trash"></i></button></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    // --- STOPPER VEZÉRLÉS ---
-    function adminTriggerTimer(actionOrSeconds) {
-      let action = 'start';
-      let secs = 30;
-
-      if (typeof actionOrSeconds === 'number') {
-        action = 'start';
-        secs = actionOrSeconds;
-      } else {
-        action = actionOrSeconds;
-      }
-
-      db.ref('timer_sync').set({
-        action: action,
-        seconds: secs,
-        time: firebase.database.ServerValue.TIMESTAMP
-      });
-    }
-
-    function applyTimerCommand(data) {
-      const timerCard = document.getElementById('publicTimerCard');
-      const timerDisplay = document.getElementById('timerDisplay');
-      const timerTitleText = document.getElementById('timerTitleText');
-
-      if (activeTimer) {
-        clearInterval(activeTimer);
-        activeTimer = null;
-      }
-
-      if (data.action === 'reset') {
-        timerCard.style.display = 'none';
-        return;
-      }
-
-      timerCard.style.display = 'block';
-
-      if (data.action === 'pause') {
-        timerDisplay.style.color = "#eab308";
-        timerDisplay.style.textShadow = "0 0 10px #eab308";
-        timerTitleText.innerHTML = '<i class="fa-solid fa-pause"></i> STOPPER MEGÁLLÍTVA';
-        return;
-      }
-
-      if (data.action === 'start') {
-        const nowServerTime = Date.now() + serverTimeOffset;
-        const elapsedSeconds = Math.floor((nowServerTime - (data.time || nowServerTime)) / 1000);
-        currentSecondsLeft = data.seconds - elapsedSeconds;
-
-        if (currentSecondsLeft <= 0) {
-          timerDisplay.innerText = "00:00";
-          timerDisplay.style.color = "#ff0055";
-          timerDisplay.style.textShadow = "0 0 10px #ff0055";
-          timerTitleText.innerText = "LEJÁRT AZ IDŐ!";
-          return;
-        }
-
-        timerDisplay.style.color = "#fff";
-        timerDisplay.style.textShadow = "0 0 10px #ff9900";
-        timerTitleText.innerHTML = '<i class="fa-solid fa-stopwatch"></i> HÁTRALÉVŐ IDŐ';
-        
-        updateDisplay(currentSecondsLeft);
-
-        activeTimer = setInterval(() => {
-          currentSecondsLeft--;
-          if (currentSecondsLeft <= 0) {
-            clearInterval(activeTimer);
-            activeTimer = null;
-            timerDisplay.innerText = "00:00";
-            timerDisplay.style.color = "#ff0055";
-            timerDisplay.style.textShadow = "0 0 10px #ff0055";
-            timerTitleText.innerText = "LEJÁRT AZ IDŐ!";
-          } else {
-            updateDisplay(currentSecondsLeft);
+            html += `
+              <div class="podium-card ${placeClass}">
+                <div class="podium-rank">${rank}</div>
+                <img src="${avatar}" alt="${name}" class="podium-avatar" onerror="this.src='images/hiena.png'">
+                <div class="podium-name">${name}</div>
+                <div class="podium-prize">${prizes[i] || '-'}</div>
+                <div class="podium-wager">$${formattedWager}</div>
+              </div>
+            `;
           }
-        }, 1000);
-      }
-    }
+          html += `</div>`;
 
-    function updateDisplay(sec) {
-      const formatted = sec < 10 ? `0${sec}` : sec;
-      document.getElementById('timerDisplay').innerText = `00:${formatted}`;
-    }
+          // 2. TÁBLÁZAT A 4. HELYTŐL
+          html += `
+            <div class="leaderboard-container">
+              <table class="leaderboard-table">
+                <thead>
+                  <tr>
+                    <th style="width: 80px;">Rank</th>
+                    <th>Player</th>
+                    <th style="text-align: center;">Prize</th>
+                    <th style="text-align: right;">Wagered</th>
+                  </tr>
+                </thead>
+                <tbody>
+          `;
 
-    function renderRollerLanes(count) {
-      rollersArea.innerHTML = '';
+          for (let i = 3; i < 10; i++) {
+            const rank = i + 1;
+            const player = players[i];
+            const prizeTag = prizes[i] 
+              ? `<span style="color: #a855f7; font-weight: 700;">${prizes[i]}</span>` 
+              : '<span style="color: #6b6b7c;">-</span>';
 
-      for (let i = 0; i < count; i++) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'roller-wrapper';
-        wrapper.innerHTML = `
-          <div class="roller-label">
-            <span><i class="fa-solid fa-circle-play"></i> ${i + 1}. NYERTES</span>
-          </div>
-          <div class="selector-arrow"></div>
-          <div class="roller-container">
-            <div class="selector-line"></div>
-            <div id="rollerTrack_${i}" class="roller-track"></div>
-          </div>
-          <div id="winnerResult_${i}" class="single-winner-result"></div>
-        `;
-        rollersArea.appendChild(wrapper);
+            if (player) {
+              const avatar = player.pic || 'images/hiena.png';
+              const wageredVal = Number(player.wagered || 0);
+              const formattedWager = wageredVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-        fillTrackWithCards(`rollerTrack_${i}`, players[0] || "---");
-      }
-    }
-
-    function fillTrackWithCards(trackId, winnerName) {
-      const track = document.getElementById(trackId);
-      if (!track) return;
-
-      track.innerHTML = '';
-      const CARD_COUNT = 80;
-      const WINNER_INDEX = 65;
-      const chance = getPlayerChance();
-
-      for (let i = 0; i < CARD_COUNT; i++) {
-        let name = (i === WINNER_INDEX) ? winnerName : players[Math.floor(Math.random() * (players.length || 1))];
-        const card = document.createElement('div');
-        card.className = 'name-card';
-        card.innerHTML = `<div>${name || '---'}</div><div class="chance-tag">${chance}%</div>`;
-        track.appendChild(card);
-      }
-    }
-
-    function startLiveSpin() {
-      const countSelect = document.getElementById('winnerCountSelect');
-      const requestedCount = parseInt(countSelect.value);
-
-      if (players.length < requestedCount) {
-        alert(`Nincs elég játékos! Legalább ${requestedCount} játékos kell ennyi nyerteshez.`);
-        return;
-      }
-
-      let tempPool = [...players];
-      let selectedWinners = [];
-
-      for (let i = 0; i < requestedCount; i++) {
-        const randomIndex = Math.floor(Math.random() * tempPool.length);
-        const winner = tempPool[randomIndex];
-        selectedWinners.push(winner);
-        tempPool.splice(randomIndex, 1);
-      }
-
-      executeSimultaneousSpin(selectedWinners, currentGwTitle, true);
-
-      db.ref('live_spin').set({
-        winners: selectedWinners,
-        gwTitle: currentGwTitle,
-        timestamp: Date.now()
-      });
-    }
-
-    function executeSimultaneousSpin(winnerList, title, isInitiator) {
-      const adminBtn = document.getElementById('adminSpinBtn');
-      if (adminBtn) adminBtn.disabled = true;
-
-      renderRollerLanes(winnerList.length);
-
-      winnerList.forEach((winnerName, index) => {
-        fillTrackWithCards(`rollerTrack_${index}`, winnerName);
-      });
-
-      setTimeout(() => {
-        winnerList.forEach((winnerName, index) => {
-          const track = document.getElementById(`rollerTrack_${index}`);
-          const container = track.parentElement;
-          const WINNER_INDEX = 65;
-          const winnerCard = track.children[WINNER_INDEX];
-
-          if (!winnerCard) return;
-
-          // A ténylegesen kiválasztott nyertes kártya DOM pozícióját használjuk.
-          // Így nem csúszik el a piros kijelölő vonal a fix pixelszámítás miatt.
-          const containerCenter = container.clientWidth / 2;
-          const winnerCardCenter = winnerCard.offsetLeft + (winnerCard.offsetWidth / 2);
-
-          // Kis természetes eltérés, de mindig a nyertes kártyán belül marad.
-          const safeOffset = Math.floor(Math.random() * 31) - 15;
-          const targetX = winnerCardCenter - containerCenter + safeOffset;
-
-          track.style.transition = 'none';
-          track.style.transform = 'translateX(0px)';
-
-          setTimeout(() => {
-            track.style.transition = 'transform 6s cubic-bezier(0.15, 0.9, 0.15, 1)';
-            track.style.transform = `translateX(-${targetX}px)`;
-          }, 50);
-        });
-      }, 100);
-
-      setTimeout(() => {
-        winnerList.forEach((winnerName, index) => {
-          const resBox = document.getElementById(`winnerResult_${index}`);
-          if (resBox) {
-            resBox.innerHTML = `🎉 ${index + 1}. NYERTES: <span style="color:#fff;">${winnerName}</span> 🎉`;
-          }
-        });
-
-        if (adminBtn) adminBtn.disabled = false;
-
-        if (isInitiator) {
-          setTimeout(() => {
-            const confirmSave = confirm(`🎉 A PÖRGETÉS VÉGET ÉRT!\n\nKihúzott nyertes(ek):\n${winnerList.join(', ')}\n\nSzeretnéd elmenteni a nyerteseket az 'Eddigi Nyertesek' archívumba a vendégek számára?`);
-            if (confirmSave) {
-              saveWinnersToArchive(winnerList);
+              html += `
+                <tr>
+                  <td><div class="rank-badge">${rank}</div></td>
+                  <td>
+                    <div class="player-info">
+                      <img src="${avatar}" alt="${player.name || 'Player'}" class="player-avatar" onerror="this.src='images/hiena.png'">
+                      <span class="player-name">${player.name || 'Unknown'}</span>
+                    </div>
+                  </td>
+                  <td style="text-align: center;">${prizeTag}</td>
+                  <td style="text-align: right;" class="wagered-amount">$${formattedWager}</td>
+                </tr>
+              `;
+            } else {
+              html += `
+                <tr>
+                  <td><div class="rank-badge">${rank}</div></td>
+                  <td>
+                    <div class="player-info" style="opacity: 0.4;">
+                      <div class="player-avatar" style="background: transparent; border-color: rgba(255,255,255,0.1);"></div>
+                      <span class="player-name" style="color: #6b6b7c;">-</span>
+                    </div>
+                  </td>
+                  <td style="text-align: center;">${prizeTag}</td>
+                  <td style="text-align: right; color: #6b6b7c;" class="wagered-amount">-</td>
+                </tr>
+              `;
             }
-          }, 400);
+          }
+
+          html += `
+                </tbody>
+              </table>
+            </div>
+          `;
+
+          container.innerHTML = html;
+
+        } else {
+          throw new Error('Invalid API response structure');
         }
 
-      }, 6200);
-    }
-
-    function saveWinnersToArchive(winnerList) {
-      const now = new Date();
-      const dateStr = now.toLocaleDateString('hu-HU') + ' ' + now.toLocaleTimeString('hu-HU', {hour: '2-digit', minute:'2-digit'});
-
-      archivedRounds.unshift({
-        title: currentGwTitle,
-        date: dateStr,
-        winners: [...winnerList]
-      });
-
-      totalGwCount = archivedRounds.length;
-
-      db.ref('winners_history').set({
-        archivedRounds: archivedRounds,
-        totalCount: totalGwCount
-      });
-
-      alert("Nyertesek elmentve az eddigi nyertesek közé!");
-    }
-
-    function getPlayerChance() {
-      return players.length === 0 ? 0 : (100 / players.length).toFixed(1);
-    }
-
-    function toggleWinnersAccordion() {
-      const content = document.getElementById('winnersContent');
-      const arrow = document.getElementById('accordionArrow');
-
-      if (content.style.display === 'block') {
-        content.style.display = 'none';
-        arrow.style.transform = 'translateY(-50%) rotate(0deg)';
-      } else {
-        content.style.display = 'block';
-        arrow.style.transform = 'translateY(-50%) rotate(180deg)';
+      } catch (error) {
+        console.error('Leaderboard fetch error:', error);
+        container.innerHTML = `<div class="leaderboard-container"><div class="lb-status"><p>Could not load leaderboard data.</p></div></div>`;
       }
     }
 
-    function renderWinners() {
-      const archiveContainer = document.getElementById('archivedWinnersContainer');
-      const counterBadge = document.getElementById('gwCounterBadge');
-
-      if (counterBadge) {
-        counterBadge.innerText = `Összesen: ${totalGwCount} lezárt giveaway sorsolás`;
-      }
-
-      if (archivedRounds.length > 0) {
-        archiveContainer.innerHTML = archivedRounds.map((round) => `
-          <div class="archive-card">
-            <div class="archive-card-title">
-              <span><i class="fa-solid fa-gift"></i> ${round.title || 'Giveaway'}</span>
-              <span style="font-size: 0.8rem; color: #a0a0a0; font-weight: normal;"><i class="fa-regular fa-clock"></i> ${round.date}</span>
-            </div>
-            <div class="winners-list">
-              ${round.winners.map(w => `
-                <div class="winner-badge">
-                  <i class="fa-solid fa-trophy" style="color:#ffd700;"></i> ${w}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `).join('');
-      } else {
-        archiveContainer.innerHTML = '<div style="color: var(--subtext); padding: 10px 0;">Még nincs mentett nyertes az eddigi nyertesek között.</div>';
-      }
-    }
-
-    function clearWinnersHistory() {
-      if (confirm("Figyelem! Ez az ÖSSZES nyertes előzményt ÉS az archívumot is törli! Folytatod?")) {
-        archivedRounds = [];
-        totalGwCount = 0;
-        db.ref('winners_history').set({
-          archivedRounds: [],
-          totalCount: 0
-        });
-      }
-    }
-
-    function updateGwTitle() {
-      const input = document.getElementById('gwTitleInput');
-      if (input.value.trim() !== "") {
-        currentGwTitle = input.value.trim();
-        db.ref('gw_title').set(currentGwTitle);
-        alert("Giveaway neve frissítve!");
-      }
-    }
-  </script>
+    document.addEventListener('DOMContentLoaded', fetchLeaderboard);
+</script>
 </body>
 </html>
