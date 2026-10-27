@@ -76,7 +76,6 @@
     }
     .main-nav a:hover, .main-nav a.active { color: #a855f7; }
 
-    /* FEJLÉC HIÉNA KABALÁVAL */
     header { 
       text-align: center; 
       padding: 130px 1rem 1.5rem 1rem; 
@@ -129,7 +128,35 @@
       font-size: 1.05rem;
     }
 
-    /* DOBOGÓS (PODIUM) KIEMELT KÁRTYÁK A TOP 3-NAK */
+    /* SZABÁLYZAT / NOTE DOBOZ */
+    .winovo-rules-box {
+      background: rgba(13, 13, 24, 0.9);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      border-radius: 16px;
+      padding: 18px 22px;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--secondary-text-color);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+
+    .winovo-rules-box h4 {
+      color: #facc15;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .winovo-rules-box ul {
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    /* DOBOGÓS KÁRTYÁK */
     .podium-container {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -218,7 +245,6 @@
       font-weight: 600;
     }
 
-    /* HAGYOMÁNYOS TÁBLÁZAT A 4. HELYTŐL */
     .leaderboard-container {
       background: var(--card-background);
       border: 2px solid var(--border-color);
@@ -372,6 +398,15 @@
   </header>
 
   <main>
+    <!-- WINNOVO HIVATALOS SZABÁLYZAT DOBOZ -->
+    <div class="winovo-rules-box">
+      <h4><i class="fa-solid fa-triangle-exclamation"></i> Important Leaderboard Rules</h4>
+      <ul>
+        <li><strong>Deposit Rule:</strong> Users must deposit more than the placement prize. If your total deposit is less than the prize amount, the prize will be voided.</li>
+        <li>Make sure you are playing through the active creator link and streaming live!</li>
+      </ul>
+    </div>
+
     <div id="leaderboardContent">
       <div class="leaderboard-container">
         <div class="lb-status">
