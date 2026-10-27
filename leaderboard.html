@@ -702,7 +702,7 @@
       setInterval(updateTimer, 60000);
     }
 
-    async function fetchLeaderboard() {
+async function fetchLeaderboard() {
       const container = document.getElementById('leaderboardContent');
       
       try {
@@ -715,8 +715,41 @@
         const result = await response.json();
 
         if (result.status === 'ok') {
-          globalPlayersData = Array.isArray(result.data) ? result.data : Object.values(result.data || {});
+          let rawData = Array.isArray(result.data) ? result.data : Object.values(result.data || {});
           
+          // Október 25-i bázis / kezdeti értékek rögzítése localStorage-ba, 
+          // hogy tőle kezdve csak a növekményt (az azóta wagerelt összeget) számolja:
+          let baseValues = JSON.parse(localStorage.getItem('al1ve_wager_base') || '{}');
+          const isInitialized = Object.keys(baseValues).length > 0;
+
+          rawData.forEach(player => {
+            const currentWager = Number(player.wagered || 0);
+            if (!isInitialized) {
+              // Első futáskor elmentjük a jelenlegi értéket alapként (ehhez képest mérünk)
+              baseValues[player.name] = currentWager;
+            }
+          });
+
+          if (!isInitialized) {
+            localStorage.setItem('al1ve_wager_base', JSON.stringify(baseValues));
+          }
+
+          // Kiszámoljuk a különbséget (aktuális - 25-ei bázis)
+          globalPlayersData = rawData.map(player => {
+            const currentWager = Number(player.wagered || 0);
+            const baseWager = baseValues[player.name] !== undefined ? baseValues[player.name] : currentWager;
+            let diff = currentWager - baseWager;
+            if (diff < 0) diff = 0; // Ha esetleg csökkenne, ne legyen negatív
+
+            return {
+              ...player,
+              wagered: diff.toFixed(2)
+            };
+          });
+
+          // Sorrendbe rendezzük a frissített wager alapján (csökkenő sorrend)
+          globalPlayersData.sort((a, b) => Number(b.wagered) - Number(a.wagered));
+
           document.getElementById('stat-players-count').innerText = globalPlayersData.length;
 
           renderLeaderboard(globalPlayersData);
@@ -730,10 +763,6 @@
         container.innerHTML = `<div class="leaderboard-container"><div class="lb-status"><p>Could not load leaderboard data.</p></div></div>`;
       }
     }
-
-    function renderLeaderboard(players) {
-      const container = document.getElementById('leaderboardContent');
-      let html = '';
 
       // 1. KLASSZIKUS DOBOGÓ GENERÁLÁSA
       const podiumOrder = [1, 0, 2]; 
