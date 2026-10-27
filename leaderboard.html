@@ -43,14 +43,78 @@
       min-height: 100%;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* --- OLDALSÓ WINOWO DEKORÁCIÓS SÁVOK --- */
+    .page-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      position: relative;
+      flex: 1;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px 4rem 20px;
+    }
+
+    .side-decor {
+      width: 180px;
+      position: sticky;
+      top: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      padding-top: 40px;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .decor-item {
+      background: rgba(19, 19, 34, 0.6);
+      border: 1px solid rgba(147, 51, 234, 0.2);
+      border-radius: 20px;
+      padding: 20px 10px;
+      text-align: center;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.1);
+      backdrop-filter: blur(8px);
+      animation: floatItem 4s ease-in-out infinite;
+    }
+
+    .decor-item:nth-child(2) {
+      animation-delay: 2s;
+    }
+
+    .decor-item i {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.4));
+    }
+
+    .decor-item span {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--secondary-text-color);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    @keyframes floatItem {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
     main { 
-      max-width: 1000px; 
+      max-width: 950px; 
       width: 100%;
       margin: 0 auto; 
-      padding: 0 1.5rem 4rem 1.5rem;
+      padding: 0 1rem;
       flex: 1;
+      z-index: 2;
     }
 
     .main-nav {
@@ -76,7 +140,7 @@
     }
     .main-nav a:hover, .main-nav a.active { color: #a855f7; }
 
-    header { text-align: center; padding: 140px 1rem 1rem 1rem; }
+    header { text-align: center; padding: 130px 1rem 1rem 1rem; }
     header h1 { 
       font-size: 3rem; 
       font-weight: 700;
@@ -211,9 +275,15 @@
       font-size: .85rem; 
       width: 100%;
       flex-shrink: 0;
+      z-index: 10;
     }
     footer p { max-width: 800px; margin: 0 auto 10px auto; line-height: 1.6; }
     .hidden { display: none !important; }
+
+    /* Reszponzivitás: mobilon az oldalsó díszek eltűnnek, hogy ne zavarjanak */
+    @media (max-width: 1200px) {
+      .side-decor { display: none; }
+    }
 
     @media (max-width: 768px) {
       html { scroll-padding-top: 140px; }
@@ -223,6 +293,9 @@
       .main-nav ul { flex-wrap: wrap; justify-content: center; gap: 15px; }
       .main-nav a { font-size: .85rem; }
       #twitch-status { position: static; margin: 0 auto; }
+      .leaderboard-container { padding: 15px; }
+      .leaderboard-table th, .leaderboard-table td { padding: 12px 10px; font-size: 0.85rem; }
+      .player-avatar { width: 32px; height: 32px; }
     }
   </style>
 </head>
@@ -246,16 +319,45 @@
     <p>Referred players ranked by wager amount</p>
   </header>
 
-  <main>
-    <div class="leaderboard-container">
-      <div id="leaderboardContent">
-        <div class="lb-status">
-          <i class="fa-solid fa-spinner fa-spin"></i>
-          <p>Loading leaderboard data...</p>
+  <!-- KÖZÉPSŐ RÉSZ A SZEKRÉNYEKKEL ÉS A KUPÁVAL A SZÉLEKEN -->
+  <div class="page-wrapper">
+    
+    <!-- BAL OLDALI DÍSZÜNK (Ládák és Kupa stílusban) -->
+    <aside class="side-decor left-decor">
+      <div class="decor-item">
+        <i class="fa-solid fa-box-open" style="color: #facc15;"></i>
+        <span>Winovo Crates</span>
+      </div>
+      <div class="decor-item">
+        <i class="fa-solid fa-trophy" style="color: #a855f7;"></i>
+        <span>Top Race</span>
+      </div>
+    </aside>
+
+    <main>
+      <div class="leaderboard-container">
+        <div id="leaderboardContent">
+          <div class="lb-status">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Loading leaderboard data...</p>
+          </div>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
+
+    <!-- JOBB OLDALI DÍSZÜNK -->
+    <aside class="side-decor right-decor">
+      <div class="decor-item">
+        <i class="fa-solid fa-gift" style="color: #06b6d4;"></i>
+        <span>Bonus Drops</span>
+      </div>
+      <div class="decor-item">
+        <i class="fa-solid fa-crown" style="color: #facc15;"></i>
+        <span>VIP Rewards</span>
+      </div>
+    </aside>
+
+  </div>
 
   <footer>
     <p>Excessive gambling can lead to addiction. Please <a href="https://www.gambleaware.org/" target="_blank" style="color: #a855f7; text-decoration: underline; font-weight: 600;">gamble responsibly</a> and only play with money you can afford to lose.</p>
