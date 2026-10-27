@@ -13,12 +13,12 @@
   <style>
     :root {
       --background-color: #05050a;
-      --card-background: #0d0d18;
-      --border-color: rgba(147, 51, 234, 0.2);
+      --card-background: rgba(13, 13, 24, 0.85);
+      --border-color: rgba(147, 51, 234, 0.25);
       --primary-text-color: #ffffff;
       --secondary-text-color: #a0a0b5;
       --accent-color: #7c3aed;
-      --accent-glow: rgba(147, 51, 234, 0.3);
+      --accent-glow: rgba(147, 51, 234, 0.4);
     }
 
     html {
@@ -38,50 +38,54 @@
       color: var(--primary-text-color);
       line-height: 1.5;
       background-color: var(--background-color);
-      background-image: radial-gradient(circle at top, #0f0c20 0%, #05050a 60%);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at top, #0f0c20 0%, #05050a 70%);
       background-attachment: fixed;
       min-height: 100%;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden; /* Prevent horizontal scroll due to fixed elements */
+      position: relative;
+      overflow-x: hidden;
     }
 
-    /* RÖGZÍTETT HALLOWEEN LÁDÁK (BAL OLDAL) */
-    .halloween-cases-sidebar {
+    /* OLDALSÓ DEKORÁCIÓS KÉPEK (Fixed position) */
+    .bg-side-graphic {
       position: fixed;
-      left: 0;
-      top: 150px; /* Aligned with main content start */
-      width: 200px; /* Adjust based on your images */
-      z-index: 50; /* Above background, below main content */
-      pointer-events: none; /* Clicking passes through to content underneath */
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding-left: 10px;
+      bottom: 0;
+      z-index: 1;
+      pointer-events: none;
+      max-height: 80vh;
+      object-fit: contain;
+      filter: drop-shadow(0 0 25px rgba(124, 58, 237, 0.25));
     }
 
-    .halloween-case-img {
-      width: 100%;
-      height: auto;
-      margin-bottom: -40px; /* Stacking effect */
-      filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.5));
-      transition: transform 0.3s ease;
+    .bg-side-graphic.left-cases {
+      left: 0;
+      width: 28vw;
+      max-width: 420px;
+    }
+
+    .bg-side-graphic.right-hyena {
+      right: 0;
+      width: 32vw;
+      max-width: 480px;
     }
 
     main { 
-      max-width: 1000px; 
+      max-width: 950px; 
       width: 100%;
       margin: 0 auto; 
       padding: 0 1.5rem 4rem 1.5rem;
       flex: 1;
       position: relative;
-      z-index: 100; /* Main content is above the fixed cases */
+      z-index: 10;
     }
 
     .main-nav {
       background-color: rgba(13, 13, 24, 0.85);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(147, 51, 234, 0.15);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(147, 51, 234, 0.2);
       position: fixed;
       top: 0; left: 0; width: 100%;
       z-index: 1000;
@@ -104,57 +108,56 @@
     header { 
       text-align: center; 
       padding: 130px 1rem 1.5rem 1rem; 
-      z-index: 100;
     }
     
     .header-logo-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 80px;
-      height: 80px;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%);
+      width: 85px;
+      height: 85px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, transparent 75%);
       border-radius: 50%;
       margin-bottom: 15px;
       position: relative;
     }
 
     .header-logo-badge img {
-      width: 60px;
-      height: 60px;
+      width: 65px;
+      height: 65px;
       object-fit: contain;
-      filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.6));
+      filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.7));
     }
 
     .header-crown {
       position: absolute;
-      top: -2px;
+      top: -4px;
       right: 12px;
       color: #facc15;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
       animation: crownBounce 2s infinite ease-in-out;
     }
 
     @keyframes crownBounce {
       0%, 100% { transform: translateY(0) rotate(0deg); }
-      50= transform: translateY(-4px) rotate(5deg); }
+      50% { transform: translateY(-5px) rotate(6deg); }
     }
 
     header h1 { 
-      font-size: 3rem; 
-      font-weight: 700;
+      font-size: 3.2rem; 
+      font-weight: 800;
       color: #fff;
       letter-spacing: 1px;
-      text-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+      text-shadow: 0 0 25px rgba(147, 51, 234, 0.4);
     }
     header p {
       color: var(--secondary-text-color);
-      margin-top: 10px;
+      margin-top: 8px;
       font-size: 1.05rem;
     }
 
-    /* STATISZTIKÁK */
+    /* STATISZTIKAI KÁRTYÁK */
     .stats-overview {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -164,11 +167,12 @@
 
     .stat-card {
       background: var(--card-background);
+      backdrop-filter: blur(10px);
       border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 18px;
       text-align: center;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
     }
 
     .stat-card .stat-title {
@@ -180,33 +184,34 @@
     }
 
     .stat-card .stat-value {
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: #facc15;
     }
 
     .stat-card.timer-card .stat-value {
       color: #a855f7;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
     }
 
-    /* KERESŐ ÉS SZABÁLYZAT */
+    /* KERESŐ ÉS SZABÁLYZAT DOBOZ */
     .controls-wrapper {
       display: flex;
       gap: 15px;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
       flex-wrap: wrap;
     }
 
     .winovo-rules-box {
       flex: 2;
-      background: rgba(13, 13, 24, 0.9);
-      border: 1px solid rgba(250, 204, 21, 0.3);
+      background: var(--card-background);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(250, 204, 21, 0.35);
       border-radius: 16px;
       padding: 18px 22px;
       font-size: 0.9rem;
       color: var(--secondary-text-color);
-      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
     }
 
     .winovo-rules-box h4 {
@@ -227,15 +232,16 @@
 
     .search-box-container {
       flex: 1;
-      min-width: 250px;
-      background: rgba(13, 13, 24, 0.9);
+      min-width: 240px;
+      background: var(--card-background);
+      backdrop-filter: blur(10px);
       border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 18px 22px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
     }
 
     .search-box-container label {
@@ -250,7 +256,7 @@
 
     .search-input {
       width: 100%;
-      background: #05050a;
+      background: rgba(5, 5, 10, 0.8);
       border: 1px solid rgba(147, 51, 234, 0.3);
       border-radius: 10px;
       padding: 10px 15px;
@@ -263,10 +269,10 @@
 
     .search-input:focus {
       border-color: #a855f7;
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
     }
 
-    /* DOBOGÓ (PODIUM) LAYOUT */
+    /* DOBOGÓ (PODIUM) */
     .podium-container {
       display: flex;
       justify-content: center;
@@ -278,16 +284,17 @@
 
     .podium-card {
       background: var(--card-background);
+      backdrop-filter: blur(10px);
       border: 1px solid var(--border-color);
       border-radius: 20px;
       padding: 25px 15px;
       text-align: center;
       position: relative;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 30%;
+      width: 31%;
       transition: transform 0.3s ease;
     }
 
@@ -303,9 +310,9 @@
 
     .podium-card.first-place {
       order: 2;
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(13, 13, 24, 0.95));
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(13, 13, 24, 0.95));
       border: 2px solid #f59e0b;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.3);
+      box-shadow: 0 15px 45px rgba(0,0,0,0.7), 0 0 30px rgba(245, 158, 11, 0.35);
       transform: translateY(-15px) scale(1.05);
       z-index: 3;
     }
@@ -330,7 +337,7 @@
       font-size: 0.9rem;
     }
 
-    .podium-card.first-place .podium-rank { background: #f59e0b; color: #000; box-shadow: 0 0 10px #f59e0b; }
+    .podium-card.first-place .podium-rank { background: #f59e0b; color: #000; box-shadow: 0 0 12px #f59e0b; }
     .podium-card.second-place .podium-rank { background: #94a3b8; color: #000; }
     .podium-card.third-place .podium-rank { background: #b45309; color: #fff; }
 
@@ -366,10 +373,10 @@
     }
 
     .podium-prize {
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: #facc15;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       text-shadow: 0 0 12px rgba(250, 204, 21, 0.4);
     }
 
@@ -379,12 +386,14 @@
       font-weight: 600;
     }
 
+    /* RANGU LISTA TÁBLÁZAT */
     .leaderboard-container {
       background: var(--card-background);
+      backdrop-filter: blur(10px);
       border: 2px solid var(--border-color);
       border-radius: 28px;
       padding: 25px 30px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
     }
 
     .leaderboard-table {
@@ -410,7 +419,7 @@
     }
 
     .leaderboard-table tbody tr:hover {
-      background-color: rgba(147, 51, 234, 0.05);
+      background-color: rgba(147, 51, 234, 0.08);
     }
 
     .player-info {
@@ -491,15 +500,18 @@
       font-size: .85rem; 
       width: 100%;
       flex-shrink: 0;
-      z-index: 100;
       position: relative;
+      z-index: 10;
     }
     footer p { max-width: 800px; margin: 0 auto 10px auto; line-height: 1.6; }
     .hidden { display: none !important; }
 
-    @media (max-width: 1200px) {
-      /* Hide cases on smaller screens to avoid overlapping content */
-      .halloween-cases-sidebar { display: none; }
+    @media (max-width: 1350px) {
+      .bg-side-graphic { opacity: 0.4; }
+    }
+
+    @media (max-width: 1024px) {
+      .bg-side-graphic { display: none; }
     }
 
     @media (max-width: 768px) {
@@ -518,12 +530,9 @@
 </head>
 
 <body>
-  <!-- RÖGZÍTETT HALLOWEEN LÁDÁK -->
-  <div class="halloween-cases-sidebar">
-    <img src="images/case-halloween-1.png" alt="Halloween Case" class="halloween-case-img">
-    <img src="images/case-halloween-2.png" alt="Halloween Case" class="halloween-case-img">
-    <img src="images/case-halloween-3.png" alt="Halloween Case" class="halloween-case-img">
-  </div>
+  <!-- RÖGZÍTETT HÁTTÉR KÉPEK A KÉT SZÉLEN -->
+  <img src="images/cases-stack.png" alt="Halloween Cases Stack" class="bg-side-graphic left-cases">
+  <img src="images/hyena-trophy.png" alt="Hyena with Trophy" class="bg-side-graphic right-hyena">
 
   <nav class="main-nav">
     <ul>
@@ -612,7 +621,7 @@
         }
 
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60 * 24)) % 24);
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((diff / 1000 / 60) % 60);
 
         timerEl.innerHTML = `${days}d ${hours}h ${minutes}m`;
