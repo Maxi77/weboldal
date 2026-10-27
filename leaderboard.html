@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="images/hiena.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   
   <style>
@@ -43,115 +43,14 @@
       min-height: 100%;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
-    }
-
-    /* --- OLDALSÓ HIÉNA / KORONA DEKORÁCIÓS SÁVOK --- */
-    .page-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      position: relative;
-      flex: 1;
-      width: 100%;
-      max-width: 1450px;
-      margin: 0 auto;
-      padding: 0 20px 4rem 20px;
-    }
-
-    .side-decor {
-      width: 200px;
-      position: sticky;
-      top: 120px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 30px;
-      padding-top: 20px;
-      user-select: none;
-      pointer-events: none;
-    }
-
-    .decor-card {
-      background: rgba(19, 19, 34, 0.75);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      border-radius: 24px;
-      padding: 25px 15px;
-      text-align: center;
-      width: 100%;
-      box-shadow: 0 0 25px rgba(124, 58, 237, 0.15), inset 0 0 10px rgba(250, 204, 21, 0.1);
-      backdrop-filter: blur(8px);
-      animation: floatItem 4s ease-in-out infinite;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .decor-card:nth-child(2) {
-      animation-delay: 2s;
-    }
-
-    .decor-hyena-container {
-      width: 90px;
-      height: 90px;
-      margin: 0 auto 12px auto;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, transparent 70%);
-      border-radius: 50%;
-    }
-
-    .decor-hyena-container img {
-      width: 70px;
-      height: 70px;
-      object-fit: contain;
-      filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.5));
-    }
-
-    .decor-crown-badge {
-      position: absolute;
-      top: -2px;
-      right: 5px;
-      color: #facc15;
-      font-size: 1.3rem;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
-      animation: crownBounce 2s infinite ease-in-out;
-    }
-
-    @keyframes crownBounce {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-4px) rotate(5deg); }
-    }
-
-    .decor-card span {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-top: 5px;
-    }
-
-    .decor-card p {
-      font-size: 0.72rem;
-      color: var(--secondary-text-color);
-      margin-top: 3px;
-    }
-
-    @keyframes floatItem {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
     }
 
     main { 
-      max-width: 950px; 
+      max-width: 1000px; 
       width: 100%;
       margin: 0 auto; 
-      padding: 0 1rem;
+      padding: 0 1.5rem 4rem 1.5rem;
       flex: 1;
-      z-index: 2;
     }
 
     .main-nav {
@@ -177,7 +76,46 @@
     }
     .main-nav a:hover, .main-nav a.active { color: #a855f7; }
 
-    header { text-align: center; padding: 130px 1rem 1rem 1rem; }
+    /* FEJLÉC HIÉNA KABALÁVAL */
+    header { 
+      text-align: center; 
+      padding: 130px 1rem 1.5rem 1rem; 
+    }
+    
+    .header-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .header-logo-badge img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.6));
+    }
+
+    .header-crown {
+      position: absolute;
+      top: -2px;
+      right: 12px;
+      color: #facc15;
+      font-size: 1.2rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+      animation: crownBounce 2s infinite ease-in-out;
+    }
+
+    @keyframes crownBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(5deg); }
+    }
+
     header h1 { 
       font-size: 3rem; 
       font-weight: 700;
@@ -191,13 +129,102 @@
       font-size: 1.05rem;
     }
 
+    /* DOBOGÓS (PODIUM) KIEMELT KÁRTYÁK A TOP 3-NAK */
+    .podium-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 2.5rem;
+    }
+
+    .podium-card {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 25px 15px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s ease;
+    }
+
+    .podium-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .podium-card.first-place {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(13, 13, 24, 0.9));
+      border: 2px solid #f59e0b;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 25px rgba(245, 158, 11, 0.25);
+      transform: scale(1.05);
+      z-index: 2;
+    }
+
+    .podium-rank {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .podium-card.first-place .podium-rank { background: #f59e0b; color: #000; }
+    .podium-card.second-place .podium-rank { background: #94a3b8; color: #000; }
+    .podium-card.third-place .podium-rank { background: #b45309; color: #fff; }
+
+    .podium-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-color);
+      background: #1a1a2e;
+      margin-bottom: 12px;
+    }
+
+    .podium-card.first-place .podium-avatar { border-color: #f59e0b; }
+
+    .podium-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #fff;
+      margin-bottom: 5px;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .podium-prize {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #facc15;
+      margin-bottom: 8px;
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
+    }
+
+    .podium-wager {
+      font-size: 0.85rem;
+      color: #22c55e;
+      font-weight: 600;
+    }
+
+    /* HAGYOMÁNYOS TÁBLÁZAT A 4. HELYTŐL */
     .leaderboard-container {
       background: var(--card-background);
       border: 2px solid var(--border-color);
       border-radius: 28px;
-      padding: 30px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(147, 51, 234, 0.05);
-      margin-top: 2rem;
+      padding: 25px 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
     }
 
     .leaderboard-table {
@@ -216,14 +243,10 @@
     }
 
     .leaderboard-table td {
-      padding: 18px 20px;
+      padding: 16px 20px;
       color: #e0e0e6;
       font-size: 1rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    }
-
-    .leaderboard-table tbody tr {
-      transition: background-color 0.2s ease;
     }
 
     .leaderboard-table tbody tr:hover {
@@ -237,8 +260,8 @@
     }
 
     .player-avatar {
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--accent-color);
@@ -254,19 +277,15 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       background: #1a1a2e;
       color: var(--secondary-text-color);
       border: 1px solid var(--border-color);
     }
-
-    .rank-1 { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; border: none; box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); }
-    .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; border: none; }
-    .rank-3 { background: linear-gradient(135deg, #b45309, #78350f); color: #fff; border: none; }
 
     .wagered-amount {
       font-weight: 700;
@@ -312,26 +331,19 @@
       font-size: .85rem; 
       width: 100%;
       flex-shrink: 0;
-      z-index: 10;
     }
     footer p { max-width: 800px; margin: 0 auto 10px auto; line-height: 1.6; }
     .hidden { display: none !important; }
 
-    @media (max-width: 1250px) {
-      .side-decor { display: none; }
-    }
-
     @media (max-width: 768px) {
-      html { scroll-padding-top: 140px; }
-      header { padding-top: 130px; }
+      .podium-container { grid-template-columns: 1fr; }
+      .podium-card.first-place { transform: none; }
+      header { padding-top: 120px; }
       header h1 { font-size: 2.2rem; }
       .main-nav { flex-direction: column; height: auto; padding: 15px; gap: 15px; position: static; }
       .main-nav ul { flex-wrap: wrap; justify-content: center; gap: 15px; }
       .main-nav a { font-size: .85rem; }
       #twitch-status { position: static; margin: 0 auto; }
-      .leaderboard-container { padding: 15px; }
-      .leaderboard-table th, .leaderboard-table td { padding: 12px 10px; font-size: 0.85rem; }
-      .player-avatar { width: 32px; height: 32px; }
     }
   </style>
 </head>
@@ -351,65 +363,24 @@
   </nav>
 
   <header>
+    <div class="header-logo-badge">
+      <i class="fa-solid fa-crown header-crown"></i>
+      <img src="images/hiena.png" alt="King Hyena">
+    </div>
     <h1>500$ Winovo Leaderboard</h1>
     <p>Referred players ranked by wager amount</p>
   </header>
 
-  <!-- OLDALSÓ HIÉNA & KORONA DÍSZEK KÖZÉPEN A TÁBLÁZZAL -->
-  <div class="page-wrapper">
-    
-    <!-- BAL OLDALI SÁV -->
-    <aside class="side-decor left-decor">
-      <div class="decor-card">
-        <div class="decor-hyena-container">
-          <i class="fa-solid fa-crown decor-crown-badge"></i>
-          <img src="images/hiena.png" alt="King Hyena">
-        </div>
-        <span>Winovo King</span>
-        <p>Top Wager Race</p>
-      </div>
-      <div class="decor-card">
-        <div class="decor-hyena-container">
-          <i class="fa-solid fa-trophy decor-crown-badge" style="color: #facc15;"></i>
-          <img src="images/hiena.png" alt="Hyena Trophy">
-        </div>
-        <span>$500 Prize Pool</span>
-        <p>Exclusive Rewards</p>
-      </div>
-    </aside>
-
-    <main>
+  <main>
+    <div id="leaderboardContent">
       <div class="leaderboard-container">
-        <div id="leaderboardContent">
-          <div class="lb-status">
-            <i class="fa-solid fa-spinner fa-spin"></i>
-            <p>Loading leaderboard data...</p>
-          </div>
+        <div class="lb-status">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <p>Loading leaderboard data...</p>
         </div>
       </div>
-    </main>
-
-    <!-- JOBB OLDALI SÁV -->
-    <aside class="side-decor right-decor">
-      <div class="decor-card">
-        <div class="decor-hyena-container">
-          <i class="fa-solid fa-box-open decor-crown-badge" style="color: #06b6d4;"></i>
-          <img src="images/hiena.png" alt="Hyena Crate">
-        </div>
-        <span>Bonus Crates</span>
-        <p>Daily Drops</p>
-      </div>
-      <div class="decor-card">
-        <div class="decor-hyena-container">
-          <i class="fa-solid fa-fire decor-crown-badge" style="color: #ef4444;"></i>
-          <img src="images/hiena.png" alt="Hyena Hot">
-        </div>
-        <span>Active Race</span>
-        <p>Live Standings</p>
-      </div>
-    </aside>
-
-  </div>
+    </div>
+  </main>
 
   <footer>
     <p>Excessive gambling can lead to addiction. Please <a href="https://www.gambleaware.org/" target="_blank" style="color: #a855f7; text-decoration: underline; font-weight: 600;">gamble responsibly</a> and only play with money you can afford to lose.</p>
@@ -432,44 +403,62 @@
 
         if (result.status === 'ok') {
           const players = Array.isArray(result.data) ? result.data : Object.values(result.data || {});
-          const maxRows = 10; 
+          
+          let html = '';
 
-          let html = `
-            <table class="leaderboard-table">
-              <thead>
-                <tr>
-                  <th style="width: 80px;">Rank</th>
-                  <th>Player</th>
-                  <th style="text-align: center;">Prize</th>
-                  <th style="text-align: right;">Wagered</th>
-                </tr>
-              </thead>
-              <tbody>
+          // 1. TOP 3 DOBOGÓS KÁRTYÁK GENERÁLÁSA
+          html += `<div class="podium-container">`;
+          for (let i = 0; i < 3; i++) {
+            const player = players[i];
+            const rank = i + 1;
+            const placeClass = rank === 1 ? 'first-place' : (rank === 2 ? 'second-place' : 'third-place');
+            const avatar = player && player.pic ? player.pic : 'images/hiena.png';
+            const name = player && player.name ? player.name : '---';
+            const wageredVal = player && player.wagered ? Number(player.wagered) : 0;
+            const formattedWager = wageredVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            html += `
+              <div class="podium-card ${placeClass}">
+                <div class="podium-rank">${rank}</div>
+                <img src="${avatar}" alt="${name}" class="podium-avatar" onerror="this.src='images/hiena.png'">
+                <div class="podium-name">${name}</div>
+                <div class="podium-prize">${prizes[i] || '-'}</div>
+                <div class="podium-wager">$${formattedWager}</div>
+              </div>
+            `;
+          }
+          html += `</div>`;
+
+          // 2. TÁBLÁZAT A 4. HELYTŐL
+          html += `
+            <div class="leaderboard-container">
+              <table class="leaderboard-table">
+                <thead>
+                  <tr>
+                    <th style="width: 80px;">Rank</th>
+                    <th>Player</th>
+                    <th style="text-align: center;">Prize</th>
+                    <th style="text-align: right;">Wagered</th>
+                  </tr>
+                </thead>
+                <tbody>
           `;
 
-          for (let i = 0; i < maxRows; i++) {
+          for (let i = 3; i < 10; i++) {
             const rank = i + 1;
-            let rankClass = 'rank-badge';
-            if (rank === 1) rankClass += ' rank-1';
-            else if (rank === 2) rankClass += ' rank-2';
-            else if (rank === 3) rankClass += ' rank-3';
-
             const player = players[i];
             const prizeTag = prizes[i] 
-              ? `<span style="color: #a855f7; font-weight: 700; text-shadow: 0 0 10px rgba(168, 85, 247, 0.4);">${prizes[i]}</span>` 
+              ? `<span style="color: #a855f7; font-weight: 700;">${prizes[i]}</span>` 
               : '<span style="color: #6b6b7c;">-</span>';
 
             if (player) {
               const avatar = player.pic || 'images/hiena.png';
               const wageredVal = Number(player.wagered || 0);
-              const formattedWager = wageredVal.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              });
+              const formattedWager = wageredVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
               html += `
                 <tr>
-                  <td><div class="${rankClass}">${rank}</div></td>
+                  <td><div class="rank-badge">${rank}</div></td>
                   <td>
                     <div class="player-info">
                       <img src="${avatar}" alt="${player.name || 'Player'}" class="player-avatar" onerror="this.src='images/hiena.png'">
@@ -483,7 +472,7 @@
             } else {
               html += `
                 <tr>
-                  <td><div class="${rankClass}">${rank}</div></td>
+                  <td><div class="rank-badge">${rank}</div></td>
                   <td>
                     <div class="player-info" style="opacity: 0.4;">
                       <div class="player-avatar" style="background: transparent; border-color: rgba(255,255,255,0.1);"></div>
@@ -498,9 +487,11 @@
           }
 
           html += `
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           `;
+
           container.innerHTML = html;
 
         } else {
@@ -509,46 +500,7 @@
 
       } catch (error) {
         console.error('Leaderboard fetch error:', error);
-        
-        let html = `
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th style="width: 80px;">Rank</th>
-                <th>Player</th>
-                <th style="text-align: center;">Prize</th>
-                <th style="text-align: right;">Wagered</th>
-              </tr>
-            </thead>
-            <tbody>
-        `;
-        for (let i = 0; i < 10; i++) {
-          const rank = i + 1;
-          let rankClass = 'rank-badge';
-          if (rank === 1) rankClass += ' rank-1';
-          else if (rank === 2) rankClass += ' rank-2';
-          else if (rank === 3) rankClass += ' rank-3';
-
-          const prizeTag = prizes[i] 
-            ? `<span style="color: #a855f7; font-weight: 700;">${prizes[i]}</span>` 
-            : '<span style="color: #6b6b7c;">-</span>';
-
-          html += `
-            <tr>
-              <td><div class="${rankClass}">${rank}</div></td>
-              <td>
-                <div class="player-info" style="opacity: 0.4;">
-                  <div class="player-avatar" style="background: transparent; border-color: rgba(255,255,255,0.1);"></div>
-                  <span class="player-name" style="color: #6b6b7c;">-</span>
-                </div>
-              </td>
-              <td style="text-align: center;">${prizeTag}</td>
-              <td style="text-align: right; color: #6b6b7c;" class="wagered-amount">-</td>
-            </tr>
-          `;
-        }
-        html += `</tbody></table>`;
-        container.innerHTML = html;
+        container.innerHTML = `<div class="leaderboard-container"><div class="lb-status"><p>Could not load leaderboard data.</p></div></div>`;
       }
     }
 
