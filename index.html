@@ -12,13 +12,14 @@
   
   <style>
     :root {
-      --bg-dark: #070712;
-      --card-bg: rgba(15, 15, 30, 0.75);
-      --card-border: rgba(168, 85, 247, 0.2);
+      --bg-dark: #050714;
+      --card-bg: rgba(12, 16, 36, 0.78);
+      --card-border: rgba(56, 189, 248, 0.25);
       --primary-text: #ffffff;
-      --secondary-text: #a0a0c8;
+      --secondary-text: #a0b2d6;
       --accent-purple: #a855f7;
       --accent-ice: #38bdf8;
+      --accent-frost: #e0f2fe;
       --accent-green: #22c55e;
       --accent-red: #ef4444;
       --accent-cyan: #06b6d4;
@@ -31,19 +32,22 @@
       padding: 0;
     }
 
-    /* Egyedi görgetősáv */
+    /* Egyedi Fagyos Görgetősáv */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg-dark); }
-    ::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.4); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
+    ::-webkit-scrollbar-thumb { 
+      background: linear-gradient(180deg, var(--accent-ice), var(--accent-purple)); 
+      border-radius: 4px; 
+    }
+    ::-webkit-scrollbar-thumb:hover { background: #7dd3fc; }
 
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(circle at 15% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 45%),
-        radial-gradient(circle at 85% 60%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 50% 90%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+        radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 85% 60%, rgba(168, 85, 247, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(14, 165, 233, 0.1) 0%, transparent 50%);
       background-attachment: fixed;
       color: var(--primary-text);
       line-height: 1.6;
@@ -68,18 +72,18 @@
       inset: 0;
       display: grid;
       place-items: center;
-      background: rgba(5, 5, 12, 0.94);
-      backdrop-filter: blur(14px);
+      background: rgba(3, 5, 15, 0.95);
+      backdrop-filter: blur(16px);
       z-index: 3000;
     }
     .gate-hidden { display: none !important; }
     .gate-dialog {
       width: min(600px, 92vw);
-      background: rgba(19, 19, 36, 0.95);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      background: rgba(10, 16, 38, 0.95);
+      border: 1px solid rgba(56, 189, 248, 0.4);
       border-radius: 20px;
       padding: 2rem;
-      box-shadow: 0 0 50px rgba(168, 85, 247, 0.25);
+      box-shadow: 0 0 50px rgba(56, 189, 248, 0.3);
     }
     .gate-dialog h2 {
       font-size: 1.6rem;
@@ -108,7 +112,7 @@
       color: #d1d1e0;
     }
     .gate-row input[type="checkbox"] {
-      accent-color: var(--accent-purple);
+      accent-color: var(--accent-ice);
       width: 18px;
       height: 18px;
       cursor: pointer;
@@ -130,14 +134,14 @@
     .gbtn-secondary { background: rgba(255, 255, 255, 0.08); color: #fff; }
     .gbtn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
     .gbtn-primary {
-      background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+      background: linear-gradient(135deg, var(--accent-ice), #0284c7);
       color: #fff;
-      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+      box-shadow: 0 4px 20px rgba(56, 189, 248, 0.4);
     }
     .gbtn-primary:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
     .gbtn-primary:not(:disabled):hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 25px rgba(168, 85, 247, 0.6);
+      box-shadow: 0 6px 25px rgba(56, 189, 248, 0.6);
     }
 
     .app-hidden { display: none !important; }
@@ -147,7 +151,7 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: rgba(10, 10, 20, 0.85);
+      background: rgba(8, 12, 28, 0.85);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--card-border);
       padding: 0.8rem 2rem;
@@ -171,13 +175,13 @@
     }
     .sound-toggle-btn:hover {
       color: #fff;
-      border-color: var(--accent-purple);
+      border-color: var(--accent-ice);
     }
 
     /* --- ALERT BANNER --- */
     .alert-ticker-container {
-      background: linear-gradient(90deg, rgba(56, 189, 248, 0.15), rgba(168, 85, 247, 0.2), rgba(56, 189, 248, 0.15));
-      border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.25), rgba(56, 189, 248, 0.2));
+      border-bottom: 1px solid rgba(56, 189, 248, 0.4);
       padding: 0.6rem 1rem;
       text-align: center;
       font-size: 0.85rem;
@@ -213,13 +217,13 @@
     header h1 {
       font-size: 3.4rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #ffffff 20%, #38bdf8 50%, var(--accent-purple) 80%);
+      background: linear-gradient(135deg, #ffffff 20%, #7dd3fc 50%, var(--accent-purple) 80%);
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: gradientShift 6s ease infinite;
       letter-spacing: -1px;
-      filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.3));
+      filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.4));
     }
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
@@ -301,15 +305,15 @@
     }
     .filter-btn:hover, .nav-link-btn:hover {
       color: #fff;
-      border-color: rgba(56, 189, 248, 0.5);
-      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.6);
+      background: rgba(56, 189, 248, 0.15);
       transform: translateY(-2px);
     }
     .filter-btn.active {
-      background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+      background: linear-gradient(135deg, var(--accent-ice), #0284c7);
       color: #fff;
       border-color: transparent;
-      box-shadow: 0 4px 18px rgba(168, 85, 247, 0.45);
+      box-shadow: 0 4px 18px rgba(56, 189, 248, 0.45);
     }
 
     .view-toggle {
@@ -333,9 +337,9 @@
       gap: 5px;
     }
     .view-btn.active {
-      background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+      background: linear-gradient(135deg, var(--accent-ice), #0284c7);
       color: #fff;
-      box-shadow: 0 2px 10px rgba(168, 85, 247, 0.4);
+      box-shadow: 0 2px 10px rgba(56, 189, 248, 0.4);
     }
 
     .section-title {
@@ -366,11 +370,11 @@
     .section-divider {
       border: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.2), transparent);
       margin: 4rem 0;
     }
 
-    /* --- FEATURED HERO CARD --- */
+    /* --- FEATURED HERO CARD (JÉGCSAPOSSAL) --- */
     .featured-hero-container {
       margin-bottom: 3.5rem;
       display: flex;
@@ -381,18 +385,31 @@
     .featured-card {
       width: 100%;
       max-width: 900px;
-      background: linear-gradient(135deg, rgba(25, 20, 50, 0.85), rgba(15, 20, 35, 0.85));
-      border: 1px solid rgba(250, 204, 21, 0.45);
+      background: linear-gradient(135deg, rgba(16, 24, 52, 0.85), rgba(10, 16, 32, 0.85));
+      border: 1px solid rgba(250, 204, 21, 0.5);
       border-radius: 28px;
-      padding: 2rem;
+      padding: 2.2rem 2rem 2rem;
       display: flex;
       gap: 2rem;
       align-items: center;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 35px rgba(250, 204, 21, 0.2);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(56, 189, 248, 0.15);
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(12px);
     }
+
+    /* JÉGCSAP OVERLAY SVG */
+    .icicle-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 20px;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0.85;
+    }
+
     .featured-badge {
       position: absolute;
       top: 0;
@@ -406,6 +423,7 @@
       letter-spacing: 1px;
       text-transform: uppercase;
       box-shadow: 0 2px 10px rgba(234, 179, 8, 0.4);
+      z-index: 11;
     }
     .featured-content { flex: 1; }
     .featured-content h3 { font-size: 1.8rem; color: #fff; margin-bottom: 0.2rem; }
@@ -414,11 +432,11 @@
       .featured-card {
         flex-direction: column;
         text-align: center;
-        padding: 2.5rem 1.5rem 1.5rem;
+        padding: 2.8rem 1.5rem 1.5rem;
       }
     }
 
-    /* --- GRID & CARDS --- */
+    /* --- GRID & CARDS (FAGYOS DÍSZÍTÉSSELE) --- */
     main {
       max-width: 1280px;
       margin: 0 auto;
@@ -498,13 +516,14 @@
       backdrop-filter: blur(14px);
       border: 1px solid var(--card-border);
       border-radius: 24px;
-      padding: 2rem 1.5rem 1.5rem;
+      padding: 2.2rem 1.5rem 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.3s ease;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(56, 189, 248, 0.08);
       animation: fadeIn 0.5s ease forwards;
+      overflow: hidden;
     }
 
     .casino-card.hide { display: none !important; }
@@ -514,7 +533,11 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .casino-card:hover { transform: translateY(-8px); }
+    .casino-card:hover { 
+      transform: translateY(-8px); 
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 25px rgba(56, 189, 248, 0.25);
+    }
 
     /* BADGES */
     .card-rank-badge {
@@ -529,6 +552,7 @@
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
       animation: badgePulse 2.5s infinite;
+      z-index: 11;
     }
 
     .card-rank-badge.badge-gold {
@@ -570,7 +594,7 @@
     }
     .promo-copy-box i { font-size: 0.75rem; }
 
-    /* GLOW EFFECTS (EREDETI SZÍNEK MEGŐRVE!) */
+    /* GLOW EFFECTS */
     .glow-shuffle { position: relative; overflow: hidden; }
     .glow-shuffle::before {
       content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -599,7 +623,7 @@
     .card-logo-container {
       width: 100px;
       height: 80px;
-      margin-top: 1rem;
+      margin-top: 0.8rem;
       margin-bottom: 0.5rem;
       display: flex;
       align-items: center;
@@ -648,7 +672,7 @@
       line-height: 1.4;
     }
     .check-icon {
-      color: var(--accent-purple);
+      color: var(--accent-ice);
       font-size: 0.9rem;
       margin-top: 3px;
       flex-shrink: 0;
@@ -662,7 +686,7 @@
     .play-button {
       width: 100%;
       padding: 0.9rem;
-      background: linear-gradient(135deg, var(--accent-purple), #6d28d9);
+      background: linear-gradient(135deg, var(--accent-ice), #0284c7);
       color: #fff;
       text-decoration: none;
       font-weight: 700;
@@ -673,15 +697,15 @@
       justify-content: center;
       gap: 8px;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
       text-transform: uppercase;
       font-size: 0.9rem;
       letter-spacing: 0.5px;
     }
     .play-button i { transition: transform 0.2s ease; }
     .play-button:hover {
-      background: linear-gradient(135deg, #c084fc, var(--accent-purple));
-      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
+      background: linear-gradient(135deg, #7dd3fc, var(--accent-ice));
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
       transform: translateY(-2px);
     }
     .play-button:hover i { transform: translateX(4px); }
@@ -709,7 +733,7 @@
       overflow: hidden;
       transition: border-color 0.25s ease;
     }
-    .faq-item:hover { border-color: rgba(168, 85, 247, 0.4); }
+    .faq-item:hover { border-color: rgba(56, 189, 248, 0.5); }
     .faq-question {
       width: 100%;
       padding: 1.2rem;
@@ -726,7 +750,7 @@
       align-items: center;
     }
     .faq-question i {
-      color: var(--accent-purple);
+      color: var(--accent-ice);
       transition: transform 0.3s ease;
     }
     .faq-answer {
@@ -752,7 +776,7 @@
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-purple), #6d28d9);
+      background: linear-gradient(135deg, var(--accent-ice), #0284c7);
       color: #fff;
       border: none;
       cursor: pointer;
@@ -760,7 +784,7 @@
       align-items: center;
       justify-content: center;
       font-size: 1.1rem;
-      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.5);
+      box-shadow: 0 4px 20px rgba(56, 189, 248, 0.5);
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s ease;
@@ -769,7 +793,7 @@
     .back-to-top.show { opacity: 1; visibility: visible; }
     .back-to-top:hover {
       transform: translateY(-4px);
-      box-shadow: 0 6px 25px rgba(168, 85, 247, 0.8);
+      box-shadow: 0 6px 25px rgba(56, 189, 248, 0.8);
     }
 
     /* --- SOCIALS & FOOTER --- */
@@ -821,6 +845,15 @@
 <body>
   <!-- SNOW & MAGIC PARTICLES CANVAS -->
   <canvas id="snowCanvas"></canvas>
+
+  <!-- SVG ICICLE TEMPLATE (FOR REUSE) -->
+  <svg style="display:none;">
+    <defs>
+      <g id="icicleShape">
+        <path d="M0,0 L10,14 L20,0 L35,18 L50,0 L65,12 L80,0 L100,16 L120,0 L140,10 L160,0 L180,15 L200,0 L220,12 L240,0 L260,18 L280,0 L300,14 L320,0 L340,16 L360,0 L380,10 L400,0 L420,15 L440,0" fill="rgba(224, 242, 254, 0.4)" />
+      </g>
+    </defs>
+  </svg>
 
   <!-- GATE OVERLAY -->
   <div id="gateOverlay" class="gate-overlay" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
@@ -900,6 +933,8 @@
       <!-- FEATURED HERO DEAL -->
       <div class="featured-hero-container">
         <div class="featured-card">
+          <!-- Jégcsap díszítés -->
+          <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
           <div class="featured-badge"><i class="fa-solid fa-crown"></i> Featured Deal</div>
           <div class="card-logo-container" style="width: 120px; height: 100px;">
             <img src="images/shuffle.png" alt="Shuffle">
@@ -920,6 +955,7 @@
 
           <!-- SHUFFLE -->
           <div class="casino-card glow-shuffle" data-tags="nokyc crypto" data-name="shuffle">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/shuffle.png" alt="Shuffle">
             </div>
@@ -940,6 +976,7 @@
 
           <!-- 1XBIT -->
           <div class="casino-card glow-1xbit" data-tags="nokyc sports crypto" data-name="1xbit">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/1xbitr.png" alt="1xBit">
             </div>
@@ -965,6 +1002,7 @@
 
           <!-- WINSPIRIT -->
           <div class="casino-card glow-winspirit" data-tags="sports crypto" data-name="winspirit">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/winspirit.png" alt="Winspirit">
             </div>
@@ -985,6 +1023,7 @@
 
           <!-- SPINBETTER -->
           <div class="casino-card glow-spinbetter" data-tags="sports crypto" data-name="spinbetter">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/spinbetter.png" alt="Spinbetter">
             </div>
@@ -1009,6 +1048,7 @@
 
           <!-- SPINSY -->
           <div class="casino-card glow-spinsy" data-tags="sports crypto" data-name="spinsy">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/spinsy.png" alt="Spinsy">
             </div>
@@ -1029,6 +1069,7 @@
 
           <!-- COCOBET -->
           <div class="casino-card glow-cocobet" data-tags="sports crypto nokyc" data-name="cocobet">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/nemtom1.png" alt="CocoBet">
             </div>
@@ -1049,6 +1090,7 @@
 
           <!-- PARIPESA -->
           <div class="casino-card glow-paripesa" data-tags="crypto" data-name="paripesa">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/paripesa.png" alt="PariPesa">
             </div>
@@ -1073,6 +1115,7 @@
 
           <!-- PICKWIN -->
           <div class="casino-card glow-pickwin" data-tags="crypto" data-name="pickwin">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/pickwin.png" alt="pickwin">
             </div>
@@ -1097,6 +1140,7 @@
 
           <!-- WINOVO -->
           <div class="casino-card glow-1xbit" data-tags="nokyc crypto casebattle" data-name="winovo">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/winovo.png" alt="Winovo">
             </div>
@@ -1120,6 +1164,7 @@
 
           <!-- CS2.CASINO -->
           <div class="casino-card glow-cs2" data-tags="nokyc crypto casebattle" data-name="cs2.casino">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/cs2casinowhite.png" alt="CS2.Casino">
             </div>
@@ -1147,6 +1192,7 @@
         <div class="casino-grid">
           <!-- DUEL -->
           <div class="casino-card glow-duel" data-tags="nokyc sports crypto" data-name="duel">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/top2.png" alt="Duel Logo">
             </div>
@@ -1173,6 +1219,7 @@
         <div class="casino-grid">
           <!-- WAZAMBA -->
           <div class="casino-card glow-wazamba" data-tags="crypto" data-name="wazamba">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/wazamba.png" alt="Wazamba Logó">
             </div>
@@ -1192,6 +1239,7 @@
 
           <!-- SG CASINO -->
           <div class="casino-card glow-sgcasino" data-tags="crypto" data-name="sg casino">
+            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
             <div class="card-logo-container">
               <img src="images/sg.png" alt="Sg Logó">
             </div>
@@ -1278,12 +1326,12 @@
       let width = (canvas.width = window.innerWidth);
       let height = (canvas.height = window.innerHeight);
 
-      const particles = Array.from({ length: 60 }).map(() => ({
+      const particles = Array.from({ length: 65 }).map(() => ({
         x: Math.random() * width,
         y: Math.random() * height,
         r: Math.random() * 2.5 + 1,
         d: Math.random() * 1 + 0.4,
-        color: Math.random() > 0.7 ? (Math.random() > 0.5 ? 'rgba(168, 85, 247, 0.8)' : 'rgba(250, 204, 21, 0.8)') : 'rgba(255, 255, 255, 0.7)'
+        color: Math.random() > 0.6 ? (Math.random() > 0.5 ? 'rgba(56, 189, 248, 0.8)' : 'rgba(168, 85, 247, 0.7)') : 'rgba(255, 255, 255, 0.75)'
       }));
 
       function drawParticles() {
