@@ -31,6 +31,12 @@
       padding: 0;
     }
 
+    /* Egyedi görgetősáv */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.4); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
+
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--bg-dark);
@@ -208,10 +214,17 @@
       font-size: 3.4rem;
       font-weight: 800;
       background: linear-gradient(135deg, #ffffff 20%, #38bdf8 50%, var(--accent-purple) 80%);
+      background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      animation: gradientShift 6s ease infinite;
       letter-spacing: -1px;
       filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.3));
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     /* --- CONTROLS & FILTERS --- */
@@ -323,63 +336,6 @@
       background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
       color: #fff;
       box-shadow: 0 2px 10px rgba(168, 85, 247, 0.4);
-    }
-
-    /* --- LUCKY SPIN WIDGET (POINT 3) --- */
-    .lucky-widget {
-      max-width: 900px;
-      margin: 0 auto 3rem;
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(56, 189, 248, 0.12));
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      border-radius: 24px;
-      padding: 1.8rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.5rem;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      position: relative;
-      z-index: 2;
-    }
-    .lucky-info h3 {
-      font-size: 1.3rem;
-      color: #fff;
-      margin-bottom: 0.3rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .lucky-info p {
-      color: var(--secondary-text);
-      font-size: 0.9rem;
-    }
-    .spin-btn {
-      background: linear-gradient(135deg, #facc15, #eab308);
-      color: #000;
-      border: none;
-      padding: 0.8rem 1.6rem;
-      border-radius: 14px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(250, 204, 21, 0.4);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
-    }
-    .spin-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(250, 204, 21, 0.6);
-    }
-
-    @media (max-width: 768px) {
-      .lucky-widget {
-        flex-direction: column;
-        text-align: center;
-      }
     }
 
     .section-title {
@@ -941,15 +897,6 @@
         </div>
       </div>
 
-      <!-- LUCKY SPIN / DAILY BONUS WIDGET (POINT 3) -->
-      <div class="lucky-widget">
-        <div class="lucky-info">
-          <h3><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--accent-gold);"></i> Daily Lucky Spin Tip</h3>
-          <p id="luckyTipText">Kattints a gombra, hogy megkapd a mai szerencsés kaszinó tippdet és bónusz üzenetedet!</p>
-        </div>
-        <button id="spinTipBtn" class="spin-btn"><i class="fa-solid fa-dice"></i> Napi Tipp Pörgetése</button>
-      </div>
-
       <!-- FEATURED HERO DEAL -->
       <div class="featured-hero-container">
         <div class="featured-card">
@@ -1331,7 +1278,6 @@
       let width = (canvas.width = window.innerWidth);
       let height = (canvas.height = window.innerHeight);
 
-      // Snowflakes + Glowing Magic Sparks mix
       const particles = Array.from({ length: 60 }).map(() => ({
         x: Math.random() * width,
         y: Math.random() * height,
@@ -1419,12 +1365,9 @@
       const btnGrid = document.getElementById('viewGrid');
       const btnList = document.getElementById('viewList');
       const soundBtn = document.getElementById('soundToggle');
-      const spinTipBtn = document.getElementById('spinTipBtn');
-      const luckyTipText = document.getElementById('luckyTipText');
 
       let currentFilter = 'all';
 
-      /* Sound Toggle Logic */
       if(soundBtn) {
         soundBtn.addEventListener('click', () => {
           soundEnabled = !soundEnabled;
@@ -1433,39 +1376,12 @@
         });
       }
 
-      /* Hover sound on cards */
       cards.forEach(card => {
         card.addEventListener('mouseenter', () => {
           playTone(400, 'sine', 0.05);
         });
       });
 
-      /* Lucky Spin / Daily Tip Generator Logic */
-      const luckyTips = [
-        "🍀 Mai tipp: Nézd meg a Shuffle No-KYC bónuszait a maximális gyorsaságért!",
-        "👻 Szellem-szerencse: A CocoBet 50% cashback ajánlata ma különösen kedvező!",
-        "❄️ Jeges tipp: Próbáld ki a CS2.Casino Case Battle funkcióját egy barátoddal!",
-        "🎃 Halloweeni mágia: Pörgess meg egy új slotot a WinSpirit-en mai ajándék pörgetésekkel!",
-        "⚡ Villámgyors tipp: Használd a Crypto befizetést a leggyorsabb kifizetéshez!"
-      ];
-
-      if(spinTipBtn) {
-        spinTipBtn.addEventListener('click', () => {
-          playTone(900, 'square', 0.2);
-          spinTipBtn.disabled = true;
-          spinTipBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pörgetés...';
-          
-          setTimeout(() => {
-            const randomTip = luckyTips[Math.floor(Math.random() * luckyTips.length)];
-            luckyTipText.innerHTML = `<strong>Eredmény:</strong> ${randomTip}`;
-            spinTipBtn.disabled = false;
-            spinTipBtn.innerHTML = '<i class="fa-solid fa-dice"></i> Újra Pörgetés';
-            playTone(1200, 'triangle', 0.25);
-          }, 800);
-        });
-      }
-
-      /* View Toggle Logic with sound */
       btnGrid.addEventListener('click', () => {
         playTone(500, 'sine', 0.08);
         btnGrid.classList.add('active');
@@ -1480,7 +1396,6 @@
         document.querySelectorAll('.casino-grid').forEach(g => g.classList.add('list-view'));
       });
 
-      /* Filter Logic with sound */
       function applyFilters() {
         const query = searchInput.value.toLowerCase().trim();
 
@@ -1511,7 +1426,6 @@
         });
       });
 
-      /* FAQ ACCORDION LOGIC */
       const faqQuestions = document.querySelectorAll('.faq-question');
       faqQuestions.forEach(q => {
         q.addEventListener('click', () => {
@@ -1521,7 +1435,6 @@
         });
       });
 
-      /* BACK TO TOP BUTTON LOGIC */
       const backToTopBtn = document.getElementById('backToTop');
       window.addEventListener('scroll', () => {
         if (window.scrollY > 300) {
