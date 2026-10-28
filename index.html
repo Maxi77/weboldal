@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Al1ve Kaszik</title>
+  <title>Al1ve Kaszik - Frostbite Halloween</title>
   <link rel="icon" type="image/png" href="images/hiena.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,12 +12,13 @@
   
   <style>
     :root {
-      --bg-dark: #0a0a12;
-      --card-bg: rgba(19, 19, 34, 0.7);
-      --card-border: rgba(255, 255, 255, 0.08);
+      --bg-dark: #070712;
+      --card-bg: rgba(15, 15, 30, 0.75);
+      --card-border: rgba(168, 85, 247, 0.2);
       --primary-text: #ffffff;
-      --secondary-text: #a0a0b8;
+      --secondary-text: #a0a0c8;
       --accent-purple: #a855f7;
+      --accent-ice: #38bdf8;
       --accent-green: #22c55e;
       --accent-red: #ef4444;
       --accent-cyan: #06b6d4;
@@ -34,12 +35,25 @@
       font-family: 'Poppins', sans-serif;
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(circle at 15% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 85% 60%, rgba(236, 72, 153, 0.1) 0%, transparent 40%);
+        radial-gradient(circle at 15% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 85% 60%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
       background-attachment: fixed;
       color: var(--primary-text);
       line-height: 1.6;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    /* --- CANVAS SNOW ANIMATION --- */
+    #snowCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
     }
 
     /* --- GATE OVERLAY --- */
@@ -48,18 +62,18 @@
       inset: 0;
       display: grid;
       place-items: center;
-      background: rgba(5, 5, 10, 0.92);
-      backdrop-filter: blur(12px);
+      background: rgba(5, 5, 12, 0.94);
+      backdrop-filter: blur(14px);
       z-index: 3000;
     }
     .gate-hidden { display: none !important; }
     .gate-dialog {
       width: min(600px, 92vw);
-      background: rgba(19, 19, 34, 0.95);
-      border: 1px solid rgba(168, 85, 247, 0.3);
+      background: rgba(19, 19, 36, 0.95);
+      border: 1px solid rgba(56, 189, 248, 0.3);
       border-radius: 20px;
       padding: 2rem;
-      box-shadow: 0 0 50px rgba(168, 85, 247, 0.2);
+      box-shadow: 0 0 50px rgba(168, 85, 247, 0.25);
     }
     .gate-dialog h2 {
       font-size: 1.6rem;
@@ -127,7 +141,7 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: rgba(10, 10, 18, 0.85);
+      background: rgba(10, 10, 20, 0.85);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--card-border);
       padding: 0.8rem 2rem;
@@ -157,8 +171,8 @@
 
     /* --- ALERT BANNER (LIVE TICKER) --- */
     .alert-ticker-container {
-      background: linear-gradient(90deg, rgba(234, 179, 8, 0.15), rgba(168, 85, 247, 0.15), rgba(234, 179, 8, 0.15));
-      border-bottom: 1px solid rgba(250, 204, 21, 0.3);
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.15), rgba(168, 85, 247, 0.2), rgba(56, 189, 248, 0.15));
+      border-bottom: 1px solid rgba(56, 189, 248, 0.3);
       padding: 0.6rem 1rem;
       text-align: center;
       font-size: 0.85rem;
@@ -169,9 +183,11 @@
       align-items: center;
       gap: 10px;
       backdrop-filter: blur(8px);
+      position: relative;
+      z-index: 2;
     }
     .alert-ticker-badge {
-      background: #facc15;
+      background: linear-gradient(135deg, #facc15, #eab308);
       color: #000;
       font-size: 0.7rem;
       font-weight: 800;
@@ -186,14 +202,17 @@
     header {
       text-align: center;
       padding: 2.5rem 1rem 1rem;
+      position: relative;
+      z-index: 2;
     }
     header h1 {
-      font-size: 3.2rem;
+      font-size: 3.4rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #ffffff 30%, var(--accent-purple));
+      background: linear-gradient(135deg, #ffffff 20%, #38bdf8 50%, var(--accent-purple) 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -1px;
+      filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.3));
     }
 
     /* --- SEARCH, FILTERS & NAVIGATION BUTTONS --- */
@@ -203,6 +222,8 @@
       align-items: center;
       gap: 1.2rem;
       margin: 1.5rem 0 2.5rem;
+      position: relative;
+      z-index: 2;
     }
     .search-box {
       position: relative;
@@ -220,10 +241,11 @@
       font-family: inherit;
       outline: none;
       transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
     }
     .search-box input:focus {
-      border-color: var(--accent-purple);
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+      border-color: var(--accent-ice);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
       background: rgba(255, 255, 255, 0.08);
     }
     .search-box i {
@@ -250,7 +272,7 @@
       justify-content: center;
     }
     .filter-btn, .nav-link-btn {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
       color: var(--secondary-text);
       padding: 0.5rem 1.2rem;
@@ -263,17 +285,19 @@
       align-items: center;
       gap: 6px;
       text-decoration: none;
+      backdrop-filter: blur(8px);
     }
     .filter-btn:hover, .nav-link-btn:hover {
       color: #fff;
-      border-color: rgba(168, 85, 247, 0.4);
-      background: rgba(168, 85, 247, 0.1);
+      border-color: rgba(56, 189, 248, 0.5);
+      background: rgba(56, 189, 248, 0.12);
+      transform: translateY(-2px);
     }
     .filter-btn.active {
       background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
       color: #fff;
       border-color: transparent;
-      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.35);
+      box-shadow: 0 4px 18px rgba(168, 85, 247, 0.45);
     }
 
     .view-toggle {
@@ -307,7 +331,7 @@
       font-size: 2rem;
       margin: 2rem 0;
       font-weight: 700;
-      background: linear-gradient(135deg, #fff, #c084fc);
+      background: linear-gradient(135deg, #fff, var(--accent-ice), #c084fc);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       position: relative;
@@ -323,7 +347,7 @@
       left: 20%;
       width: 60%;
       height: 3px;
-      background: linear-gradient(90deg, transparent, var(--accent-purple), transparent);
+      background: linear-gradient(90deg, transparent, var(--accent-ice), var(--accent-purple), transparent);
       border-radius: 2px;
     }
 
@@ -339,18 +363,20 @@
       margin-bottom: 3.5rem;
       display: flex;
       justify-content: center;
+      position: relative;
+      z-index: 2;
     }
     .featured-card {
       width: 100%;
       max-width: 900px;
-      background: linear-gradient(135deg, rgba(25, 18, 45, 0.85), rgba(15, 15, 28, 0.85));
-      border: 1px solid rgba(250, 204, 21, 0.4);
+      background: linear-gradient(135deg, rgba(25, 20, 50, 0.85), rgba(15, 20, 35, 0.85));
+      border: 1px solid rgba(250, 204, 21, 0.45);
       border-radius: 28px;
       padding: 2rem;
       display: flex;
       gap: 2rem;
       align-items: center;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 35px rgba(250, 204, 21, 0.15);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 35px rgba(250, 204, 21, 0.2);
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(12px);
@@ -385,6 +411,8 @@
       max-width: 1280px;
       margin: 0 auto;
       padding: 0 1.5rem 4rem;
+      position: relative;
+      z-index: 2;
     }
 
     .casino-grid {
@@ -460,7 +488,7 @@
       position: relative;
       width: 100%;
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
       border: 1px solid var(--card-border);
       border-radius: 24px;
       padding: 2rem 1.5rem 1.5rem;
@@ -468,7 +496,7 @@
       flex-direction: column;
       align-items: center;
       transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.3s ease;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
       animation: fadeIn 0.5s ease forwards;
     }
 
@@ -535,7 +563,7 @@
     }
     .promo-copy-box i { font-size: 0.75rem; }
 
-    /* GLOW & SHINE EFFECTS */
+    /* GLOW & SHINE EFFECTS (EREDETI SZÍNEK MEGŐRVE!) */
     .glow-shuffle {
       position: relative;
       overflow: hidden;
@@ -809,10 +837,13 @@
 </head>
 
 <body>
+  <!-- SNOW ANIMATION CANVAS -->
+  <canvas id="snowCanvas"></canvas>
+
   <!-- GATE OVERLAY -->
   <div id="gateOverlay" class="gate-overlay" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
     <div class="gate-dialog">
-      <h2 id="gateTitle">Verification Required</h2>
+      <h2 id="gateTitle">Verification Required ❄️🎃</h2>
       <p class="gate-text">
         Only persons over the age of 18 may continue. The content of this site is intended for users residing abroad.
         By continuing, you confirm your age and accept responsibility for your access. Please confirm this.
@@ -852,7 +883,7 @@
     </div>
 
     <header>
-      <h1>Casinos</h1>
+      <h1>Casinos ❄️🎃</h1>
     </header>
 
     <main>
@@ -951,7 +982,7 @@
             <a href="https://refpa04636.pro/L?tag=d_4427689m_129584c_AL1VE1X&site=4427689&ad=129584&r=registration" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div> 
 
-                    <!-- CS2.CASINO (CASE BATTLES - FEHÉR RAGYOGÁSSAL) -->
+          <!-- CS2.CASINO (CASE BATTLES - FEHÉR RAGYOGÁSSAL) -->
           <div class="casino-card glow-cs2" data-tags="nokyc crypto casebattle" data-name="cs2.casino">
             <div class="card-logo-container">
               <img src="images/cs2casinowhite.png" alt="CS2.Casino">
@@ -966,6 +997,7 @@
                 <i class="fa-solid fa-circle-check check-icon"></i> 
                 <span class="text-accent">Promocode</span>&nbsp;
                 <span class="promo-copy-box" onclick="copyCode(this, 'alive')">al1ve <i class="fa-regular fa-copy"></i></span>
+              </li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Exciting Case Battles & Upgrades</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Unique new slots and originals</li>
               <li><i class="fa-solid fa-circle-check check-icon"></i> Daily,Weekly,Monthly rakeback and cashback</li>
@@ -976,7 +1008,7 @@
             <a href="https://cs2.casino/r/al1ve" target="_blank" class="play-button">PLAY NOW <i class="fa-solid fa-chevron-right"></i></a>
           </div> 
 
-                    <!-- WINOVO (CASE BATTLES & LEADERBOARD) -->
+          <!-- WINOVO (CASE BATTLES & LEADERBOARD) -->
           <div class="casino-card glow-1xbit" data-tags="nokyc crypto casebattle" data-name="winovo">
             <div class="card-logo-container">
               <img src="images/winovo.png" alt="Winovo">
@@ -1266,6 +1298,58 @@
   </div>
 
   <script>
+    /* SNOW ANIMATION SYSTEM */
+    (function initSnow() {
+      const canvas = document.getElementById('snowCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      const flakes = Array.from({ length: 45 }).map(() => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 2.5 + 1,
+        d: Math.random() * 1 + 0.5,
+        o: Math.random() * 0.5 + 0.3
+      }));
+
+      function drawFlakes() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.beginPath();
+        for (let f of flakes) {
+          ctx.moveTo(f.x, f.y);
+          ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+        }
+        ctx.fill();
+        moveFlakes();
+      }
+
+      function moveFlakes() {
+        for (let f of flakes) {
+          f.y += f.d;
+          f.x += Math.sin(f.y * 0.01) * 0.5;
+          if (f.y > height) {
+            f.y = -10;
+            f.x = Math.random() * width;
+          }
+        }
+      }
+
+      function animate() {
+        drawFlakes();
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      animate();
+    })();
+
     /* WEB AUDIO API SOUND SYSTEM */
     let soundEnabled = true;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
