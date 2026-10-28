@@ -374,7 +374,7 @@
       margin: 4rem 0;
     }
 
-    /* --- FEATURED HERO CARD (JÉGCSAPOSSAL) --- */
+    /* --- FEATURED HERO CARD --- */
     .featured-hero-container {
       margin-bottom: 3.5rem;
       display: flex;
@@ -398,16 +398,16 @@
       backdrop-filter: blur(12px);
     }
 
-    /* JÉGCSAP OVERLAY SVG */
+    /* ÉLETHŰBB JÉGCSAPOK (MAX 2-3 DB, VÉLETLENSZERŰ HELYEKEN) */
     .icicle-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 20px;
+      height: 28px;
       pointer-events: none;
       z-index: 10;
-      opacity: 0.85;
+      opacity: 0.9;
     }
 
     .featured-badge {
@@ -436,7 +436,7 @@
       }
     }
 
-    /* --- GRID & CARDS (FAGYOS DÍSZÍTÉSSELE) --- */
+    /* --- GRID & CARDS --- */
     main {
       max-width: 1280px;
       margin: 0 auto;
@@ -846,11 +846,28 @@
   <!-- SNOW & MAGIC PARTICLES CANVAS -->
   <canvas id="snowCanvas"></canvas>
 
-  <!-- SVG ICICLE TEMPLATE (FOR REUSE) -->
+  <!-- VALÓSÁGHŰBB JÉGCSAP SABLONOK (MAX 2-3 DB, KÜLÖNBÖZŐ HELYEKEN) -->
   <svg style="display:none;">
     <defs>
-      <g id="icicleShape">
-        <path d="M0,0 L10,14 L20,0 L35,18 L50,0 L65,12 L80,0 L100,16 L120,0 L140,10 L160,0 L180,15 L200,0 L220,12 L240,0 L260,18 L280,0 L300,14 L320,0 L340,16 L360,0 L380,10 L400,0 L420,15 L440,0" fill="rgba(224, 242, 254, 0.4)" />
+      <!-- Változat 1: Bal oldalon és középen -->
+      <g id="icicles1">
+        <path d="M15,0 Q17,12 14,24 Q13,12 11,0 Z" fill="rgba(224, 242, 254, 0.85)" />
+        <path d="M16,0 Q16,8 15,16 Q14,8 14,0 Z" fill="rgba(255,255,255,0.95)" />
+        <path d="M150,0 Q153,20 148,36 Q145,20 142,0 Z" fill="rgba(224, 242, 254, 0.85)" />
+        <path d="M320,0 Q322,14 319,28 Q318,14 316,0 Z" fill="rgba(224, 242, 254, 0.8)" />
+      </g>
+      <!-- Változat 2: Jobb oldalon és bal szélen -->
+      <g id="icicles2">
+        <path d="M40,0 Q43,18 39,32 Q37,18 35,0 Z" fill="rgba(224, 242, 254, 0.85)" />
+        <path d="M280,0 Q282,15 279,30 Q278,15 276,0 Z" fill="rgba(224, 242, 254, 0.8)" />
+        <path d="M350,0 Q352,22 348,38 Q346,22 344,0 Z" fill="rgba(224, 242, 254, 0.85)" />
+        <path d="M349,0 Q349,12 348,24 Q347,12 347,0 Z" fill="rgba(255,255,255,0.95)" />
+      </g>
+      <!-- Változat 3: Középen és jobb szélen -->
+      <g id="icicles3">
+        <path d="M120,0 Q122,16 119,30 Q118,16 116,0 Z" fill="rgba(224, 242, 254, 0.85)" />
+        <path d="M230,0 Q233,24 228,42 Q225,24 222,0 Z" fill="rgba(224, 242, 254, 0.9)" />
+        <path d="M229,0 Q229,14 228,28 Q227,14 227,0 Z" fill="rgba(255,255,255,0.95)" />
       </g>
     </defs>
   </svg>
@@ -933,8 +950,8 @@
       <!-- FEATURED HERO DEAL -->
       <div class="featured-hero-container">
         <div class="featured-card">
-          <!-- Jégcsap díszítés -->
-          <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+          <!-- Változatos jégcsapok -->
+          <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles1"/></svg>
           <div class="featured-badge"><i class="fa-solid fa-crown"></i> Featured Deal</div>
           <div class="card-logo-container" style="width: 120px; height: 100px;">
             <img src="images/shuffle.png" alt="Shuffle">
@@ -955,7 +972,7 @@
 
           <!-- SHUFFLE -->
           <div class="casino-card glow-shuffle" data-tags="nokyc crypto" data-name="shuffle">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles2"/></svg>
             <div class="card-logo-container">
               <img src="images/shuffle.png" alt="Shuffle">
             </div>
@@ -976,7 +993,7 @@
 
           <!-- 1XBIT -->
           <div class="casino-card glow-1xbit" data-tags="nokyc sports crypto" data-name="1xbit">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles3"/></svg>
             <div class="card-logo-container">
               <img src="images/1xbitr.png" alt="1xBit">
             </div>
@@ -1002,7 +1019,7 @@
 
           <!-- WINSPIRIT -->
           <div class="casino-card glow-winspirit" data-tags="sports crypto" data-name="winspirit">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles1"/></svg>
             <div class="card-logo-container">
               <img src="images/winspirit.png" alt="Winspirit">
             </div>
@@ -1023,7 +1040,7 @@
 
           <!-- SPINBETTER -->
           <div class="casino-card glow-spinbetter" data-tags="sports crypto" data-name="spinbetter">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles2"/></svg>
             <div class="card-logo-container">
               <img src="images/spinbetter.png" alt="Spinbetter">
             </div>
@@ -1048,7 +1065,7 @@
 
           <!-- SPINSY -->
           <div class="casino-card glow-spinsy" data-tags="sports crypto" data-name="spinsy">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles3"/></svg>
             <div class="card-logo-container">
               <img src="images/spinsy.png" alt="Spinsy">
             </div>
@@ -1069,7 +1086,7 @@
 
           <!-- COCOBET -->
           <div class="casino-card glow-cocobet" data-tags="sports crypto nokyc" data-name="cocobet">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles1"/></svg>
             <div class="card-logo-container">
               <img src="images/nemtom1.png" alt="CocoBet">
             </div>
@@ -1090,7 +1107,7 @@
 
           <!-- PARIPESA -->
           <div class="casino-card glow-paripesa" data-tags="crypto" data-name="paripesa">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles2"/></svg>
             <div class="card-logo-container">
               <img src="images/paripesa.png" alt="PariPesa">
             </div>
@@ -1115,7 +1132,7 @@
 
           <!-- PICKWIN -->
           <div class="casino-card glow-pickwin" data-tags="crypto" data-name="pickwin">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles3"/></svg>
             <div class="card-logo-container">
               <img src="images/pickwin.png" alt="pickwin">
             </div>
@@ -1140,7 +1157,7 @@
 
           <!-- WINOVO -->
           <div class="casino-card glow-1xbit" data-tags="nokyc crypto casebattle" data-name="winovo">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles1"/></svg>
             <div class="card-logo-container">
               <img src="images/winovo.png" alt="Winovo">
             </div>
@@ -1164,7 +1181,7 @@
 
           <!-- CS2.CASINO -->
           <div class="casino-card glow-cs2" data-tags="nokyc crypto casebattle" data-name="cs2.casino">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles2"/></svg>
             <div class="card-logo-container">
               <img src="images/cs2casinowhite.png" alt="CS2.Casino">
             </div>
@@ -1192,7 +1209,7 @@
         <div class="casino-grid">
           <!-- DUEL -->
           <div class="casino-card glow-duel" data-tags="nokyc sports crypto" data-name="duel">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles3"/></svg>
             <div class="card-logo-container">
               <img src="images/top2.png" alt="Duel Logo">
             </div>
@@ -1219,7 +1236,7 @@
         <div class="casino-grid">
           <!-- WAZAMBA -->
           <div class="casino-card glow-wazamba" data-tags="crypto" data-name="wazamba">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles1"/></svg>
             <div class="card-logo-container">
               <img src="images/wazamba.png" alt="Wazamba Logó">
             </div>
@@ -1239,7 +1256,7 @@
 
           <!-- SG CASINO -->
           <div class="casino-card glow-sgcasino" data-tags="crypto" data-name="sg casino">
-            <svg class="icicle-overlay" viewBox="0 0 440 20" preserveAspectRatio="none"><use href="#icicleShape"/></svg>
+            <svg class="icicle-overlay" viewBox="0 0 400 40" preserveAspectRatio="none"><use href="#icicles2"/></svg>
             <div class="card-logo-container">
               <img src="images/sg.png" alt="Sg Logó">
             </div>
