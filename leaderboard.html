@@ -336,12 +336,31 @@
         if (result.status === 'ok') {
           let rawData = Array.isArray(result.data) ? result.data : Object.values(result.data || {});
           
-          // KÖZVETLENÜL AZ API ÉRTÉKEIT HASZNÁLJUK (Nincs bázis-kivonás!)
+          // Bázisértékek betöltése a localStorage-ből (kivonáshoz)
+          let baseValues = JSON.parse(localStorage.getItem('al1ve_wager_base') || '{}');
+          const isInitialized = Object.keys(baseValues).length > 0;
+
+          rawData.forEach(player => {
+            const currentWager = Number(player.wagered || 0);
+            if (!isInitialized) {
+              baseValues[player.name] = currentWager;
+            }
+          });
+
+          if (!isInitialized) {
+            localStorage.setItem('al1ve_wager_base', JSON.stringify(baseValues));
+          }
+
+          // Különbség számítása: All-time wager mínusz a rögzített bázisérték
           globalPlayersData = rawData.map(player => {
-            const rawWager = Number(player.wagered || 0);
+            const currentWager = Number(player.wagered || 0);
+            const baseWager = baseValues[player.name] !== undefined ? baseValues[player.name] : currentWager;
+            let diff = currentWager - baseWager;
+            if (diff < 0) diff = 0;
+
             return {
               ...player,
-              wagered: rawWager.toFixed(2)
+              wagered: diff.toFixed(2)
             };
           });
 
