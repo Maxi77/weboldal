@@ -336,25 +336,16 @@
         if (result.status === 'ok') {
           let rawData = Array.isArray(result.data) ? result.data : Object.values(result.data || {});
           
-          // Bázisértékek betöltése a localStorage-ből (kivonáshoz)
-          let baseValues = JSON.parse(localStorage.getItem('al1ve_wager_base') || '{}');
-          const isInitialized = Object.keys(baseValues).length > 0;
+          // ITT ADD MEG A JÁTÉKOSOKHOZ TARTOZÓ KIVONANDÓ BÁZIS ÉRTÉKEKET (Játékosnév: levonandó összeg)
+          const manualBaseValues = {
+            // "JátékosNév1": 1000,
+            // "JátékosNév2": 2500.50
+          };
 
-          rawData.forEach(player => {
-            const currentWager = Number(player.wagered || 0);
-            if (!isInitialized) {
-              baseValues[player.name] = currentWager;
-            }
-          });
-
-          if (!isInitialized) {
-            localStorage.setItem('al1ve_wager_base', JSON.stringify(baseValues));
-          }
-
-          // Különbség számítása: All-time wager mínusz a rögzített bázisérték
+          // Különbség számítása: All-time wager mínusz a manuálisan megadott érték
           globalPlayersData = rawData.map(player => {
             const currentWager = Number(player.wagered || 0);
-            const baseWager = baseValues[player.name] !== undefined ? baseValues[player.name] : currentWager;
+            const baseWager = manualBaseValues[player.name] !== undefined ? manualBaseValues[player.name] : 0;
             let diff = currentWager - baseWager;
             if (diff < 0) diff = 0;
 
