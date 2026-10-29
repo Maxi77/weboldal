@@ -336,13 +336,17 @@
         if (result.status === 'ok') {
           let rawData = Array.isArray(result.data) ? result.data : Object.values(result.data || {});
           
-          // ITT ADD MEG A JÁTÉKOSOKHOZ TARTOZÓ KIVONANDÓ BÁZIS ÉRTÉKEKET (Játékosnév: levonandó összeg)
+          // MEGADOTT BÁZIS ÉRTÉKEK JÁTÉKOSONKÉNT
           const manualBaseValues = {
-            // "JátékosNév1": 1000,
-            // "JátékosNév2": 2500.50
+            "nocnoc": 736.87,
+            "fkreator33": 322.14,
+            "dzsan": 270.35,
+            "Dabiggoat2": 66.51,
+            "bencasd": 25.91,
+            "enbenjivok42": 14.5
           };
 
-          // Különbség számítása: All-time wager mínusz a manuálisan megadott érték
+          // Különbség számítása: All-time wager mínusz a megadott érték
           globalPlayersData = rawData.map(player => {
             const currentWager = Number(player.wagered || 0);
             const baseWager = manualBaseValues[player.name] !== undefined ? manualBaseValues[player.name] : 0;
