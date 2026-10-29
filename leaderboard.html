@@ -336,31 +336,12 @@
         if (result.status === 'ok') {
           let rawData = Array.isArray(result.data) ? result.data : Object.values(result.data || {});
           
-          // Október 25-i kiinduló alapértékek rögzítése/kezelése (All-time wager különbség számítás)
-          let baseValues = JSON.parse(localStorage.getItem('al1ve_wager_base') || '{}');
-          const isInitialized = Object.keys(baseValues).length > 0;
-
-          rawData.forEach(player => {
-            const currentWager = Number(player.wagered || 0);
-            if (!isInitialized) {
-              baseValues[player.name] = currentWager;
-            }
-          });
-
-          if (!isInitialized) {
-            localStorage.setItem('al1ve_wager_base', JSON.stringify(baseValues));
-          }
-
-          // Különbség számítása az induló bázishoz képest
+          // KÖZVETLENÜL AZ API ÉRTÉKEIT HASZNÁLJUK (Nincs bázis-kivonás!)
           globalPlayersData = rawData.map(player => {
-            const currentWager = Number(player.wagered || 0);
-            const baseWager = baseValues[player.name] !== undefined ? baseValues[player.name] : currentWager;
-            let diff = currentWager - baseWager;
-            if (diff < 0) diff = 0;
-
+            const rawWager = Number(player.wagered || 0);
             return {
               ...player,
-              wagered: diff.toFixed(2)
+              wagered: rawWager.toFixed(2)
             };
           });
 
@@ -452,7 +433,6 @@
       const query = document.getElementById('playerSearch').value.toLowerCase();
       if (!query) { renderLeaderboard(globalPlayersData); return; }
       
-      // JAVÍTVA: .path helyett sima .filter
       const filtered = globalPlayersData.filter(p => p.name && p.name.toLowerCase().includes(query));
       
       const container = document.getElementById('leaderboardContent');
